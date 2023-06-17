@@ -1,4 +1,4 @@
 {
-    "profile": "",
-    "password": ""
+    "profile": "bolt://localhost:7687",
+    "password": "test"
 }
