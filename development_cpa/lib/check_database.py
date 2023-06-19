@@ -4,7 +4,7 @@ import json
 
 class Check:
     def __init__(self):
-        self.config_account_path = 'development/config/config_account.json'
+        self.config_account_path = 'development_cpa/config/config_account.json'
         self.graph = self.connect_to_db()
         
     def connect_to_db(self):
@@ -17,9 +17,12 @@ class Check:
         self.graph.delete_all()
 
     def add_limit(self):
-        self.graph.run(f'CREATE CONSTRAINT FOR (n: PreData) REQUIRE n.sample_id IS UNIQUE')
-        self.graph.run(f'CREATE CONSTRAINT FOR (n: PostData) REQUIRE n.sample_id IS UNIQUE')
-        self.graph.run(f'CREATE CONSTRAINT FOR (n: Experiment) REQUIRE n.experiment_id IS UNIQUE')
+        self.graph.run(f'CREATE CONSTRAINT FOR (n: DSC) REQUIRE n.File_name IS UNIQUE')
+        self.graph.run(f'CREATE CONSTRAINT FOR (n: FTIR) REQUIRE n.File_name IS UNIQUE')
+        # self.graph.run(f'CREATE CONSTRAINT FOR (n: Cryomicroscopy) REQUIRE n.File_name IS UNIQUE')
+        # self.graph.run(f'CREATE CONSTRAINT FOR (n: Osmolality) REQUIRE n.File_name IS UNIQUE')
+        # self.graph.run(f'CREATE CONSTRAINT FOR (n: Viscosity) REQUIRE n.File_name IS UNIQUE')
+        pass
     
     def query_all(self):
         node_counts = self.graph.run("MATCH (n) RETURN DISTINCT labels(n) AS label, count(*) AS count").data()
@@ -36,4 +39,4 @@ class Check:
             count = result['count']
             print(f"{relationship_type}: {count}")
 
-Check().add_limit()
+Check().delete_all()

@@ -10,8 +10,8 @@ from .json_to_neo import json_to_neo
 
 class FeedOneExp:
     def __init__(self, index, pre_data_path, post_data_path, process_path, cpa):
-        self.config_account_path = 'development/config/config_account.json'
-        self.config_cryo_db_path = 'development/config/config_cryo_db.json'
+        self.config_account_path = 'development_cryo/config/config_account.json'
+        self.config_cryo_db_path = 'development_cryo/config/config_cryo_db.json'
         self.index = index
         self.pre_data_path = pre_data_path
         self.post_data_path = post_data_path
