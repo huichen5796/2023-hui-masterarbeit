@@ -1,0 +1,12 @@
+<div class="content" role="main">
+    <p>seite-start works!</p>
+    <button (click)="click()">test</button>
+    <span>{{ output | json }}</span>
+    <mat-form-field>
+        <mat-label>Clearable input</mat-label>
+        <input matInput type="text" [(ngModel)]="value">
+        <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="testInput()">
+            <mat-icon>search</mat-icon>
+        </button>
+    </mat-form-field>
+</div>
