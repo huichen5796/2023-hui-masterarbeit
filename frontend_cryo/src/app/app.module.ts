@@ -39,11 +39,23 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 // Components //
 import { AppRoutingModule } from './app-routers/app-routing.module';
 import { AppComponent } from './app.component';
+import { SeiteWelcomeComponent } from './seite-welcome/seite-welcome.component';
+import { SeiteAboutUsComponent } from './seite-about-us/seite-about-us.component';
+import { SeiteAboutThisComponent } from './seite-about-this/seite-about-this.component';
+import { SeiteTechnologyComponent } from './seite-technology/seite-technology.component';
+import { SeiteDatabaseComponent } from './seite-database/seite-database.component';
+import { SeiteNnComponent } from './seite-nn/seite-nn.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    SeiteWelcomeComponent,
+    SeiteAboutUsComponent,
+    SeiteAboutThisComponent,
+    SeiteTechnologyComponent,
+    SeiteDatabaseComponent,
+    SeiteNnComponent,
   ],
   imports: [
     BrowserModule,
