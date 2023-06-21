@@ -6,6 +6,7 @@ import { SeiteAboutThisComponent } from '../seite-about-this/seite-about-this.co
 import { SeiteTechnologyComponent } from '../seite-technology/seite-technology.component';
 import { SeiteDatabaseComponent } from '../seite-database/seite-database.component';
 import { SeiteNnComponent } from '../seite-nn/seite-nn.component';
+import { SeiteStartComponent } from '../seite-start/seite-start.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'technology', component: SeiteTechnologyComponent },
   { path: 'database', component: SeiteDatabaseComponent },
   { path: 'nn', component: SeiteNnComponent },
+  { path: 'start', component: SeiteStartComponent },
 
 ];
 

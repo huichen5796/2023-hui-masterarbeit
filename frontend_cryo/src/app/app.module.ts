@@ -45,6 +45,7 @@ import { SeiteAboutThisComponent } from './seite-about-this/seite-about-this.com
 import { SeiteTechnologyComponent } from './seite-technology/seite-technology.component';
 import { SeiteDatabaseComponent } from './seite-database/seite-database.component';
 import { SeiteNnComponent } from './seite-nn/seite-nn.component';
+import { SeiteStartComponent } from './seite-start/seite-start.component';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { SeiteNnComponent } from './seite-nn/seite-nn.component';
     SeiteTechnologyComponent,
     SeiteDatabaseComponent,
     SeiteNnComponent,
+    SeiteStartComponent,
   ],
   imports: [
     BrowserModule,
