@@ -46,6 +46,7 @@ import { SeiteTechnologyComponent } from './seite-technology/seite-technology.co
 import { SeiteDatabaseComponent } from './seite-database/seite-database.component';
 import { SeiteNnComponent } from './seite-nn/seite-nn.component';
 import { SeiteStartComponent } from './seite-start/seite-start.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { SeiteStartComponent } from './seite-start/seite-start.component';
   ],
   imports: [
     BrowserModule,
+    HighchartsChartModule,
     AppRoutingModule,
     MatFormFieldModule,
     MatDialogModule,

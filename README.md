@@ -1,5 +1,9 @@
 # 2023-hui-masterarbeit
 
+Frontend: hier
+Database: Neo4j auf _AWS EC2_
+Backend: [backend](https://github.com/huichen5796/ma_backend) auf _AWS EC2_
+
 Dies geht um Kryokonservierung...
 
 wird kurzzeitig in solche Schritte unterteilt:

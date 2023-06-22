@@ -179,6 +179,7 @@ a.card .material-icons path {
 
 footer {
     margin-top: 8px;
+    margin-left: 28px;
     display: flex;
     align-items: center;
     line-height: 20px;

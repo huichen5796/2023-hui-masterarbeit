@@ -1,12 +1,27 @@
 <div class="content" role="main">
     <p>seite-start works!</p>
     <button (click)="click()">test</button>
-    <span>{{ output | json }}</span>
+    <pre class="json-display">{{ output | json }}</pre>
     <mat-form-field>
-        <mat-label>Clearable input</mat-label>
+        <mat-label>test cryo db</mat-label>
         <input matInput type="text" [(ngModel)]="value">
         <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="testInput()">
             <mat-icon>search</mat-icon>
         </button>
     </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>test cpa db</mat-label>
+        <input matInput type="text" [(ngModel)]="value1">
+        <button *ngIf="value1" matSuffix mat-icon-button aria-label="Clear" (click)="testInputCpa()">
+            <mat-icon>search</mat-icon>
+        </button>
+    </mat-form-field>
 </div>
+
+<highcharts-chart *ngIf="linechart"
+  [Highcharts]="Highcharts"
+  [options]="linechart"
+  style="width: 100%; height: 400px; display: block;"
+>
+</highcharts-chart>
