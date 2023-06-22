@@ -10,7 +10,7 @@ def load_dsc_data(data_path, json_body):
             if line != "":
                 if ':' in line:
                     key, value = line.split(":", 1)
-                    key = key.strip()[1:-1]
+                    key = key.strip()[1:]
                     value = value.strip()
                     json_body['Log'][key] = value
                 else:

@@ -9,6 +9,7 @@ import { QueryNeo4jService } from '../app-services';
 export class SeiteStartComponent {
   output!: string
   value: string = 'MATCH (n) RETURN n'
+  value1: string = 'MATCH (n) RETURN n'
 
   constructor(
     private queryNeo4jService: QueryNeo4jService,
@@ -25,6 +26,15 @@ export class SeiteStartComponent {
   testInput() {
 
     this.queryNeo4jService.queryTest(this.value).then((rep) => {
+      this.output = rep
+      console.log(rep)
+    })
+
+  }
+
+  testInputCpa() {
+
+    this.queryNeo4jService.queryTestCpa(this.value1).then((rep) => {
       this.output = rep
       console.log(rep)
     })

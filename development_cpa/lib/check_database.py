@@ -39,4 +39,4 @@ class Check:
             count = result['count']
             print(f"{relationship_type}: {count}")
 
-Check().add_limit()
+Check().query_all()
