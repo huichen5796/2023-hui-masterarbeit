@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { backendUrl } from '../app-config';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class QueryNeo4jService {
 
   queryTest(cypher: string): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`http://ec2-18-197-31-138.eu-central-1.compute.amazonaws.com:8000/freeQueryCryo/${cypher}`)
+      this.http.get(`${backendUrl}/freeQueryCryo/${cypher}`)
         .subscribe((rep: any) => {
           resolve(rep)
         })
@@ -23,17 +24,7 @@ export class QueryNeo4jService {
 
   queryTestCpa(cypher: string): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`http://ec2-18-197-31-138.eu-central-1.compute.amazonaws.com:8000/freeQueryCpa/${cypher}`)
-        .subscribe((rep: any) => {
-          resolve(rep)
-        })
-    })
-    return promise
-  }
-
-  test(): Promise<any> {
-    var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`http://ec2-18-197-31-138.eu-central-1.compute.amazonaws.com:8000/`)
+      this.http.get(`${backendUrl}/freeQueryCpa/${cypher}`)
         .subscribe((rep: any) => {
           resolve(rep)
         })

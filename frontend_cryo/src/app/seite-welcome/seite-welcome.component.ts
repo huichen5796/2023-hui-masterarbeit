@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ConnectTestService } from '../app-services';
 
 @Component({
   selector: 'app-seite-welcome',
@@ -22,12 +23,14 @@ export class SeiteWelcomeComponent {
     { value: 'fb', span: 'Feedback' }
   ]
 
-  terminals: { [key: string]: string } = {
-    default: 'info default',
-    ds: 'info 1',
-    da: 'info 2',
-    srp: 'info 3',
-    po: 'info 4',
-    fb: 'info 5'
-  }
+  terminal_info: string = 'default'
+
+  constructor(
+    private connectTestService: ConnectTestService
+    ) { 
+      this.connectTestService.testBackend().then((rep) => {
+        this.terminal_info = rep
+        console.log(rep)
+      })
+    }
 }

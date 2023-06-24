@@ -1,7 +1,4 @@
 <div class="content" role="main">
-    <p>seite-start works!</p>
-    <button (click)="click()">test</button>
-    <pre class="json-display">{{ output | json }}</pre>
     <mat-form-field>
         <mat-label>test cryo db</mat-label>
         <input matInput type="text" [(ngModel)]="value">
@@ -25,3 +22,7 @@
   style="width: 100%; height: 400px; display: block;"
 >
 </highcharts-chart>
+
+
+<input type="file" (change)="onFileSelected($event, 'process')">
+<button (click)="uploadFile()">upload</button>
