@@ -39,10 +39,8 @@
     <h2>Functions</h2>
     <p>What could you do next with this?</p>
 
-    <input type="hidden" #selection>
-
     <div class="card-container">
-        <button class="card card-small" *ngFor="let card of functionCards" (click)="selection.value = card['value']"
+        <button class="card card-small" *ngFor="let card of functionCards"
             tabindex="0">
             <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
@@ -52,13 +50,9 @@
     </div>
 
     <!-- Terminal -->
-    <div class="terminal" [ngSwitch]="selection.value">
-        <pre *ngSwitchDefault>{{ terminals['default'] }}</pre>
-        <pre *ngSwitchCase="'ds'">{{ terminals['ds'] }}</pre>
-        <pre *ngSwitchCase="'da'">{{ terminals['da'] }}</pre>
-        <pre *ngSwitchCase="'srp'">{{ terminals['srp'] }}</pre>
-        <pre *ngSwitchCase="'po'">{{ terminals['po'] }}</pre>
-        <pre *ngSwitchCase="'fb'">{{ terminals['fb'] }}</pre>
+    <div class="terminal" [ngSwitch]="terminal_info">
+        <pre *ngSwitchDefault>Trying: Connect to Backend...</pre>
+        <pre *ngSwitchCase="'success'">Success: Connected to Backend.</pre>
     </div>
 
     <!-- Links -->

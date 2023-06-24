@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { QueryNeo4jService } from '../app-services';
+import { QueryNeo4jService, FileTransferService } from '../app-services';
 
 @Component({
   selector: 'app-seite-start',
@@ -13,18 +13,6 @@ export class SeiteStartComponent {
   value1: string = 'MATCH (n) RETURN n'
   Highcharts = Highcharts;
   linechart: any = false
-
-  constructor(
-    private queryNeo4jService: QueryNeo4jService,
-
-  ) {
-  }
-  click() {
-    this.queryNeo4jService.test().then((rep) => {
-      this.output = rep
-      console.log(rep)
-    })
-  }
 
   testInput() {
 
@@ -74,4 +62,46 @@ export class SeiteStartComponent {
       };
     })
   }
+  selectedFile: File | null = null;
+
+  constructor(private fileTransferService: FileTransferService, private queryNeo4jService: QueryNeo4jService,) { }
+
+  extensionsLow = {
+    'pre_data': ['txt', 'csv', 'asc'],
+    'post_data': ['txt', 'csv', 'asc'],
+    'process': ['txt', 'csv', 'asc'],
+    'exp': ['txt', 'csv', 'asc'],
+    'cpa': ['txt', 'csv', 'asc'],
+  }
+
+  onFileSelected(event: any, data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process'): void {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      if ((this.extensionsLow[data_type]).indexOf(getFileExtension(this.selectedFile.name)) != -1) {
+        console.log(`right format: ${getFileExtension(this.selectedFile.name)}`)
+      } else {
+        console.log('wrong file format')
+      }
+
+    } else {
+      console.log('nothing selected')
+    }
+  }
+
+  uploadFile(): void {
+    if (this.selectedFile) {
+      this.fileTransferService.fileUpload(this.selectedFile, 'process').then((res) => { console.log(res) })
+    } else {
+      console.log('nothing uploaded')
+    }
+  }
+}
+
+function getFileExtension(fileName: string): string {
+  const dotIndex = fileName.lastIndexOf('.');
+  if (dotIndex === -1) {
+    return 'error';
+  }
+  const extension = fileName.slice(dotIndex + 1).toLowerCase();
+  return extension;
 }
