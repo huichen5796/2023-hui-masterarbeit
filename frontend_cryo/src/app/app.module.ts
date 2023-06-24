@@ -47,6 +47,7 @@ import { SeiteDatabaseComponent } from './seite-database/seite-database.componen
 import { SeiteNnComponent } from './seite-nn/seite-nn.component';
 import { SeiteStartComponent } from './seite-start/seite-start.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { UnitBackendCheckComponent } from './unit-backend-check/unit-backend-check.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     SeiteDatabaseComponent,
     SeiteNnComponent,
     SeiteStartComponent,
+    UnitBackendCheckComponent,
   ],
   imports: [
     BrowserModule,
