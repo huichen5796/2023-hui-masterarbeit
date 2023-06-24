@@ -124,39 +124,6 @@ a.card .material-icons path {
     margin-left: 60px;
 }
 
-.terminal {
-    position: relative;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 6px;
-    padding-top: 45px;
-    margin-top: 8px;
-    overflow: hidden;
-    background-color: rgb(15, 15, 16);
-}
-
-.terminal::before {
-    content: "\2022 \2022 \2022";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 4px;
-    background: rgb(58, 58, 58);
-    color: #c2c3c4;
-    width: 100%;
-    font-size: 2rem;
-    line-height: 0;
-    padding: 14px 0;
-    text-indent: 4px;
-}
-
-.terminal pre {
-    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-    color: white;
-    padding: 0 1rem 1rem;
-    margin: 0;
-}
-
 .circle-link {
     height: 40px;
     width: 40px;
@@ -227,9 +194,6 @@ svg#clouds {
 @media screen and (max-width: 767px) {
 
     .card-container>*:not(.circle-link),
-    .terminal {
-        width: 100%;
-    }
 
     .card:not(.highlight-card) {
         height: 16px;
