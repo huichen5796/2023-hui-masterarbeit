@@ -1,0 +1,13 @@
+<label class="label-up" [attr.for]='"xFile"+data_type' *ngIf="!onlyDir">Upload Files</label>
+<label class="label-up" [attr.for]='"xFolder"+data_type'>Upload Folder</label>
+
+<input type="file" [id]='"xFile"+data_type' class="hidden-upload" (change)="onFileSelected($event)"
+    [multiple]="allowMultiple">
+<input type="file" [id]='"xFolder"+data_type' class="hidden-upload" (change)="onFileSelected($event)" webkitdirectory>
+
+<div *ngIf="uploadedFiles.length > 0">
+    <h2>uploaded files:</h2>
+    <ul>
+        <li *ngFor="let file of uploadedFiles">{{ file | json }}</li>
+    </ul>
+</div>

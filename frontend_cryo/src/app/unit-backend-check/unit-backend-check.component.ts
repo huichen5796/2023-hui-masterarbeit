@@ -17,31 +17,50 @@ export class UnitBackendCheckComponent {
       'dataStoreIntegrityPostdata': 'pending',
       'dataStoreIntegrityProcess': 'pending'
     }
-
+  connectionStatus: string = 'pending'
+  panelOpenState = false
 
   constructor(
     private connectTestService: ConnectTestService
   ) {
     this.connectTestService.testBackend().then((rep) => {
       this.checkItems['backendConnection'] = rep
+      this.updateStatus()
     })
     this.connectTestService.testDataStore().then((rep) => {
       this.checkItems['dataStoreExistence'] = rep
+      this.updateStatus()
     })
     this.connectTestService.testDataStoreFile('cpa').then((rep) => {
       this.checkItems['dataStoreIntegrityCpa'] = rep
+      this.updateStatus()
     })
     this.connectTestService.testDataStoreFile('exp').then((rep) => {
       this.checkItems['dataStoreIntegrityExp'] = rep
+      this.updateStatus()
     })
     this.connectTestService.testDataStoreFile('pre_data').then((rep) => {
       this.checkItems['dataStoreIntegrityPredata'] = rep
+      this.updateStatus()
     })
     this.connectTestService.testDataStoreFile('post_data').then((rep) => {
       this.checkItems['dataStoreIntegrityPostdata'] = rep
+      this.updateStatus()
     })
     this.connectTestService.testDataStoreFile('process').then((rep) => {
       this.checkItems['dataStoreIntegrityProcess'] = rep
+      this.updateStatus()
     })
+  }
+  updateStatus() {
+    const values = Object.values(this.checkItems);
+
+    if (values.includes('pending')) {
+      this.connectionStatus = 'pending';
+    } else if (values.includes('error')) {
+      this.connectionStatus = 'error';
+    } else {
+      this.connectionStatus = 'success';
+    }
   }
 }

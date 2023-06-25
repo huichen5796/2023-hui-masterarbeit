@@ -1,30 +1,9 @@
 <div class="content" role="main">
-    <mat-form-field>
-        <mat-label>test cryo db</mat-label>
-        <input matInput type="text" [(ngModel)]="value">
-        <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="testInput()">
-            <mat-icon>search</mat-icon>
-        </button>
-    </mat-form-field>
-
-    <mat-form-field>
-        <mat-label>test cpa db</mat-label>
-        <input matInput type="text" [(ngModel)]="value1">
-        <button *ngIf="value1" matSuffix mat-icon-button aria-label="Clear" (click)="testInputCpa()">
-            <mat-icon>search</mat-icon>
-        </button>
-    </mat-form-field>
+    <!-- <app-unit-backend-check></app-unit-backend-check>
+    <app-unit-database-check></app-unit-database-check> -->
+    cpa:<app-unit-data-upload [onlyDir]="true" [allowMultiple]="false" [allowFolder]="true" [data_type]="'cpa'"></app-unit-data-upload>
+    pre:<app-unit-data-upload [onlyDir]="false" [allowMultiple]="true" [allowFolder]="true" [data_type]="'pre_data'"></app-unit-data-upload>
+    pos:<app-unit-data-upload [onlyDir]="false" [allowMultiple]="true" [allowFolder]="true" [data_type]="'post_data'"></app-unit-data-upload>
+    exp:<app-unit-data-upload [onlyDir]="false" [allowMultiple]="true" [allowFolder]="true" [data_type]="'exp'"></app-unit-data-upload>
+    pro:<app-unit-data-upload [onlyDir]="false" [allowMultiple]="true" [allowFolder]="true" [data_type]="'process'"></app-unit-data-upload>
 </div>
-
-<highcharts-chart *ngIf="linechart"
-  [Highcharts]="Highcharts"
-  [options]="linechart"
-  style="width: 100%; height: 400px; display: block;"
->
-</highcharts-chart>
-
-
-<input type="file" (change)="onFileSelected($event, 'process')">
-<button (click)="uploadFile()">upload</button>
-
-<app-unit-backend-check></app-unit-backend-check>
