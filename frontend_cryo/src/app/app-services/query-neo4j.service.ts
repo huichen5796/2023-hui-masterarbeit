@@ -12,19 +12,9 @@ export class QueryNeo4jService {
     private http: HttpClient,
   ) { }
 
-  queryTest(cypher: string): Promise<any> {
+  queryTest(db_id: string): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`${backendUrl}/freeQueryCryo/${cypher}`)
-        .subscribe((rep: any) => {
-          resolve(rep)
-        })
-    })
-    return promise
-  }
-
-  queryTestCpa(cypher: string): Promise<any> {
-    var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`${backendUrl}/freeQueryCpa/${cypher}`)
+      this.http.get(`${backendUrl}/connectDatabase/${db_id}`)
         .subscribe((rep: any) => {
           resolve(rep)
         })

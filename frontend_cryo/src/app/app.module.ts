@@ -35,6 +35,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTreeModule } from '@angular/material/tree';
 
 // Components //
 import { AppRoutingModule } from './app-routers/app-routing.module';
@@ -48,6 +49,9 @@ import { SeiteNnComponent } from './seite-nn/seite-nn.component';
 import { SeiteStartComponent } from './seite-start/seite-start.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { UnitBackendCheckComponent } from './unit-backend-check/unit-backend-check.component';
+import { UnitDatabaseCheckComponent } from './unit-database-check/unit-database-check.component';
+import { UnitDataUploadComponent } from './unit-data-upload/unit-data-upload.component';
+import { UnitHighchartsGraphComponent } from './unit-highcharts-graph/unit-highcharts-graph.component';
 
 
 @NgModule({
@@ -61,6 +65,9 @@ import { UnitBackendCheckComponent } from './unit-backend-check/unit-backend-che
     SeiteNnComponent,
     SeiteStartComponent,
     UnitBackendCheckComponent,
+    UnitDatabaseCheckComponent,
+    UnitDataUploadComponent,
+    UnitHighchartsGraphComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,6 +75,7 @@ import { UnitBackendCheckComponent } from './unit-backend-check/unit-backend-che
     AppRoutingModule,
     MatFormFieldModule,
     MatDialogModule,
+    MatTreeModule,
     MatStepperModule,
     MatInputModule,
     MatTabsModule,
