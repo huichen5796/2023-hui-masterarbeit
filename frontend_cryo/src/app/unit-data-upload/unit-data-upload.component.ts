@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../app-services';
 
 @Component({
@@ -7,6 +7,9 @@ import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../a
   styleUrls: ['./unit-data-upload.component.css']
 })
 export class UnitDataUploadComponent {
+  @ViewChild('fileInput1') fileInput1!: ElementRef;
+  @ViewChild('fileInput2') fileInput2!: ElementRef;
+  
   uploadedFiles: { file_name: string, result: string, neo4j: string }[] = [];
   @Input() onlyDir!: boolean;
   @Input() allowMultiple!: boolean;
@@ -27,11 +30,21 @@ export class UnitDataUploadComponent {
 
   }
 
+  clearFileInput() {
+    if (this.fileInput1 && this.fileInput1.nativeElement) {
+      this.fileInput1.nativeElement.value = '';
+    }
+    if (this.fileInput2 && this.fileInput2.nativeElement) {
+      this.fileInput2.nativeElement.value = '';
+    }
+  }
+
   ngAfterViewInit() {
     this.connectTestService.cleanDataStoreFile(this.data_type).then((rep) => {
       this.dataStoreStatus = rep
       this.uploadedFiles = []
       this.selectedFiles = {};
+      this.clearFileInput()
     })
   }
 
