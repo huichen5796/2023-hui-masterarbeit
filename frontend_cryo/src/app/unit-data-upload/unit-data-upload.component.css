@@ -60,10 +60,53 @@
     stroke: #1976d2 !important;
 }
 
-.sign-in-main{
+.sign-in-main {
     transform: translateY(14px);
 }
 
 .box {
-    padding:20px;
-  }
+    padding: 20px;
+}
+
+.delete-all {
+    float: right;
+}
+
+.option-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+.successfile {
+    margin-right: 30px;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    color: green;
+}
+
+.errorfile,
+.path-errorfile, .undofile, .existsfile {
+    margin-right: 30px;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    color: red;
+}
+
+.waitingfile {
+    margin-right: 30px;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    color: #1976d2;
+}
+
+pre {
+    font-weight: bold;
+}
+
+h2 {
+    font-weight: normal;
+}
+
+.tab-box {
+    max-height: 200px;
+    overflow-y: scroll;
+}

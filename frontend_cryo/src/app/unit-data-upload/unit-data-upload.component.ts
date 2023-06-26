@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FileTransferService, ConnectTestService } from '../app-services';
+import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../app-services';
 
 @Component({
   selector: 'app-unit-data-upload',
@@ -7,26 +7,31 @@ import { FileTransferService, ConnectTestService } from '../app-services';
   styleUrls: ['./unit-data-upload.component.css']
 })
 export class UnitDataUploadComponent {
-  uploadedFiles: { file_name: string, result: string }[] = [];
+  uploadedFiles: { file_name: string, result: string, neo4j: string }[] = [];
   @Input() onlyDir!: boolean;
   @Input() allowMultiple!: boolean;
   @Input() allowFolder!: boolean;
   @Input() data_type!: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process';
 
-  dataStoreStatus: 'error' | 'success' | 'pending'  = 'pending'
+  dataStoreStatus: 'error' | 'success' | 'pending' = 'pending'
 
-  selectedFiles:any
+  selectedFiles: {[key:string]:string} = {}
+  
+  memoryForCpa: {[key:string]:string} = {}
 
   constructor(
     private fileTransferService: FileTransferService,
-    private connectTestService: ConnectTestService
+    private connectTestService: ConnectTestService,
+    private queryNeo4jService:QueryNeo4jService
   ) {
 
   }
 
   ngAfterViewInit() {
-    this.connectTestService.cleanDataStoreFile(this.data_type).then((rep)=>{
+    this.connectTestService.cleanDataStoreFile(this.data_type).then((rep) => {
       this.dataStoreStatus = rep
+      this.uploadedFiles = []
+      this.selectedFiles = {};
     })
   }
 
@@ -35,17 +40,47 @@ export class UnitDataUploadComponent {
     if (files.length > 0) {
       this.fileTransferService.fileUpload(files, this.data_type).then((res) => {
         this.uploadedFiles = [...this.uploadedFiles, ...(JSON.parse(res.replace(/'/g, '"')))]
-        console.log(this.uploadedFiles)
+        this.uploadedFiles.forEach(file => {
+          this.selectedFiles[file.file_name] = file.neo4j
+        });
       })
     }
   }
 
-  onSelected(event:any){
-    if (event['options'][0]['_selected']){
-      console.log('选项已选择:', event['options'][0]['_value'])
-    }else{
-      console.log('选项已取消选择:', event['options'][0]['_value'])
+  selectedOrNot(file: { file_name: string, result: string, neo4j: string }){
+    if (file.neo4j == 'undo'){
+      return false
     }
-    
+    else{
+      return true
+    }
+  }
+
+  onSelected(event: any) {
+    if (event['options'][0]['_selected']) {
+      this.selectedFiles[event['options'][0]['_value']] = 'waiting'
+    } else {
+      this.selectedFiles[event['options'][0]['_value']] = 'undo'
+    }
+  }
+
+  feedToDB() {
+    for (var file_name in this.selectedFiles) {
+      if (this.selectedFiles[file_name] == 'waiting'){
+        var self = this;
+        (function (fileName: string) {
+          self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {
+            self.selectedFiles[fileName] = res;
+          }).finally(() => {
+            self.selectedFiles = { ...self.selectedFiles };
+          });
+        }).call(this, file_name);
+      }
+    }
+  }
+  deleteAll(){
+    if (confirm(`All about ${this.data_type} that not saved in the database will be lost! Are you sure to continue?`)){
+      this.ngAfterViewInit()
+    }
   }
 }
