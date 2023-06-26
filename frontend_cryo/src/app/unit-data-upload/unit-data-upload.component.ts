@@ -15,6 +15,8 @@ export class UnitDataUploadComponent {
 
   dataStoreStatus: 'error' | 'success' | 'pending'  = 'pending'
 
+  selectedFiles:any
+
   constructor(
     private fileTransferService: FileTransferService,
     private connectTestService: ConnectTestService
@@ -36,5 +38,14 @@ export class UnitDataUploadComponent {
         console.log(this.uploadedFiles)
       })
     }
+  }
+
+  onSelected(event:any){
+    if (event['options'][0]['_selected']){
+      console.log('选项已选择:', event['options'][0]['_value'])
+    }else{
+      console.log('选项已取消选择:', event['options'][0]['_value'])
+    }
+    
   }
 }

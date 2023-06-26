@@ -1,10 +1,13 @@
-<h1>
+<h1 [ngSwitch]="dataStoreStatus">
     <div [title]="'Server Status: ' + dataStoreStatus" [ngClass]="dataStoreStatus" class="sign-in-main">
         <mat-spinner mode="indeterminate" [diameter]="13" class="spinner"
             *ngIf="dataStoreStatus == 'pending'"></mat-spinner>
     </div>
-    Connect: {{ data_type }}
+    <pre *ngSwitchDefault class="basic">Trying to Connect Server {{ data_type }}...</pre>
+    <pre *ngSwitchCase="'success'" class="connected">Server {{ data_type }} status: healthy</pre>
+    <pre *ngSwitchCase="'error'" class="disconnected">Server {{ data_type }} status: abnormal</pre>
 </h1>
+
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
     <mat-tab label="Upload Instance">
         <div class="box">
@@ -18,11 +21,11 @@
                 webkitdirectory>
             <h2>uploaded files:</h2>
             <div *ngIf="uploadedFiles.length > 0">
-                <mat-selection-list>
-                    <mat-list-option *ngFor="let file of uploadedFiles">
+                <mat-selection-list (selectionChange)="onSelected($event)">
+                    <mat-list-option *ngFor="let file of uploadedFiles" [value]="file.file_name">
                         {{ file | json }}
                     </mat-list-option>
-                  </mat-selection-list>
+                </mat-selection-list>
             </div>
             <div *ngIf="uploadedFiles.length == 0">
                 <ul>
@@ -32,7 +35,10 @@
         </div>
     </mat-tab>
 
-    <mat-tab label="Create Instance">Content 2</mat-tab>
+    <mat-tab label="Create Instance">
+        <div class="box">
+           
+        </div>
+    </mat-tab>
 </mat-tab-group>
-
 <mat-divider></mat-divider>
