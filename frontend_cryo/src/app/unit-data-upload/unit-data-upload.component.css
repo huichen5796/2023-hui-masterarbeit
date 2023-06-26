@@ -86,10 +86,16 @@
 }
 
 .errorfile,
-.path-errorfile, .undofile, .existsfile {
+.path-errorfile, .undofile {
     margin-right: 30px;
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     color: red;
+}
+
+.existsfile {
+    margin-right: 30px;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    color: #D2691E;
 }
 
 .waitingfile {
