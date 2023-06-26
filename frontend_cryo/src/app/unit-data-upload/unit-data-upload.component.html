@@ -1,13 +1,38 @@
-<label class="label-up" [attr.for]='"xFile"+data_type' *ngIf="!onlyDir">Upload Files</label>
-<label class="label-up" [attr.for]='"xFolder"+data_type'>Upload Folder</label>
+<h1>
+    <div [title]="'Server Status: ' + dataStoreStatus" [ngClass]="dataStoreStatus" class="sign-in-main">
+        <mat-spinner mode="indeterminate" [diameter]="13" class="spinner"
+            *ngIf="dataStoreStatus == 'pending'"></mat-spinner>
+    </div>
+    Connect: {{ data_type }}
+</h1>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <mat-tab label="Upload Instance">
+        <div class="box">
+            <label class="label-up" [attr.for]='"xFile"+data_type' *ngIf="!onlyDir">Upload File<span
+                    *ngIf="allowMultiple">s</span></label>
+            <label class="label-up" [attr.for]='"xFolder"+data_type'>Upload Folder</label>
 
-<input type="file" [id]='"xFile"+data_type' class="hidden-upload" (change)="onFileSelected($event)"
-    [multiple]="allowMultiple">
-<input type="file" [id]='"xFolder"+data_type' class="hidden-upload" (change)="onFileSelected($event)" webkitdirectory>
+            <input type="file" [id]='"xFile"+data_type' class="hidden-upload" (change)="onFileSelected($event)"
+                [multiple]="allowMultiple">
+            <input type="file" [id]='"xFolder"+data_type' class="hidden-upload" (change)="onFileSelected($event)"
+                webkitdirectory>
+            <h2>uploaded files:</h2>
+            <div *ngIf="uploadedFiles.length > 0">
+                <mat-selection-list>
+                    <mat-list-option *ngFor="let file of uploadedFiles">
+                        {{ file | json }}
+                    </mat-list-option>
+                  </mat-selection-list>
+            </div>
+            <div *ngIf="uploadedFiles.length == 0">
+                <ul>
+                    --none--
+                </ul>
+            </div>
+        </div>
+    </mat-tab>
 
-<div *ngIf="uploadedFiles.length > 0">
-    <h2>uploaded files:</h2>
-    <ul>
-        <li *ngFor="let file of uploadedFiles">{{ file | json }}</li>
-    </ul>
-</div>
+    <mat-tab label="Create Instance">Content 2</mat-tab>
+</mat-tab-group>
+
+<mat-divider></mat-divider>

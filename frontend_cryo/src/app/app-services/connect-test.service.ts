@@ -40,4 +40,38 @@ export class ConnectTestService {
     })
     return promise
   }
+
+  cleanDataStore(): Promise<any> {
+    var promise = new Promise<any>((resolve, reject) => {
+      this.http.get(`${backendUrl}/deleteDataStore/${dataStoreName}`)
+        .subscribe((rep: any) => {
+          if (rep=='success'){
+            this.testDataStore().then((rep)=>{
+              resolve(rep)
+            })
+          }
+          else{
+            resolve('error')
+          }
+        })
+    })
+    return promise
+  }
+
+  cleanDataStoreFile(data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process'): Promise<any> {
+    var promise = new Promise<any>((resolve, reject) => {
+      this.http.get(`${backendUrl}/deleteOneType/?store_name=${dataStoreName}&data_type=${data_type}`)
+        .subscribe((rep: any) => {
+          if (rep=='success'){
+            this.testDataStoreFile(data_type).then((rep)=>{
+              resolve(rep)
+            })
+          }
+          else{
+            resolve('error')
+          }
+        })
+    })
+    return promise
+  }
 }

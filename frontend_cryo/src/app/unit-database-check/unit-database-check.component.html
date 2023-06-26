@@ -2,7 +2,7 @@
     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
                 <div [ngSwitch]="connectionStatus" class="status-bar">
-                    <div [ngClass]="connectionStatus" class="sign-in-main"><mat-spinner mode="indeterminate" [diameter]="13" class="spinner"
+                    <div title="Server Status" [ngClass]="connectionStatus" class="sign-in-main"><mat-spinner mode="indeterminate" [diameter]="13" class="spinner"
                             *ngIf="connectionStatus == 'pending'"></mat-spinner></div>
                     <pre *ngSwitchDefault class="basic">Checking Database...</pre>
                     <pre *ngSwitchCase="'success'" class="connected">Database status: healthy</pre>
@@ -15,7 +15,7 @@
                 <pre>Connection Check:</pre>
             </div>
             <div [ngSwitch]="checkItems['cryoConnection']">
-                <div [ngClass]="checkItems['cryoConnection']"><mat-spinner mode="indeterminate" [diameter]="13"
+                <div title="Server Status" [ngClass]="checkItems['cryoConnection']"><mat-spinner mode="indeterminate" [diameter]="13"
                         class="spinner" *ngIf="connectionStatus == 'pending'"></mat-spinner></div>
                 <pre *ngSwitchDefault>Trying: Connect to Database 'cryo'...</pre>
                 <pre *ngSwitchCase="'success'">Success: Connected to Database 'cryo'.</pre>
@@ -26,7 +26,7 @@
             </div>
 
             <div [ngSwitch]="checkItems['cpaConnection']">
-                <div [ngClass]="checkItems['cpaConnection']"><mat-spinner mode="indeterminate" [diameter]="13"
+                <div title="Server Status" [ngClass]="checkItems['cpaConnection']"><mat-spinner mode="indeterminate" [diameter]="13"
                         class="spinner" *ngIf="connectionStatus == 'pending'"></mat-spinner></div>
                 <pre *ngSwitchDefault>Trying: Connect to Database 'cpa'...</pre>
                 <pre *ngSwitchCase="'success'">Success: Connected to Database 'cpa'.</pre>

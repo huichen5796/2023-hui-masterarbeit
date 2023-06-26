@@ -5,7 +5,7 @@
 
 .label-up {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 5px 0px;
     background-color: #1976d2;
     color: #fff;
     border: none;
@@ -14,13 +14,56 @@
     text-align: center;
     text-decoration: none;
     font-size: 16px;
+    width: 120px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+
 }
 
 .label-up:hover {
     background-color: #0056b3;
 }
 
-.label-up:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+.pending {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    float: left;
+    margin-right: 10px;
 }
+
+.success,
+.exists {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4caf50;
+    float: left;
+    margin-right: 10px;
+}
+
+.error {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #f44336;
+    float: left;
+    margin-right: 10px;
+}
+
+.spinner {
+    transform: translateY(-2px) translateX(-2px);
+}
+
+.spinner::ng-deep circle {
+    stroke: #1976d2 !important;
+}
+
+.sign-in-main{
+    transform: translateY(11px);
+}
+
+.box {
+    padding:20px;
+  }

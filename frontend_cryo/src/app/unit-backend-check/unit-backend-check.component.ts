@@ -27,7 +27,7 @@ export class UnitBackendCheckComponent {
       this.checkItems['backendConnection'] = rep
       this.updateStatus()
     })
-    this.connectTestService.testDataStore().then((rep) => {
+    this.connectTestService.cleanDataStore().then((rep) => {
       this.checkItems['dataStoreExistence'] = rep
       this.updateStatus()
     })
