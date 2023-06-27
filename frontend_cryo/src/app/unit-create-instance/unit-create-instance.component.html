@@ -1,0 +1,37 @@
+<label class="label-create" (click)="newFile()">create new file</label>
+<input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
+<mat-error *ngIf="error['fileName'] == 'type1'">'/' and '\' shall not be used in file name</mat-error>
+<mat-error *ngIf="error['fileName'] == 'type2'">file name is required</mat-error>
+<mat-error *ngIf="error['fileName'] == 'type2'">file name is used</mat-error>
+
+<ul class="max-box">
+    <li *ngFor="let key of getObjectKeys(newFileData)">
+        <label>{{ key }}:</label>
+        <input matInput type="search" [(ngModel)]="newFileData[key]">
+    </li>
+</ul>
+
+
+<p>Current Value: {{ newFileData | json }}</p>
+<h2>created files:
+    <button mat-button color="primary" (click)="feedToDB()"><u>click here to feed all into database</u></button>
+    <button mat-button color="warn" class="delete-all" (click)="deleteAll()">
+        <u>delete all</u></button>
+</h2>
+<div *ngIf="createdFiles.length > 0" class="tab-box">
+    <mat-selection-list (selectionChange)="onSelected($event)">
+        <mat-list-option *ngFor="let file of createdFiles" [value]="file.file_name" [selected]="selectedOrNot(file)"
+            [disabled]="!selectedOrNot(file)">
+            <div>{{ file.file_name }}</div>
+            <div class="option-box">
+                <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}</div>
+                <div [ngClass]="selectedFiles[file.file_name] + 'file'">save: {{ selectedFiles[file.file_name] }}</div>
+            </div>
+        </mat-list-option>
+    </mat-selection-list>
+</div>
+<div *ngIf="createdFiles.length == 0">
+    <ul>
+        --none--
+    </ul>
+</div>

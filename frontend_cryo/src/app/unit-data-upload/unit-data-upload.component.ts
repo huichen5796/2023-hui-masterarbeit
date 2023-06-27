@@ -1,12 +1,13 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../app-services';
+import { CpaStructur, OtherStructur, defaultCpaData, defaultExp, defaultPrePostData, defaultProcess } from '../app-config';
 
 @Component({
   selector: 'app-unit-data-upload',
   templateUrl: './unit-data-upload.component.html',
   styleUrls: ['./unit-data-upload.component.css']
 })
-export class UnitDataUploadComponent {
+export class UnitDataUploadComponent implements OnInit, AfterViewInit {
   @ViewChild('fileInput1') fileInput1!: ElementRef;
   @ViewChild('fileInput2') fileInput2!: ElementRef;
   
@@ -19,8 +20,8 @@ export class UnitDataUploadComponent {
   dataStoreStatus: 'error' | 'success' | 'pending' = 'pending'
 
   selectedFiles: {[key:string]:string} = {}
-  
-  memoryForCpa: {[key:string]:string} = {}
+
+  defaultData!: CpaStructur | OtherStructur
 
   constructor(
     private fileTransferService: FileTransferService,
@@ -36,6 +37,20 @@ export class UnitDataUploadComponent {
     }
     if (this.fileInput2 && this.fileInput2.nativeElement) {
       this.fileInput2.nativeElement.value = '';
+    }
+  }
+
+  ngOnInit(){
+    if (this.data_type == 'cpa'){
+      this.defaultData = defaultCpaData
+    } else if (this.data_type == 'exp'){
+      this.defaultData = defaultExp
+    } else if (this.data_type == 'pre_data'){
+      this.defaultData = defaultPrePostData
+    } else if (this.data_type == 'post_data'){
+      this.defaultData = defaultPrePostData
+    } else if (this.data_type == 'process'){
+      this.defaultData = defaultProcess
     }
   }
 
