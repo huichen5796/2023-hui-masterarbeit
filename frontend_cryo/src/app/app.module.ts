@@ -52,6 +52,7 @@ import { UnitBackendCheckComponent } from './unit-backend-check/unit-backend-che
 import { UnitDatabaseCheckComponent } from './unit-database-check/unit-database-check.component';
 import { UnitDataUploadComponent } from './unit-data-upload/unit-data-upload.component';
 import { UnitHighchartsGraphComponent } from './unit-highcharts-graph/unit-highcharts-graph.component';
+import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-instance.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { UnitHighchartsGraphComponent } from './unit-highcharts-graph/unit-highc
     UnitDatabaseCheckComponent,
     UnitDataUploadComponent,
     UnitHighchartsGraphComponent,
+    UnitCreateInstanceComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,6 @@
-.hidden-upload {
-    position: absolute;
-    clip: rect(0 0 0 0);
-}
-
-.label-up {
+.label-create {
     display: inline-block;
-    padding: 5px 0px;
+    padding: 5px 10px;
     background-color: #1976d2;
     color: #fff;
     border: none;
@@ -14,58 +9,17 @@
     text-align: center;
     text-decoration: none;
     font-size: 16px;
-    width: 120px;
     margin-bottom: 10px;
     margin-right: 10px;
 
 }
 
-.label-up:hover {
-    background-color: #0056b3;
+pre {
+    font-weight: bold;
 }
 
-.pending {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    float: left;
-    margin-right: 10px;
-}
-
-.success,
-.exists {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #4caf50;
-    float: left;
-    margin-right: 10px;
-}
-
-.error {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #f44336;
-    float: left;
-    margin-right: 10px;
-}
-
-.spinner {
-    transform: translateY(-2px) translateX(-2px);
-}
-
-.spinner::ng-deep circle {
-    stroke: #1976d2 !important;
-}
-
-.sign-in-main {
-    transform: translateY(14px);
-}
-
-.box {
-    padding: 20px;
+h2 {
+    font-weight: normal;
 }
 
 .delete-all {
@@ -104,15 +58,15 @@
     color: #1976d2;
 }
 
-pre {
-    font-weight: bold;
-}
-
-h2 {
-    font-weight: normal;
-}
-
 .tab-box {
     max-height: 200px;
     overflow-y: scroll;
+}
+
+mat-error {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+}
+
+.file-box{
+    max-height: 400px;
 }

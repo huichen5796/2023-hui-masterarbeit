@@ -31,4 +31,18 @@ export class FileTransferService {
     })
     return promise
   }
+
+  fileCreate(file_name:string, data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process', data: {}):Promise<any> {
+    var promise = new Promise<any>((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('files', new Blob([JSON.stringify(data)], { type: 'application/json' }), file_name);
+      
+      this.http.post(`${backendUrl}/fileCreate/?data_type=${data_type}`, formData)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+
+    })
+    return promise
+  }
 }
