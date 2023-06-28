@@ -22,12 +22,25 @@
         <span>Get Started</span>
     </a>
 
+    <!-- Functions -->
+    <h2>Functions</h2>
+    <p>What could you do next with this?</p>
+
+    <div class="card-container">
+        <a href="{{ card['href'] }}" *ngFor="let card of functionCards" class="card">
+            <mat-icon>{{ card['icon'] }}</mat-icon>
+            <span>{{ card['span'] }}</span>
+        </a>
+
+    </div>
+
     <!-- Resources -->
     <h2>Resources</h2>
     <p>Here are some links to help you get started:</p>
 
     <div class="card-container">
-        <a class="card" target="_blank" rel="noopener" *ngFor="let card of resourcesCards" href="{{ card['href'] }}">
+        <a class="card card-small" target="_blank" rel="noopener" *ngFor="let card of resourcesCards"
+            href="{{ card['href'] }}">
             <mat-icon>{{ card['icon'] }}</mat-icon>
             <span>{{ card['span'] }}</span>
             <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -35,18 +48,9 @@
             </svg> </a>
     </div>
 
-    <!-- Functions -->
-    <h2>Functions</h2>
-    <p>What could you do next with this?</p>
-
-    <div class="card-container">
-        <button class="card card-small" *ngFor="let card of functionCards"
-            tabindex="0">
-            <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-            </svg>
-            <span>{{ card['span'] }}</span>
-        </button>
+    <div style="width: 70%; min-width: 400px;">
+        <app-unit-backend-check></app-unit-backend-check>
+        <app-unit-database-check></app-unit-database-check>
     </div>
 
     <!-- Links -->

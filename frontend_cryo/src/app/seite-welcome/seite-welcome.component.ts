@@ -8,17 +8,17 @@ import { Component } from '@angular/core';
 export class SeiteWelcomeComponent {
   resourcesCards: { href: string, icon: string, span: string }[] = [
     { href: '/about-us', icon: 'perm_identity', span: 'About Us' },
-    { href: '/about-this', icon: 'insert_chart_outlined', span: 'About This' },
+    { href: '/about-this', icon: 'help_outline', span: 'About This' },
     { href: '/technology', icon: 'developer_board', span: 'Technology' },
     { href: '/database', icon: 'cloud_queue', span: 'Database' },
     { href: '/nn', icon: 'blur_on', span: 'Neural Networks' }
   ]
 
-  functionCards: { value: string, span: string }[] = [
-    { value: 'ds', span: 'Data storage' },
-    { value: 'da', span: 'Data analyse' },
-    { value: 'srp', span: 'Survivalrate predict' },
-    { value: 'po', span: 'Parameter optimize' },
-    { value: 'fb', span: 'Feedback' }
+  functionCards: { icon: string, span: string, href: string }[] = [
+    { icon: 'storage', span: 'Data storage', href:'/data-storage' },
+    { icon: 'insert_chart_outlined', span: 'Data analyse', href:'/data-analyse' },
+    { icon: 'bubble_chart', span: 'Survivalrate predict', href:'/data-storage' },
+    { icon: 'trending_up', span: 'Parameter optimize', href:'/data-storage' },
+    { icon: 'favorite_border', span: 'Feedback', href:'/data-storage' }
   ]
 }

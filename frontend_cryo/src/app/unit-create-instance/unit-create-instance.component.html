@@ -1,11 +1,26 @@
-<label class="label-edit">Edit File:</label>
-<label class="label-create" (click)="reloadConfigFile()">Reload Template</label>
+<div class="title-box">
+    <label class="label-edit">Edit File:</label>
+    <mat-chip-listbox *ngIf="data_type == 'cpa'" class="type-box" (change)="onSelecteChips($event)" [value]="currentType">
+        <mat-chip-option [value]="'DSC'">DSC</mat-chip-option>
+        <mat-chip-option [value]="'FTIR'">FTIR</mat-chip-option>
+        <mat-chip-option [value]="'Kryomikroskopie'">Kryomikroskopie</mat-chip-option>
+        <mat-chip-option [value]="'Osmolalit&auml;t'">Osmolalit&auml;t</mat-chip-option>
+        <mat-chip-option [value]="'Viskosit&auml;t'">Viskosit&auml;t</mat-chip-option>
+    </mat-chip-listbox>
+    <label class="label-create" (click)="reloadConfigFile()">Reload Template</label>
+</div>
 <div class="file-box">
     <label>File name:</label>
-    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
-    <mat-error *ngIf="error['fileName'] == 'type1'">'/' and '\' shall not be used in file name</mat-error>
-    <mat-error *ngIf="error['fileName'] == 'type2'">file name is required</mat-error>
-    <mat-error *ngIf="error['fileName'] == 'type3'">file name is used</mat-error>
+    <input *ngIf="data_type == 'cpa'" type="search" [(ngModel)]="currentCpaIndex" placeholder="Ex. CPA1"
+        (blur)="checkCpaIndex()">
+    <label *ngIf="data_type == 'cpa'" style="margin-right: 0px;">/{{ currentType }}/</label>
+    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">.txt
+    <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">'/', '\' and '.' shall not be
+        used.</mat-error>
+    <mat-error *ngIf="error['cpaIndex'] == 'type2'">cpa index is required.</mat-error>
+    <mat-error *ngIf="error['cpaIndex'] == 'type3'">cpa index is used.</mat-error>
+    <mat-error *ngIf="error['fileName'] == 'type2'">file name is required.</mat-error>
+    <mat-error *ngIf="error['fileName'] == 'type3'">file name is used.</mat-error>
 
     <ul>
         <li *ngFor="let key of getObjectKeys(newFileData)">

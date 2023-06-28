@@ -53,6 +53,8 @@ import { UnitDatabaseCheckComponent } from './unit-database-check/unit-database-
 import { UnitDataUploadComponent } from './unit-data-upload/unit-data-upload.component';
 import { UnitHighchartsGraphComponent } from './unit-highcharts-graph/unit-highcharts-graph.component';
 import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-instance.component';
+import { SeiteDataStorageComponent } from './seite-data-storage/seite-data-storage.component';
+import { SeiteDataAnalyseComponent } from './seite-data-analyse/seite-data-analyse.component';
 
 
 @NgModule({
@@ -70,6 +72,8 @@ import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-
     UnitDataUploadComponent,
     UnitHighchartsGraphComponent,
     UnitCreateInstanceComponent,
+    SeiteDataStorageComponent,
+    SeiteDataAnalyseComponent,
   ],
   imports: [
     BrowserModule,

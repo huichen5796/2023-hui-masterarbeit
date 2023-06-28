@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { backendUrl } from '../app-config';
+import { backendUrl, dataStoreName } from '../app-config';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class FileTransferService {
         }
 
       }
-      this.http.post(`${backendUrl}/fileUpload/?data_type=${data_type}`, formData)
+      this.http.post(`${backendUrl}/fileUpload/?data_type=${data_type}&data_store=${dataStoreName}`, formData)
         .subscribe((rep: any) => {
           resolve(rep)
         })
@@ -37,7 +37,7 @@ export class FileTransferService {
       const formData = new FormData();
       formData.append('files', new Blob([JSON.stringify(data)], { type: 'application/json' }), file_name);
       
-      this.http.post(`${backendUrl}/fileCreate/?data_type=${data_type}`, formData)
+      this.http.post(`${backendUrl}/fileCreate/?data_type=${data_type}&data_store=${dataStoreName}`, formData)
         .subscribe((rep: any) => {
           resolve(rep)
         })

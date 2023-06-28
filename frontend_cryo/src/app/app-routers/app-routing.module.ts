@@ -7,6 +7,8 @@ import { SeiteTechnologyComponent } from '../seite-technology/seite-technology.c
 import { SeiteDatabaseComponent } from '../seite-database/seite-database.component';
 import { SeiteNnComponent } from '../seite-nn/seite-nn.component';
 import { SeiteStartComponent } from '../seite-start/seite-start.component';
+import { SeiteDataStorageComponent } from '../seite-data-storage/seite-data-storage.component';
+import { SeiteDataAnalyseComponent } from '../seite-data-analyse/seite-data-analyse.component';
 
 
 const routes: Routes = [
@@ -17,7 +19,8 @@ const routes: Routes = [
   { path: 'database', component: SeiteDatabaseComponent },
   { path: 'nn', component: SeiteNnComponent },
   { path: 'start', component: SeiteStartComponent },
-
+  { path: 'data-storage', component: SeiteDataStorageComponent },
+  { path: 'data-analyse', component: SeiteDataAnalyseComponent },
 ];
 
 @NgModule({
