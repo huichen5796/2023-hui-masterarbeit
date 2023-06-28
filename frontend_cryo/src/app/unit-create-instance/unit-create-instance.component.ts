@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CpaStructur, OtherStructur } from '../app-config';
-import { FileTransferService } from '../app-services';
+import { FileTransferService, QueryNeo4jService } from '../app-services';
 
 @Component({
   selector: 'app-unit-create-instance',
@@ -8,7 +8,6 @@ import { FileTransferService } from '../app-services';
   styleUrls: ['./unit-create-instance.component.css']
 })
 export class UnitCreateInstanceComponent implements OnInit {
-  create: boolean = false
   currentFileName: string = ''
   error: { [key: string]: string } = { fileName: '' }
 
@@ -18,19 +17,30 @@ export class UnitCreateInstanceComponent implements OnInit {
   newFileData!: CpaStructur | OtherStructur
 
   createdFiles: { file_name: string, result: string, neo4j: string }[] = [];
-  dataStoreStatus: 'error' | 'success' | 'pending' = 'pending'
 
   selectedFiles: { [key: string]: string } = {}
 
-  memory: { [fileName: string]: CpaStructur | OtherStructur } = {}
+  memory: { [fileName: string]: [CpaStructur | OtherStructur, string[]] } = {}
+
+  deletedItems: string[] = []
+
+  currrentKey: string = ''
 
   constructor(
     private fileTransferService: FileTransferService,
+    private queryNeo4jService:QueryNeo4jService
   ) {
 
   }
 
   ngOnInit(): void {
+    this.error = { fileName: '' }
+    this.createdFiles = []
+    this.selectedFiles = {}
+    this.memory = {}
+    this.deletedItems = []
+    this.currentFileName = ''
+    this.currrentKey = ''
     this.newFileData = { ...this.defaultData }
   }
 
@@ -52,11 +62,35 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   deleteAll() {
-
+    if (confirm(`All about ${this.data_type} that not saved in the database will be lost! Are you sure to continue?`)){
+      this.ngOnInit()
+    }
   }
 
   feedToDB() {
+    for (var file_name in this.selectedFiles) {
+      if (this.selectedFiles[file_name] == 'waiting'){
+        var self = this;
+        (function (fileName: string) {
+          self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {
+            self.selectedFiles[fileName] = res;
+          }).finally(() => {
+            self.selectedFiles = { ...self.selectedFiles };
+          });
+        }).call(this, file_name);
+      }
+    }
+  }
 
+  addNewItem() {
+    this.currrentKey = ''
+    this.newFileData[this.currrentKey] = ''
+    //this.newFileData = {...this.newFileData}
+  }
+
+  updateKey() {
+    delete this.newFileData['']
+    this.newFileData[this.currrentKey] = ''
   }
 
   checkFileName() {
@@ -72,14 +106,25 @@ export class UnitCreateInstanceComponent implements OnInit {
   newFile() {
     if (this.currentFileName != '') {
       if (this.error['fileName'] == 'none') {
-        this.currentFileName = this.currentFileName + '.txt'
-        this.memory[this.currentFileName] = this.newFileData
+        delete this.newFileData['']
+        if (this.data_type != 'cpa') {
+          this.currentFileName = this.currentFileName + '.txt'
+        } else {
+
+        }
+
+        this.memory[this.currentFileName] = [{...this.newFileData}, this.deletedItems]
+
+        for (let deletedItem of this.deletedItems) {
+          delete this.newFileData[deletedItem]
+        }
+
+        this.deletedItems = []
         this.fileTransferService.fileCreate(this.currentFileName, this.data_type, this.newFileData).then((res) => {
           this.createdFiles.push(...(JSON.parse(res.replace(/'/g, '"'))))
           this.selectedFiles[this.currentFileName] = this.createdFiles[this.createdFiles.length - 1]['neo4j']
           this.currentFileName = ''
           this.newFileData = { ...this.defaultData }
-          console.log(this.memory)
         })
 
       }
@@ -90,5 +135,41 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   getObjectKeys(obj: any): string[] {
     return Object.keys(obj);
+  }
+
+  deleteItem(itemKey: string) {
+    if (itemKey == '') {
+      delete this.newFileData['']
+    } else {
+      if (this.deletedItems.indexOf(itemKey) == -1) {
+        this.deletedItems.push(itemKey)
+        this.deletedItems = [...this.deletedItems]
+      }
+    }
+  }
+
+  undoItem(itemKey: string) {
+    if (itemKey == '') {
+      this.addNewItem()
+    } else {
+      if (this.deletedItems.indexOf(itemKey) != -1) {
+        this.deletedItems = this.deletedItems.filter(item => item !== itemKey);
+      }
+    }
+
+  }
+
+  reloadConfigFile() {
+    this.newFileData = { ...this.defaultData }
+    this.currentFileName = ''
+  }
+
+  editCreatedFiles(fileName:string){
+    this.newFileData = this.memory[fileName][0]
+    this.currentFileName = fileName.split('.')[0]
+    this.deletedItems = this.memory[fileName][1]
+    delete this.memory[fileName]
+    delete this.selectedFiles[fileName]
+    this.createdFiles = this.createdFiles.filter(item => item.file_name != fileName)
   }
 }
