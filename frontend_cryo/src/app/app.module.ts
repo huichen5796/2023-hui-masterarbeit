@@ -55,6 +55,7 @@ import { UnitHighchartsGraphComponent } from './unit-highcharts-graph/unit-highc
 import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-instance.component';
 import { SeiteDataStorageComponent } from './seite-data-storage/seite-data-storage.component';
 import { SeiteDataAnalyseComponent } from './seite-data-analyse/seite-data-analyse.component';
+import { UnitTopGuideComponent } from './unit-top-guide/unit-top-guide.component';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { SeiteDataAnalyseComponent } from './seite-data-analyse/seite-data-analy
     UnitCreateInstanceComponent,
     SeiteDataStorageComponent,
     SeiteDataAnalyseComponent,
+    UnitTopGuideComponent,
   ],
   imports: [
     BrowserModule,

@@ -12,7 +12,7 @@
 <div class="file-box">
     <label>File name:</label>
     <input *ngIf="data_type == 'cpa'" type="search" [(ngModel)]="currentCpaIndex" placeholder="Ex. CPA1"
-        (blur)="checkCpaIndex()">
+        (blur)="checkCpaIndex()" style="width: 80px;">
     <label *ngIf="data_type == 'cpa'" style="margin-right: 0px;">/{{ currentType }}/</label>
     <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">.txt
     <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">'/', '\' and '.' shall not be
@@ -28,7 +28,14 @@
             <label>· {{ key }}</label>
             <input matInput type="search" *ngIf="key == ''" [(ngModel)]="currrentKey" (blur)="updateKey()">
             <label>:</label>
-            <input matInput type="search" [(ngModel)]="newFileData[key]">
+            <input matInput type="search" *ngIf="isString(newFileData[key])" [(ngModel)]="newFileData[key]">
+            <div *ngIf="!isString(newFileData[key])" class="sub-box">
+                <div *ngFor="let item of getObjectKeys(newFileData[key])" class="sub-box-sub">
+                    <label>- {{ item }}</label>
+                    <label>:</label>
+                    <input matInput type="search" [(ngModel)]="newFileData[key][item]">
+                </div>
+            </div>
             <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
             <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
         </li>
