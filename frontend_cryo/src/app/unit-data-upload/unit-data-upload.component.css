@@ -115,4 +115,5 @@ h2 {
 .tab-box {
     max-height: 200px;
     overflow-y: scroll;
+    width: 100%;
 }
