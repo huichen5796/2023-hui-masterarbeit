@@ -47,10 +47,10 @@ export class UnitCreateInstanceComponent implements OnInit {
     this.currrentKey = ''
     this.currentCpaIndex = ''
     this.currentType = 'DSC'
-    if (this.data_type == 'cpa'){
+    if (this.data_type == 'cpa') {
       this.newFileData = { ...this.defaultData }[this.currentType]
-      this.newFileData = {...this.newFileData}
-    }else{
+      this.newFileData = { ...this.newFileData }
+    } else {
       this.newFileData = { ...this.defaultData }
     }
   }
@@ -152,10 +152,10 @@ export class UnitCreateInstanceComponent implements OnInit {
           this.currentFileName = ''
           this.currentCpaIndex = ''
           this.currentType = 'DSC'
-          if (this.data_type == 'cpa'){
+          if (this.data_type == 'cpa') {
             this.newFileData = { ...this.defaultData }[this.currentType]
-            this.newFileData = {...this.newFileData}
-          }else{
+            this.newFileData = { ...this.newFileData }
+          } else {
             this.newFileData = { ...this.defaultData }
           }
         })
@@ -197,10 +197,10 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   reloadConfigFile() {
-    if (this.data_type == 'cpa'){
+    if (this.data_type == 'cpa') {
       this.newFileData = { ...this.defaultData }[this.currentType]
-      this.newFileData = {...this.newFileData}
-    }else{
+      this.newFileData = { ...this.newFileData }
+    } else {
       this.newFileData = { ...this.defaultData }
     }
     this.currentFileName = ''
@@ -211,14 +211,14 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   editCreatedFiles(fileName: string) {
     this.newFileData = this.memory[fileName][0]
-    if (this.data_type == 'cpa'){
+    if (this.data_type == 'cpa') {
       this.currentCpaIndex = fileName.split('/')[0]
       this.currentType = fileName.split('/')[1]
       this.currentFileName = fileName.split('/')[2].split('.')[0]
-    }else{
+    } else {
       this.currentFileName = fileName.split('.')[0]
     }
-    
+
     this.deletedItems = this.memory[fileName][1]
     delete this.memory[fileName]
     delete this.selectedFiles[fileName]
@@ -227,9 +227,16 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   onSelecteChips(event: any) {
     this.currentType = event['value']
-    if (!this.currentType){
+    if (!this.currentType) {
       this.currentType = 'DSC'
     }
-    console.log(event)
+    this.reloadConfigFile()
+  }
+
+  isString(value: any): boolean {
+    return typeof value === 'string';
+  }
+  toString(value: {[key: string]: []} | string) {
+    return JSON.stringify(value)
   }
 }

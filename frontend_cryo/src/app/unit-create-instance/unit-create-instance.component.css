@@ -124,16 +124,34 @@ li {
     flex-wrap: nowrap;
     justify-content: space-between;
     transform: translateX(-20px);
-    min-width: 500px;
+    min-width: 550px;
+}
+
+.sub-box {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
 }
 
 li label,
 li input,
-li u {
+li u,
+.sub-box {
     flex: 0 0 auto;
 }
 
-li input {
+li input,
+.sub-box {
+    flex-grow: 1;
+}
+
+.sub-box-sub {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.sub-box-sub input {
+    flex: 0 0 auto;
     flex-grow: 1;
 }
 
