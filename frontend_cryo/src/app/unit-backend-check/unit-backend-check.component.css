@@ -93,11 +93,15 @@
     stroke: #1976d2 !important;
 }
 
-.box{
+.box {
     width: 80%;
     max-width: 600px;
 }
 
-.sign-in-main{
+.sign-in-main {
     transform: translateY(14px);
+}
+
+.data-store-name {
+    color: yellow;
 }

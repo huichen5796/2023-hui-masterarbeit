@@ -16,7 +16,7 @@
             </div>
             <div [ngSwitch]="checkItems['cryoConnection']">
                 <div title="Server Status" [ngClass]="checkItems['cryoConnection']"><mat-spinner mode="indeterminate" [diameter]="13"
-                        class="spinner" *ngIf="connectionStatus == 'pending'"></mat-spinner></div>
+                        class="spinner" *ngIf="checkItems['cryoConnection'] == 'pending'"></mat-spinner></div>
                 <pre *ngSwitchDefault>Trying: Connect to Database 'cryo'...</pre>
                 <pre *ngSwitchCase="'success'">Success: Connected to Database 'cryo'.</pre>
                 <pre *ngSwitchCase="'error'">Error: Loss Connection to Database 'cryo'.</pre>
@@ -27,7 +27,7 @@
 
             <div [ngSwitch]="checkItems['cpaConnection']">
                 <div title="Server Status" [ngClass]="checkItems['cpaConnection']"><mat-spinner mode="indeterminate" [diameter]="13"
-                        class="spinner" *ngIf="connectionStatus == 'pending'"></mat-spinner></div>
+                        class="spinner" *ngIf="checkItems['cpaConnection'] == 'pending'"></mat-spinner></div>
                 <pre *ngSwitchDefault>Trying: Connect to Database 'cpa'...</pre>
                 <pre *ngSwitchCase="'success'">Success: Connected to Database 'cpa'.</pre>
                 <pre *ngSwitchCase="'error'">Error: Loss Connection to Database 'cpa'.</pre>

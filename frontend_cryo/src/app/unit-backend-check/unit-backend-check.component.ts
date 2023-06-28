@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ConnectTestService } from '../app-services';
+import { dataStoreName } from '../app-config';
 
 @Component({
   selector: 'app-unit-backend-check',
@@ -19,9 +20,10 @@ export class UnitBackendCheckComponent {
     }
   connectionStatus: string = 'pending'
   panelOpenState = false
+  dataStoreName = dataStoreName
 
   constructor(
-    private connectTestService: ConnectTestService
+    private connectTestService: ConnectTestService,
   ) {
     this.connectTestService.testBackend().then((rep) => {
       this.checkItems['backendConnection'] = rep

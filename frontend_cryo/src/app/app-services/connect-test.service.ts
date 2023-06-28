@@ -26,6 +26,7 @@ export class ConnectTestService {
       this.http.get(`${backendUrl}/buildDataStore/${dataStoreName}`)
         .subscribe((rep: any) => {
           resolve(rep)
+          console.log(rep)
         })
     })
     return promise

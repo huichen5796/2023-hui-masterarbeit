@@ -5,6 +5,7 @@ label {
 .label-create {
     display: inline-block;
     padding: 5px 10px;
+    padding-bottom: 7px;
     background-color: #1976d2;
     color: #fff;
     border: none;
@@ -99,7 +100,7 @@ mat-error {
 
 .add-new {
     cursor: pointer;
-    color: #1976d2;
+    color: rgb(0, 162, 255);
 }
 
 .add-delete {
@@ -144,8 +145,18 @@ li input {
     background-color: rgb(15, 15, 16);
 }
 
-.edit{
+.edit {
     margin-left: 20px;
-    color:chocolate;
-    cursor:url('../../assets/create_black_24dp.svg'), crosshair;
+    color: chocolate;
+    cursor: url('../../assets/create_black_24dp.svg'), crosshair;
+}
+
+.title-box {
+    display: flex;
+    align-items: baseline;
+}
+
+.type-box {
+    transform: translateY(8px);
+    margin-right: 10px;
 }
