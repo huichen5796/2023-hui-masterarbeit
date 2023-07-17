@@ -1,4 +1,26 @@
 <div class="content" role="main">
-    <app-unit-top-guide [back]="'data storage'" [backUrl]="'/data-storage'" [forward]="'survivalrate predict'" [forwardUrl]="'/survivalrate-predict'"></app-unit-top-guide>
-    <p>seite-data-analyse works!</p>
+    <app-unit-top-guide [back]="'data storage'" [backUrl]="'/data-storage'" [forward]="'survivalrate predict'"
+        [forwardUrl]="'/survivalrate-predict'"></app-unit-top-guide>
+    <div class="check-box">
+        <app-unit-database-check></app-unit-database-check>
+    </div>
+    <div style="height: 20px;"></div>
+    <mat-divider></mat-divider>
+    <div class="main">
+        <div class="left">
+            <div *ngFor="let key of getObjectKeys(listItems)">
+                <h2>- {{ key }} -</h2>
+                <mat-list cdkListbox [cdkListboxValue]="appointment" (cdkListboxValueChange)="appointment = $event.value">
+                    <mat-list-item *ngFor="let value of listItems[key]" [cdkOption]="value" class="action" [class.selected]="isSelected(value)">
+                        <span *ngIf="value == appointment[0]" class="focus">{{ value | uppercase }}</span>
+                        <span *ngIf="value != appointment[0]">{{ value }}</span>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </div>
+        <div class="right">
+             <h2>- {{ appointment }} -</h2>
+        </div>
+       
+    </div>
 </div>

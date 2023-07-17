@@ -36,6 +36,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTreeModule } from '@angular/material/tree';
+import { CdkListboxModule } from '@angular/cdk/listbox';
 
 // Components //
 import { AppRoutingModule } from './app-routers/app-routing.module';
@@ -92,6 +93,7 @@ import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse
     MatFormFieldModule,
     MatDialogModule,
     MatTreeModule,
+    CdkListboxModule,
     MatStepperModule,
     MatInputModule,
     MatTabsModule,
