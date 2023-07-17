@@ -1,52 +1,66 @@
-<h1 [ngSwitch]="dataStoreStatus">
-    <div [title]="'Server Status: ' + dataStoreStatus" [ngClass]="dataStoreStatus" class="sign-in-main">
-        <mat-spinner mode="indeterminate" [diameter]="13" class="spinner"
-            *ngIf="dataStoreStatus == 'pending'"></mat-spinner>
-    </div>
-    <pre *ngSwitchDefault class="basic">Trying to Connect Server {{ data_type }}...</pre>
-    <pre *ngSwitchCase="'success'" class="connected">Server {{ data_type }} status: healthy</pre>
-    <pre *ngSwitchCase="'error'" class="disconnected">Server {{ data_type }} status: abnormal</pre>
-</h1>
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Uploader: {{ data_type | uppercase }}
+            </mat-panel-title>
+            <mat-panel-description [ngSwitch]="dataStoreStatus">
+                <pre *ngSwitchDefault class="basic">Trying to Connect Server...</pre>
+                <pre *ngSwitchCase="'success'" class="connected">Server status: healthy</pre>
+                <pre *ngSwitchCase="'error'" class="disconnected">Server status: abnormal</pre>
+                <div [title]="'Server Status: ' + dataStoreStatus" [ngClass]="dataStoreStatus" class="sign-in-main">
+                    <mat-spinner mode="indeterminate" [diameter]="13" class="spinner"
+                        *ngIf="dataStoreStatus == 'pending'"></mat-spinner>
+                </div>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
 
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-    <mat-tab label="Upload Instance">
-        <div class="box">
-            <label class="label-up" [attr.for]='"xFile"+data_type' *ngIf="!onlyDir">Upload File<span
-                    *ngIf="allowMultiple">s</span></label>
-            <label class="label-up" [attr.for]='"xFolder"+data_type'>Upload Folder</label>
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+            <mat-tab label="Upload Instance">
+                <div class="box">
+                    <label class="label-up" [attr.for]='"xFile"+data_type' *ngIf="!onlyDir">Select File<span
+                            *ngIf="allowMultiple">s</span></label>
+                    <label class="label-up" [attr.for]='"xFolder"+data_type'>Select Folder</label>
 
-            <input type="file" [id]='"xFile"+data_type' class="hidden-upload" (change)="onFileSelected($event)"
-                [multiple]="allowMultiple" #fileInput1>
-            <input type="file" [id]='"xFolder"+data_type' class="hidden-upload" (change)="onFileSelected($event)"
-                webkitdirectory #fileInput2>
-            <h2>uploaded files:
-                <button mat-button color="primary" (click)="feedToDB()"><u>click here to feed all in database</u></button>
-                <button mat-button color="warn" class="delete-all" (click)="deleteAll()">
-                    <u>delete all</u></button>
-            </h2>
-            <div *ngIf="uploadedFiles.length > 0" class="tab-box">
-                <mat-selection-list (selectionChange)="onSelected($event)">
-                    <mat-list-option *ngFor="let file of uploadedFiles" [value]="file.file_name" [selected]="selectedOrNot(file)" [disabled]="!selectedOrNot(file)">
-                        <div>{{ file.file_name }}</div>
-                        <div class="option-box">
-                            <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}</div>
-                            <div [ngClass]="selectedFiles[file.file_name] + 'file'">save: {{ selectedFiles[file.file_name] }}</div>
-                        </div>
-                    </mat-list-option>
-                </mat-selection-list>
-            </div>
-            <div *ngIf="uploadedFiles.length == 0">
-                <ul>
-                    --none--
-                </ul>
-            </div>
-        </div>
-    </mat-tab>
+                    <input type="file" [id]='"xFile"+data_type' class="hidden-upload" (change)="onFileSelected($event)"
+                        [multiple]="allowMultiple" #fileInput1>
+                    <input type="file" [id]='"xFolder"+data_type' class="hidden-upload"
+                        (change)="onFileSelected($event)" webkitdirectory #fileInput2>
+                    <h2>uploaded files:
+                        <button mat-button color="primary" (click)="feedToDB()"><u>click here to feed all in
+                                database</u></button>
+                        <button mat-button color="warn" class="delete-all" (click)="deleteAll()">
+                            <u>delete all</u></button>
+                    </h2>
+                    <div *ngIf="uploadedFiles.length > 0" class="tab-box">
+                        <mat-selection-list (selectionChange)="onSelected($event)">
+                            <mat-list-option *ngFor="let file of uploadedFiles" [value]="file.file_name"
+                                [selected]="selectedOrNot(file)" [disabled]="!selectedOrNot(file)">
+                                <div>{{ file.file_name }}</div>
+                                <div class="option-box">
+                                    <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}
+                                    </div>
+                                    <div [ngClass]="selectedFiles[file.file_name] + 'file'">save: {{
+                                        selectedFiles[file.file_name] }}</div>
+                                </div>
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </div>
+                    <div *ngIf="uploadedFiles.length == 0">
+                        <ul>
+                            --none--
+                        </ul>
+                    </div>
+                </div>
+            </mat-tab>
 
-    <mat-tab label="Create Instance">
-        <div class="box">
-            <app-unit-create-instance [data_type]="data_type" [defaultData]="defaultData"></app-unit-create-instance>
-        </div>
-    </mat-tab>
-</mat-tab-group>
-<mat-divider></mat-divider>
+            <mat-tab label="Create Instance">
+                <div class="box">
+                    <app-unit-create-instance [data_type]="data_type"
+                        [defaultData]="defaultData"></app-unit-create-instance>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+    </mat-expansion-panel>
+</mat-accordion>

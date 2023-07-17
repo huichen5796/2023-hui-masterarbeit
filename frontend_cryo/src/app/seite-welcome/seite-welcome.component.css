@@ -91,6 +91,11 @@ a.card .material-icons path {
     height: 16px;
     width: 168px;
 }
+.card.card-big {
+    height: auto;
+    width: 168px;
+    font-size: large;
+}
 
 .card-container .card:not(.highlight-card) {
     cursor: pointer;

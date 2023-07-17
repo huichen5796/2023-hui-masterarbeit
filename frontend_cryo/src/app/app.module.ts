@@ -56,6 +56,10 @@ import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-
 import { SeiteDataStorageComponent } from './seite-data-storage/seite-data-storage.component';
 import { SeiteDataAnalyseComponent } from './seite-data-analyse/seite-data-analyse.component';
 import { UnitTopGuideComponent } from './unit-top-guide/unit-top-guide.component';
+import { UnitAnalyseCellComponent } from './unit-analyse-cell/unit-analyse-cell.component';
+import { UnitAnalyseExperimentComponent } from './unit-analyse-experiment/unit-analyse-experiment.component';
+import { UnitAnalyseCpaComponent } from './unit-analyse-cpa/unit-analyse-cpa.component';
+import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse-process.component';
 
 
 @NgModule({
@@ -76,6 +80,10 @@ import { UnitTopGuideComponent } from './unit-top-guide/unit-top-guide.component
     SeiteDataStorageComponent,
     SeiteDataAnalyseComponent,
     UnitTopGuideComponent,
+    UnitAnalyseCellComponent,
+    UnitAnalyseExperimentComponent,
+    UnitAnalyseCpaComponent,
+    UnitAnalyseProcessComponent,
   ],
   imports: [
     BrowserModule,

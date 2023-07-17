@@ -61,7 +61,7 @@
 }
 
 .sign-in-main {
-    transform: translateY(14px);
+    transform: translateX(6px) translateY(2px);
 }
 
 .box {

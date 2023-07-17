@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CpaStructur, CpaValueStructur, OtherStructur } from '../app-config';
 import { FileTransferService, QueryNeo4jService } from '../app-services';
+import { cloneDeep } from 'lodash-es';
 
 @Component({
   selector: 'app-unit-create-instance',
@@ -27,7 +28,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   currrentKey: string = ''
 
   //only for cpa
-  currentType: 'DSC' | 'FTIR' | 'Kryomikroskopie' | 'Osmolalität' | 'Viskosität' | string = 'DSC'
+  currentType: 'DSC' | 'FTIR' | 'Cryomicroscopy' | 'Osmolality' | 'Viscosity' | string = 'DSC'
   currentCpaIndex: string = ''
 
   constructor(
@@ -38,22 +39,15 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.error = { fileName: '', cpaIndex: '' }
     this.createdFiles = []
     this.selectedFiles = {}
     this.memory = {}
-    this.deletedItems = []
-    this.currentFileName = ''
     this.currrentKey = ''
-    this.currentCpaIndex = ''
     this.currentType = 'DSC'
-    if (this.data_type == 'cpa') {
-      this.newFileData = { ...this.defaultData }[this.currentType]
-      this.newFileData = { ...this.newFileData }
-    } else {
-      this.newFileData = { ...this.defaultData }
-    }
+    this.reloadConfigFile()
   }
+
+
 
   selectedOrNot(file: { file_name: string, result: string, neo4j: string }) {
     if (file.neo4j == 'undo') {
@@ -171,7 +165,12 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   getObjectKeys(obj: any): string[] {
-    return Object.keys(obj);
+      if (Object.keys(obj).length === 0) {
+        return []
+      }
+      else {
+        return Object.keys(obj);
+      }
   }
 
   deleteItem(itemKey: string) {
@@ -198,8 +197,7 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   reloadConfigFile() {
     if (this.data_type == 'cpa') {
-      this.newFileData = { ...this.defaultData }[this.currentType]
-      this.newFileData = { ...this.newFileData }
+      this.newFileData = cloneDeep(this.defaultData)[this.currentType]
     } else {
       this.newFileData = { ...this.defaultData }
     }
@@ -236,7 +234,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   isString(value: any): boolean {
     return typeof value === 'string';
   }
-  toString(value: {[key: string]: []} | string) {
+  toString(value: { [key: string]: [] } | string) {
     return JSON.stringify(value)
   }
 }

@@ -32,26 +32,26 @@ export class UnitBackendCheckComponent {
     this.connectTestService.cleanDataStore().then((rep) => {
       this.checkItems['dataStoreExistence'] = rep
       this.updateStatus()
-    })
-    this.connectTestService.testDataStoreFile('cpa').then((rep) => {
-      this.checkItems['dataStoreIntegrityCpa'] = rep
-      this.updateStatus()
-    })
-    this.connectTestService.testDataStoreFile('exp').then((rep) => {
-      this.checkItems['dataStoreIntegrityExp'] = rep
-      this.updateStatus()
-    })
-    this.connectTestService.testDataStoreFile('pre_data').then((rep) => {
-      this.checkItems['dataStoreIntegrityPredata'] = rep
-      this.updateStatus()
-    })
-    this.connectTestService.testDataStoreFile('post_data').then((rep) => {
-      this.checkItems['dataStoreIntegrityPostdata'] = rep
-      this.updateStatus()
-    })
-    this.connectTestService.testDataStoreFile('process').then((rep) => {
-      this.checkItems['dataStoreIntegrityProcess'] = rep
-      this.updateStatus()
+      this.connectTestService.testDataStoreFile('cpa').then((rep) => {
+        this.checkItems['dataStoreIntegrityCpa'] = rep
+        this.updateStatus()
+      })
+      this.connectTestService.testDataStoreFile('exp').then((rep) => {
+        this.checkItems['dataStoreIntegrityExp'] = rep
+        this.updateStatus()
+      })
+      this.connectTestService.testDataStoreFile('pre_data').then((rep) => {
+        this.checkItems['dataStoreIntegrityPredata'] = rep
+        this.updateStatus()
+      })
+      this.connectTestService.testDataStoreFile('post_data').then((rep) => {
+        this.checkItems['dataStoreIntegrityPostdata'] = rep
+        this.updateStatus()
+      })
+      this.connectTestService.testDataStoreFile('process').then((rep) => {
+        this.checkItems['dataStoreIntegrityProcess'] = rep
+        this.updateStatus()
+      })
     })
   }
   updateStatus() {

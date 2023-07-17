@@ -46,12 +46,18 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
         "File ID": "",
         "Curve": {
             "Wavenumber/cm^-1": [],
-            "Spectral intensity/A": []
+            "Absorbance/A": []
         }
     },
-    "Cryomicroscopy": {},
-    "Osmolality": {},
-    "Viscosity": {}
+    "Cryomicroscopy": {
+        "File ID": ""
+    },
+    "Osmolality": {
+        "File ID": ""
+    },
+    "Viscosity": {
+        "File ID": ""
+    }
 }
 
 export const defaultExp: { [key: string]: string } = {
