@@ -56,8 +56,8 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
 
 export const defaultExp: { [key: string]: string } = {
     "Experiment ID": "",
-    "CPA": "",
-    "Process": "",
+    "CPA ID": "",
+    "Process ID": "",
     "PreData Sample ID": "",
     "PostData Sample ID": ""
 }
