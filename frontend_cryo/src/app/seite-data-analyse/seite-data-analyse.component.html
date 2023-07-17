@@ -10,16 +10,16 @@
         <div class="left">
             <div *ngFor="let key of getObjectKeys(listItems)">
                 <h2>- {{ key }} -</h2>
-                <mat-list cdkListbox [cdkListboxValue]="appointment" (cdkListboxValueChange)="appointment = $event.value">
+                <mat-list cdkListbox [cdkListboxValue]="which" (cdkListboxValueChange)="which = $event.value">
                     <mat-list-item *ngFor="let value of listItems[key]" [cdkOption]="value" class="action" [class.selected]="isSelected(value)">
-                        <span *ngIf="value == appointment[0]" class="focus">{{ value | uppercase }}</span>
-                        <span *ngIf="value != appointment[0]">{{ value }}</span>
+                        <span *ngIf="value == which[0]" class="focus">{{ value | uppercase }}</span>
+                        <span *ngIf="value != which[0]">{{ value }}</span>
                     </mat-list-item>
                 </mat-list>
             </div>
         </div>
         <div class="right">
-             <h2>- {{ appointment }} -</h2>
+             <app-unit-analyse-select-list [which]="which"></app-unit-analyse-select-list>
         </div>
        
     </div>

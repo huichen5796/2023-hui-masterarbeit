@@ -61,6 +61,7 @@ import { UnitAnalyseCellComponent } from './unit-analyse-cell/unit-analyse-cell.
 import { UnitAnalyseExperimentComponent } from './unit-analyse-experiment/unit-analyse-experiment.component';
 import { UnitAnalyseCpaComponent } from './unit-analyse-cpa/unit-analyse-cpa.component';
 import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse-process.component';
+import { UnitAnalyseSelectListComponent } from './unit-analyse-select-list/unit-analyse-select-list.component';
 
 
 @NgModule({
@@ -85,6 +86,7 @@ import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse
     UnitAnalyseExperimentComponent,
     UnitAnalyseCpaComponent,
     UnitAnalyseProcessComponent,
+    UnitAnalyseSelectListComponent,
   ],
   imports: [
     BrowserModule,

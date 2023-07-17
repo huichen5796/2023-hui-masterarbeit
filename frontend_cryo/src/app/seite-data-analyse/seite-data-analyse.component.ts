@@ -10,13 +10,13 @@ export class SeiteDataAnalyseComponent {
     "analyse of": ["experiment", "pre-data", "post-data", "cpa", "process"]
   }
 
-  appointment: readonly string[] = []
+  which: readonly ("experiment" | "pre-data" | "post-data" | "cpa" | "process")[] = []
 
   getObjectKeys(obj: any): string[] {
-      return Object.keys(obj);
+    return Object.keys(obj);
   }
 
-  isSelected(value:string):boolean {
-    return value === this.appointment[0];
+  isSelected(value: string): boolean {
+    return value === this.which[0];
   }
 }
