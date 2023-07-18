@@ -41,4 +41,14 @@ export class QueryNeo4jService {
     })
     return promise
   }
+
+  queryOneNode(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process', ID: string): Promise<string> {
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.get(`${backendUrl}/queryOneNode/?data_type=${data_type}&ID=${ID}`)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
 }

@@ -4,9 +4,10 @@
     <mat-list cdkListbox [cdkListboxValue]="selectedId" cdkListboxMultiple
         (cdkListboxValueChange)="selectedId = $event.value" class="list-box">
         <mat-list-item *ngFor="let value of idList" [cdkOption]="value" class="action"
-            [class.selected]="isSelected(value)">
+            [class.selected]="isSelected(value)" (click)="searchOne(value)">
             <span *ngIf="isSelected(value)" class="focus">{{ value }}</span>
             <span *ngIf="!isSelected(value)">{{ value }}</span>
         </mat-list-item>
     </mat-list>
 </div>
+<p>{{ callBack | json }}</p>

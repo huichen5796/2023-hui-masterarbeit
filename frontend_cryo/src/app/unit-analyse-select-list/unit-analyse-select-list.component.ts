@@ -20,6 +20,8 @@ export class UnitAnalyseSelectListComponent implements OnChanges {
     "process": 'Process'
   }
 
+  callBack!: any
+
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) { }
@@ -39,5 +41,11 @@ export class UnitAnalyseSelectListComponent implements OnChanges {
     else{
       return true
     }
+  }
+
+  searchOne(ID:string){
+    this.queryNeo4jService.queryOneNode(this.translate[this.which[0]], ID).then((res) => {
+      this.callBack = res
+    })
   }
 }
