@@ -35,7 +35,7 @@
                     <div *ngIf="uploadedFiles.length > 0" class="tab-box">
                         <mat-selection-list (selectionChange)="onSelected($event)">
                             <mat-list-option *ngFor="let file of uploadedFiles" [value]="file.file_name"
-                                [selected]="selectedOrNot(file)" [disabled]="!selectedOrNot(file)">
+                                [selected]="selectedOrNot(file)" [disabled]="disabledOrNot(file)">
                                 <div>{{ file.file_name }}</div>
                                 <div class="option-box">
                                     <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}

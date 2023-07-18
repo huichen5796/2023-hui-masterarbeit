@@ -16,6 +16,10 @@ export interface OtherStructur {
     [key: string]: string
 }
 
+export interface ExpStructur {
+    [key: string]: string[]
+}
+
 export const defaultPrePostData: { [key: string]: string } = {
     "Sample ID": "",
     "RunDate": "",
@@ -60,12 +64,9 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
     }
 }
 
-export const defaultExp: { [key: string]: string } = {
-    "Experiment ID": "",
-    "CPA ID": "",
-    "Process ID": "",
-    "PreData Sample ID": "",
-    "PostData Sample ID": ""
+export const defaultExp: { [key: string]: string[] } = {
+    "ID": ["Experiment", "CPA", "Process", "PreData Sample", "PostData Sample"],
+    "No. 1": ['', '', '', '', '']
 }
 
 export const defaultProcess: { [key: string]: string } = {
