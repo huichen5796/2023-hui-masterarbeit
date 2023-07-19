@@ -47,37 +47,54 @@
 </div>
 
 <div class="file-box" *ngIf="data_type == 'exp'">
-    <label>File name:</label>
-    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">.txt
-    <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">'/', '\' and '.' shall not be
-        used.</mat-error>
-    <mat-error *ngIf="error['cpaIndex'] == 'type2'">cpa index is required.</mat-error>
-    <mat-error *ngIf="error['cpaIndex'] == 'type3'">cpa index is used.</mat-error>
+    <label>File name / Experiment ID:</label>
+    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
+    <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">
+        '/', '\' and '.' shall not beused.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type2'">file name is required.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type3'">file name is used.</mat-error>
-
     <ul>
-        <li *ngFor="let key of getObjectKeys(newFileData)" class="table-li">
-            <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
-            <label class="table-line-head">{{ makeIndex(key) }} |</label>
-            <div *ngIf="key == 'ID'" class="table-head">
-                <div class="table-cell" *ngFor="let cell of newFileData[key]">{{ cell }}</div>
-            </div>
-            <div *ngIf="key != 'ID'" class="table-head">
-                <div class="table-cell" *ngFor="let cell of newFileData['ID']; let i = index">
-                    <input #input type="search" [(ngModel)]="newFileData[key][i]" style="width: 100%;" [matAutocomplete]="auto" (click)="search(cell)">
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let id of idList" [value]="id">
-                           {{ id }}
-                        </mat-option>
-                    </mat-autocomplete>
+        <li class="table-versuch">
+            <div class="table-probes">
+                <label class="table-line-head"></label>
+                <div class="table-head">
+                    <div class="table-cell" *ngFor="let index of getObjectKeys(newFileData['Versuche 1']['Probe 1'])">{{ index }}</div>
                 </div>
+                <u class="add-delete" style="cursor:unset;"></u>
             </div>
-            <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
-            <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
+        </li>
+    </ul>
+    <ul>
+        <li *ngFor="let key of getObjectKeys(newFileData)" class="table-versuch">
+            <div class="table-li">
+                <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
+                <span>{{ key }}</span>
+                <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
+                <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
+            </div>
+            <div class="table-probes" *ngFor="let probe of getObjectKeys(newFileData[key])">
+                    <div class="red-line" *ngIf="deletedItemItems.indexOf(transformer(key,probe)) != -1"></div>
+                    <div class="red-line-big" *ngIf="deletedItems.indexOf(key) != -1"></div>
+                    <label class="table-line-head">{{ makeIndex(probe) }} |</label>
+                    <div class="table-head">
+                        <div class="table-cell" *ngFor="let cell of getObjectKeys(newFileData[key][probe])">
+                            <input #input type="search" [(ngModel)]="newFileData[key][probe][cell]" style="width: 100%;"
+                                [matAutocomplete]="auto" (click)="search(cell)">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option *ngFor="let id of idList" [value]="id" class="option">
+                                    {{ id }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                    <u class="add-delete" (click)="deleteItemItems(key, probe)"
+                        *ngIf="deletedItemItems.indexOf(transformer(key,probe)) == -1 && deletedItems.indexOf(key) == -1">delete</u>
+                    <u class="add-return" (click)="undoItemItems(key, probe)" *ngIf="deletedItemItems.indexOf(transformer(key,probe)) != -1 && deletedItems.indexOf(key) == -1">undo</u>
+            </div>
+            <div><u class="add-new" (click)="addNewItemItems(key)">+ add new Probe</u></div>
         </li>
         <li>
-            <u class="add-new" (click)="addNewItem()">+ add new experiment</u>
+            <u class="add-new" (click)="addNewItem()">+ add new Versuche</u>
         </li>
     </ul>
 </div>

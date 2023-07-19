@@ -1,8 +1,11 @@
 <mat-accordion>
     <mat-expansion-panel>
         <mat-expansion-panel-header>
-            <mat-panel-title>
+            <mat-panel-title *ngIf="data_type != 'exp'">
                 Uploader: {{ data_type | uppercase }}
+            </mat-panel-title>
+            <mat-panel-title *ngIf="data_type == 'exp'">
+                Uploader: EXPERIMENT
             </mat-panel-title>
             <mat-panel-description [ngSwitch]="dataStoreStatus">
                 <pre *ngSwitchDefault class="basic">Trying to Connect Server...</pre>

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../app-services';
-import { CpaStructur, ExpStructur, OtherStructur, defaultCpaData, defaultExp, defaultPrePostData, defaultProcess } from '../app-config';
+import { CpaStructur, ExperimentStructur, OtherStructur, defaultCpaData, defaultExperiment, defaultPrePostData, defaultProcess } from '../app-config';
 
 @Component({
   selector: 'app-unit-data-upload',
@@ -21,7 +21,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
 
   selectedFiles: {[key:string]:string} = {}
 
-  defaultData!: CpaStructur | OtherStructur | ExpStructur
+  defaultData!: CpaStructur | OtherStructur | ExperimentStructur
 
   constructor(
     private fileTransferService: FileTransferService,
@@ -44,7 +44,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
     if (this.data_type == 'cpa'){
       this.defaultData = defaultCpaData
     } else if (this.data_type == 'exp'){
-      this.defaultData = defaultExp
+      this.defaultData = defaultExperiment
     } else if (this.data_type == 'pre_data'){
       this.defaultData = defaultPrePostData
     } else if (this.data_type == 'post_data'){
