@@ -61,7 +61,7 @@
 }
 
 .sign-in-main {
-    transform: translateY(14px);
+    transform: translateX(6px) translateY(2px);
 }
 
 .box {
@@ -86,6 +86,7 @@
 }
 
 .errorfile,
+.see-error-detailfile,
 .path-errorfile, .undofile {
     margin-right: 30px;
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;

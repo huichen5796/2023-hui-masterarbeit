@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CpaStructur, CpaValueStructur, OtherStructur } from '../app-config';
+import { CpaStructur, CpaValueStructur, ExpStructur, OtherStructur } from '../app-config';
 import { FileTransferService, QueryNeo4jService } from '../app-services';
+import { cloneDeep } from 'lodash-es';
 
 @Component({
   selector: 'app-unit-create-instance',
@@ -11,7 +12,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   currentFileName: string = ''
   error: { [key: string]: string } = { fileName: '', cpaIndex: '' }
 
-  @Input() defaultData!: CpaStructur | OtherStructur
+  @Input() defaultData!: CpaStructur | OtherStructur | ExpStructur
   @Input() data_type!: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process';
 
   newFileData!: any //CpaValueStructur | OtherStructur
@@ -26,8 +27,10 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   currrentKey: string = ''
 
+  idList: string[] = []
+
   //only for cpa
-  currentType: 'DSC' | 'FTIR' | 'Kryomikroskopie' | 'Osmolalität' | 'Viskosität' | string = 'DSC'
+  currentType: 'DSC' | 'FTIR' | 'Cryomicroscopy' | 'Osmolality' | 'Viscosity' | string = 'DSC'
   currentCpaIndex: string = ''
 
   constructor(
@@ -38,21 +41,11 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.error = { fileName: '', cpaIndex: '' }
     this.createdFiles = []
     this.selectedFiles = {}
     this.memory = {}
-    this.deletedItems = []
-    this.currentFileName = ''
-    this.currrentKey = ''
-    this.currentCpaIndex = ''
     this.currentType = 'DSC'
-    if (this.data_type == 'cpa') {
-      this.newFileData = { ...this.defaultData }[this.currentType]
-      this.newFileData = { ...this.newFileData }
-    } else {
-      this.newFileData = { ...this.defaultData }
-    }
+    this.reloadConfigFile()
   }
 
   selectedOrNot(file: { file_name: string, result: string, neo4j: string }) {
@@ -66,9 +59,13 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   onSelected(event: any) {
     if (event['options'][0]['_selected']) {
-      this.selectedFiles[event['options'][0]['_value']] = 'waiting'
+      if (this.selectedFiles[event['options'][0]['_value']] == 'undo') {
+        this.selectedFiles[event['options'][0]['_value']] = 'waiting'
+      }
     } else {
-      this.selectedFiles[event['options'][0]['_value']] = 'undo'
+      if (this.selectedFiles[event['options'][0]['_value']] == 'waiting') {
+        this.selectedFiles[event['options'][0]['_value']] = 'undo'
+      }
     }
   }
 
@@ -94,9 +91,14 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   addNewItem() {
-    this.currrentKey = ''
-    this.newFileData[this.currrentKey] = ''
-    //this.newFileData = {...this.newFileData}
+    if (this.data_type != 'exp') {
+      this.currrentKey = ''
+      this.newFileData[this.currrentKey] = ''
+      //this.newFileData = {...this.newFileData}
+    } else {
+      this.currrentKey = `No. ${this.getObjectKeys(this.newFileData).length}`
+      this.newFileData[this.currrentKey] = ['', '', '', '', '']
+    }
   }
 
   updateKey() {
@@ -171,7 +173,12 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   getObjectKeys(obj: any): string[] {
-    return Object.keys(obj);
+    if (Object.keys(obj).length === 0) {
+      return []
+    }
+    else {
+      return Object.keys(obj);
+    }
   }
 
   deleteItem(itemKey: string) {
@@ -198,15 +205,19 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   reloadConfigFile() {
     if (this.data_type == 'cpa') {
-      this.newFileData = { ...this.defaultData }[this.currentType]
-      this.newFileData = { ...this.newFileData }
-    } else {
+      this.newFileData = cloneDeep(this.defaultData)[this.currentType]
+    }
+    else if (this.data_type == 'exp') {
+      this.newFileData = cloneDeep(this.defaultData)
+    }
+    else {
       this.newFileData = { ...this.defaultData }
     }
     this.currentFileName = ''
     this.currentCpaIndex = ''
     this.deletedItems = []
     this.error = { fileName: '', cpaIndex: '' }
+    this.currrentKey = ''
   }
 
   editCreatedFiles(fileName: string) {
@@ -236,7 +247,25 @@ export class UnitCreateInstanceComponent implements OnInit {
   isString(value: any): boolean {
     return typeof value === 'string';
   }
-  toString(value: {[key: string]: []} | string) {
+  toString(value: { [key: string]: [] } | string) {
     return JSON.stringify(value)
+  }
+
+  makeIndex(input: string): string {
+    return input.replace('No. ', '')
+  }
+
+  translate: { [k: string]: ("Experiment" | "PreData" | "PostData" | "CPA" | "Process") } = {
+    "Experiment": 'Experiment',
+    "PreData Sample": 'PreData',
+    "PostData Sample": 'PostData',
+    "CPA": 'CPA',
+    "Process": 'Process'
+  }
+
+  search(data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process'){
+    this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
+      this.idList = JSON.parse(res)
+    })
   }
 }

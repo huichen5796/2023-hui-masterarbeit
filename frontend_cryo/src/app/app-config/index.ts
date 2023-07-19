@@ -16,6 +16,10 @@ export interface OtherStructur {
     [key: string]: string
 }
 
+export interface ExpStructur {
+    [key: string]: string[]
+}
+
 export const defaultPrePostData: { [key: string]: string } = {
     "Sample ID": "",
     "RunDate": "",
@@ -25,7 +29,7 @@ export const defaultPrePostData: { [key: string]: string } = {
     "Average diameter (microns)": "",
     "Average circularity": "",
     "Cell type": "",
-    "Machine version": ""
+    "Machine": ""
 }
 
 export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]: [] } | string) } } = {
@@ -46,20 +50,23 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
         "File ID": "",
         "Curve": {
             "Wavenumber/cm^-1": [],
-            "Spectral intensity/A": []
+            "Absorbance/A": []
         }
     },
-    "Cryomicroscopy": {},
-    "Osmolality": {},
-    "Viscosity": {}
+    "Cryomicroscopy": {
+        "File ID": ""
+    },
+    "Osmolality": {
+        "File ID": ""
+    },
+    "Viscosity": {
+        "File ID": ""
+    }
 }
 
-export const defaultExp: { [key: string]: string } = {
-    "Experiment ID": "",
-    "CPA": "",
-    "Process": "",
-    "PreData Sample ID": "",
-    "PostData Sample ID": ""
+export const defaultExp: { [key: string]: string[] } = {
+    "ID": ["Experiment", "CPA", "Process", "PreData Sample", "PostData Sample"],
+    "No. 1": ['', '', '', '', '']
 }
 
 export const defaultProcess: { [key: string]: string } = {

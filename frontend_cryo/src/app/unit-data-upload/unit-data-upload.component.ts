@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../app-services';
-import { CpaStructur, OtherStructur, defaultCpaData, defaultExp, defaultPrePostData, defaultProcess } from '../app-config';
+import { CpaStructur, ExpStructur, OtherStructur, defaultCpaData, defaultExp, defaultPrePostData, defaultProcess } from '../app-config';
 
 @Component({
   selector: 'app-unit-data-upload',
@@ -21,7 +21,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
 
   selectedFiles: {[key:string]:string} = {}
 
-  defaultData!: CpaStructur | OtherStructur
+  defaultData!: CpaStructur | OtherStructur | ExpStructur
 
   constructor(
     private fileTransferService: FileTransferService,
@@ -84,11 +84,24 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
     }
   }
 
+  disabledOrNot(file: { file_name: string, result: string, neo4j: string }) {
+    if (file.result != 'success') {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
   onSelected(event: any) {
     if (event['options'][0]['_selected']) {
-      this.selectedFiles[event['options'][0]['_value']] = 'waiting'
+      if (this.selectedFiles[event['options'][0]['_value']] == 'undo'){
+        this.selectedFiles[event['options'][0]['_value']] = 'waiting'
+      }
     } else {
-      this.selectedFiles[event['options'][0]['_value']] = 'undo'
+      if (this.selectedFiles[event['options'][0]['_value']] == 'waiting'){
+        this.selectedFiles[event['options'][0]['_value']] = 'undo'
+      }
     }
   }
 

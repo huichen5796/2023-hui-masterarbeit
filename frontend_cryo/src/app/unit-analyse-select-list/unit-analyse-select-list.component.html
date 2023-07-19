@@ -1,0 +1,9 @@
+<div class="list-box-ower">
+    <mat-list cdkListbox [cdkListboxValue]="selectedId"
+        (cdkListboxValueChange)="selectedId = $event.value" class="list-box">
+        <mat-list-item *ngFor="let value of idList" [cdkOption]="value" (click)="searchOne(translate_which[0], value)">
+            <span *ngIf="isSelected(value)" class="focus">{{ value }}</span>
+            <span *ngIf="!isSelected(value)" class="action" >{{ value }}</span>
+        </mat-list-item>
+    </mat-list>
+</div>

@@ -36,6 +36,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTreeModule } from '@angular/material/tree';
+import { CdkListboxModule } from '@angular/cdk/listbox';
 
 // Components //
 import { AppRoutingModule } from './app-routers/app-routing.module';
@@ -56,6 +57,12 @@ import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-
 import { SeiteDataStorageComponent } from './seite-data-storage/seite-data-storage.component';
 import { SeiteDataAnalyseComponent } from './seite-data-analyse/seite-data-analyse.component';
 import { UnitTopGuideComponent } from './unit-top-guide/unit-top-guide.component';
+import { UnitAnalyseCellComponent } from './unit-analyse-cell/unit-analyse-cell.component';
+import { UnitAnalyseExperimentComponent } from './unit-analyse-experiment/unit-analyse-experiment.component';
+import { UnitAnalyseCpaComponent } from './unit-analyse-cpa/unit-analyse-cpa.component';
+import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse-process.component';
+import { UnitAnalyseSelectListComponent } from './unit-analyse-select-list/unit-analyse-select-list.component';
+import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-analyse-select-menu.component';
 
 
 @NgModule({
@@ -76,6 +83,12 @@ import { UnitTopGuideComponent } from './unit-top-guide/unit-top-guide.component
     SeiteDataStorageComponent,
     SeiteDataAnalyseComponent,
     UnitTopGuideComponent,
+    UnitAnalyseCellComponent,
+    UnitAnalyseExperimentComponent,
+    UnitAnalyseCpaComponent,
+    UnitAnalyseProcessComponent,
+    UnitAnalyseSelectListComponent,
+    UnitAnalyseSelectMenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,6 +97,7 @@ import { UnitTopGuideComponent } from './unit-top-guide/unit-top-guide.component
     MatFormFieldModule,
     MatDialogModule,
     MatTreeModule,
+    CdkListboxModule,
     MatStepperModule,
     MatInputModule,
     MatTabsModule,

@@ -1,0 +1,22 @@
+<p>{{ callBack | json }}</p>
+
+<mat-card class="example-card" *ngIf="callBack">
+    <mat-card-header>
+        <mat-card-title>{{ callBack['Sample_ID'] }}</mat-card-title>
+        <mat-card-subtitle>{{ openSearch['translate_which'] }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div *ngFor="let topItem of topItems">
+            <p>{{ topItem }}: {{ callBack[topItem] }}</p>
+        </div>
+        <div *ngFor="let key of getObjectKeys(itemShow)">
+            <label>{{ key }}: </label>
+            <p *ngFor="let item of itemShow[key]">{{ item }}: {{ callBack[item] }}</p>
+        </div>
+
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button>LIKE</button>
+        <button mat-button>SHARE</button>
+    </mat-card-actions>
+</mat-card>
