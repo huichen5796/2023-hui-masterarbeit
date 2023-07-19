@@ -29,7 +29,7 @@ export const defaultPrePostData: { [key: string]: string } = {
     "Average diameter (microns)": "",
     "Average circularity": "",
     "Cell type": "",
-    "Machine version": ""
+    "Machine": ""
 }
 
 export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]: [] } | string) } } = {
