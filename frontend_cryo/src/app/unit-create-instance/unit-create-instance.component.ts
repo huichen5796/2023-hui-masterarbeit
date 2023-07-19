@@ -27,6 +27,8 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   currrentKey: string = ''
 
+  idList: string[] = []
+
   //only for cpa
   currentType: 'DSC' | 'FTIR' | 'Cryomicroscopy' | 'Osmolality' | 'Viscosity' | string = 'DSC'
   currentCpaIndex: string = ''
@@ -57,11 +59,11 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   onSelected(event: any) {
     if (event['options'][0]['_selected']) {
-      if (this.selectedFiles[event['options'][0]['_value']] == 'undo'){
+      if (this.selectedFiles[event['options'][0]['_value']] == 'undo') {
         this.selectedFiles[event['options'][0]['_value']] = 'waiting'
       }
     } else {
-      if (this.selectedFiles[event['options'][0]['_value']] == 'waiting'){
+      if (this.selectedFiles[event['options'][0]['_value']] == 'waiting') {
         this.selectedFiles[event['options'][0]['_value']] = 'undo'
       }
     }
@@ -251,5 +253,19 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   makeIndex(input: string): string {
     return input.replace('No. ', '')
+  }
+
+  translate: { [k: string]: ("Experiment" | "PreData" | "PostData" | "CPA" | "Process") } = {
+    "Experiment": 'Experiment',
+    "PreData Sample": 'PreData',
+    "PostData Sample": 'PostData',
+    "CPA": 'CPA',
+    "Process": 'Process'
+  }
+
+  search(data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process'){
+    this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
+      this.idList = JSON.parse(res)
+    })
   }
 }

@@ -65,10 +65,10 @@
             </div>
             <div *ngIf="key != 'ID'" class="table-head">
                 <div class="table-cell" *ngFor="let cell of newFileData['ID']; let i = index">
-                    <input type="search" [(ngModel)]="newFileData[key][i]" style="width: 100%;" [matAutocomplete]="auto">
+                    <input #input type="search" [(ngModel)]="newFileData[key][i]" style="width: 100%;" [matAutocomplete]="auto" (click)="search(cell)">
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option [value]="'test'">
-                           test
+                        <mat-option *ngFor="let id of idList" [value]="id">
+                           {{ id }}
                         </mat-option>
                     </mat-autocomplete>
                 </div>
