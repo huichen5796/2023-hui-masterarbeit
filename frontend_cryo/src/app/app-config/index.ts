@@ -16,8 +16,26 @@ export interface OtherStructur {
     [key: string]: string
 }
 
-export interface ExpStructur {
-    [key: string]: string[]
+export interface ExperimentStructur {[key: string]: Versuche}
+
+export interface Versuche {[key: string]: Probe}
+
+export interface Probe {[key: string]: string}
+
+export const defaultProbe: Probe = {
+    "Sample ID": '',
+    "CPA ID": '', 
+    "Process ID": '', 
+    "PreData ID": '', 
+    "PostData ID": ''
+}
+
+export const defaultVersuche: Versuche = {
+    'Probe 1': defaultProbe
+}
+
+export const defaultExperiment: ExperimentStructur = {
+    "Versuche 1": defaultVersuche 
 }
 
 export const defaultPrePostData: { [key: string]: string } = {
@@ -62,11 +80,6 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
     "Viscosity": {
         "File ID": ""
     }
-}
-
-export const defaultExp: { [key: string]: string[] } = {
-    "ID": ["Experiment", "CPA", "Process", "PreData Sample", "PostData Sample"],
-    "No. 1": ['', '', '', '', '']
 }
 
 export const defaultProcess: { [key: string]: string } = {

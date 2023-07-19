@@ -60,7 +60,8 @@ h2 {
 
 .errorfile,
 .see-error-detailfile,
-.path-errorfile, .undofile {
+.path-errorfile,
+.undofile {
     margin-right: 30px;
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     color: red;
@@ -103,7 +104,8 @@ mat-error {
     color: rgb(0, 162, 255);
 }
 
-.add-delete, .table-li .add-delete {
+.add-delete,
+.table-li .add-delete {
     cursor: pointer;
     color: red;
     float: right;
@@ -111,7 +113,8 @@ mat-error {
     margin-left: 10%;
 }
 
-.add-return, .table-li .add-return {
+.add-return,
+.table-li .add-return {
     cursor: pointer;
     color: green;
     float: right;
@@ -119,13 +122,33 @@ mat-error {
     margin-left: 10%;
 }
 
-.table-li .add-delete, .table-li .add-return {
+.table-li .add-delete,
+.table-li .add-return {
     margin-left: 6px;
 }
 
-li, .table-li {
+li,
+.table-li {
     display: flex;
     flex-wrap: nowrap;
+    justify-content: space-between;
+    transform: translateX(-20px);
+    min-width: 550px;
+}
+
+.table-versuch {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: space-between;
+    transform: translateX(0px);
+    min-width: 550px;
+}
+
+.table-probes {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
     justify-content: space-between;
     transform: translateX(-20px);
     min-width: 550px;
@@ -160,11 +183,16 @@ li input,
 }
 
 
-.red-line {
+.red-line,
+.red-line-big {
     position: absolute;
     width: calc(100% - 50px);
     height: 100%;
     background-color: rgb(15, 15, 16);
+}
+
+.red-line-big {
+    width: calc(100% + 6px);
 }
 
 .edit {
@@ -183,12 +211,13 @@ li input,
     margin-right: 10px;
 }
 
-.table-line-head{
+.table-line-head {
     text-align: right;
     width: 40px;
 }
 
-.table-line, .table-head{
+.table-line,
+.table-head {
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
@@ -196,7 +225,7 @@ li input,
     flex-grow: 1;
 }
 
-.table-cell{
+.table-cell {
     width: 24%;
     text-align: center;
     border: solid;
@@ -204,7 +233,13 @@ li input,
     border-width: 1px;
 }
 
-.table-head .table-cell{
+.table-head .table-cell {
     color: #fff;
     font-weight: bold;
+}
+
+.option {
+    margin: 0px;
+    padding: 0px;
+    font-size: small;
 }
