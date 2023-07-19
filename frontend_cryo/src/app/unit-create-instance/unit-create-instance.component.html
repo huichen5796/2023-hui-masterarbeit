@@ -1,6 +1,7 @@
 <div class="title-box">
     <label class="label-edit">Edit File:</label>
-    <mat-chip-listbox *ngIf="data_type == 'cpa'" class="type-box" (change)="onSelecteChips($event)" [value]="currentType">
+    <mat-chip-listbox *ngIf="data_type == 'cpa'" class="type-box" (change)="onSelecteChips($event)"
+        [value]="currentType">
         <mat-chip-option [value]="'DSC'">DSC</mat-chip-option>
         <mat-chip-option [value]="'FTIR'">FTIR</mat-chip-option>
         <mat-chip-option [value]="'Cryomicroscopy'">Kryomikroskopie</mat-chip-option>
@@ -59,9 +60,19 @@
         <li *ngFor="let key of getObjectKeys(newFileData)" class="table-li">
             <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
             <label class="table-line-head">{{ makeIndex(key) }} |</label>
-            <div *ngIf="key == 'ID'" class="table-head"><div class="table-cell" *ngFor="let cell of newFileData[key]">{{ cell }}</div></div>
-            <div *ngIf="key != 'ID'" class="table-head"><div class="table-cell" *ngFor="let cell of newFileData['ID']; let i = index">
-                <input type="search" [(ngModel)]="newFileData[key][i]" style="width: 100%;"></div></div>
+            <div *ngIf="key == 'ID'" class="table-head">
+                <div class="table-cell" *ngFor="let cell of newFileData[key]">{{ cell }}</div>
+            </div>
+            <div *ngIf="key != 'ID'" class="table-head">
+                <div class="table-cell" *ngFor="let cell of newFileData['ID']; let i = index">
+                    <input type="search" [(ngModel)]="newFileData[key][i]" style="width: 100%;" [matAutocomplete]="auto">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option [value]="'test'">
+                           test
+                        </mat-option>
+                    </mat-autocomplete>
+                </div>
+            </div>
             <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
             <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
         </li>
@@ -69,6 +80,7 @@
             <u class="add-new" (click)="addNewItem()">+ add new experiment</u>
         </li>
     </ul>
+    <p>{{ newFileData | json }}</p>
 </div>
 
 <label class="label-create" (click)="newFile()">create this file</label>
@@ -85,7 +97,8 @@
             <div class="option-box">
                 <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}</div>
                 <div [ngClass]="selectedFiles[file.file_name] + 'file'">
-                    <p *ngIf="selectedFiles[file.file_name] != 'see-error-detail'">save: {{ selectedFiles[file.file_name] }}</p>
+                    <p *ngIf="selectedFiles[file.file_name] != 'see-error-detail'">save: {{
+                        selectedFiles[file.file_name] }}</p>
                     <p *ngIf="selectedFiles[file.file_name] == 'see-error-detail'">save: error <u>see detail</u></p>
                 </div>
             </div>

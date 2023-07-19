@@ -1,0 +1,4 @@
+<h2>- {{ which }} -</h2>
+
+<app-unit-analyse-select-list [translate_which]="[translate[which[0]]]" (openSearch)="onDataReceived($event)"></app-unit-analyse-select-list>
+<app-unit-analyse-cell *ngIf="which[0] == 'pre-data' || 'post-data'" [openSearch]="{translate_which:translate[which[0]], selectedId:selectedId}"></app-unit-analyse-cell>
