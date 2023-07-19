@@ -21,7 +21,7 @@ export class UnitAnalyseCellComponent {
   }
 
   ngOnChanges() {
-    if (this.openSearch) {
+    if (this.openSearch['selectedId']) {
       this.searchOne(this.openSearch['selectedId'], this.openSearch['translate_which'])
     }
   }
