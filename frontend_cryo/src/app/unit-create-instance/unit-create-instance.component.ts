@@ -29,8 +29,6 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   currrentKey: string = ''
 
-  idList: string[] = []
-
   //only for cpa
   currentType: 'DSC' | 'FTIR' | 'Cryomicroscopy' | 'Osmolality' | 'Viscosity' | string = 'DSC'
   currentCpaIndex: string = ''
@@ -103,7 +101,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   addNewItemItems(itemName: string) {
-    this.newFileData[itemName][`Probe ${Object.keys(this.newFileData[itemName]).length + 1}`] = cloneDeep(defaultProbe)
+    this.newFileData[itemName][`Probe ${Object.keys(this.newFileData[itemName]).length}`] = cloneDeep(defaultProbe)
   }
 
   updateKey() {
@@ -142,8 +140,8 @@ export class UnitCreateInstanceComponent implements OnInit {
         delete this.newFileData['']
         if (this.data_type == 'cpa') {
           this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
-        } 
-        else if (this.data_type == 'exp'){
+        }
+        else if (this.data_type == 'exp') {
           this.currentFileName = `${this.currentFileName}.json`
         }
         else {
@@ -282,15 +280,27 @@ export class UnitCreateInstanceComponent implements OnInit {
     "Process ID": 'Process'
   }
 
+  idList: { [key: string]: string[] } = {
+    "PreData ID": [],
+    "PostData ID": [],
+    "CPA ID": [],
+    "Process ID": []
+  }
+
   search(data_type: string) {
+    this.idList[data_type] = []
     if (data_type != 'Sample ID') {
       this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
-        this.idList = JSON.parse(res)
+        this.idList[data_type] = JSON.parse(res)
+        this.idList = {...this.idList}
       })
+    } else {
+      this.idList[data_type] = []
+      this.idList = {...this.idList}
     }
   }
 
-  transformer(itemKey:string, itemItem:string){
+  transformer(itemKey: string, itemItem: string) {
     return `${itemKey}-${itemItem}`
   }
 }

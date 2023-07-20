@@ -38,6 +38,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTreeModule } from '@angular/material/tree';
 import { CdkListboxModule } from '@angular/cdk/listbox';
 
+// Pipes //
+import { ExcludeItemPipe } from "./app-pipes";
+
 // Components //
 import { AppRoutingModule } from './app-routers/app-routing.module';
 import { AppComponent } from './app.component';
@@ -89,6 +92,7 @@ import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-
     UnitAnalyseProcessComponent,
     UnitAnalyseSelectListComponent,
     UnitAnalyseSelectMenuComponent,
+    ExcludeItemPipe,
   ],
   imports: [
     BrowserModule,

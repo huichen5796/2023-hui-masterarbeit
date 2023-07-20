@@ -16,9 +16,9 @@ export interface OtherStructur {
     [key: string]: string
 }
 
-export interface ExperimentStructur {[key: string]: Versuche}
+export interface ExperimentStructur {[key: string]: Versuche | string}
 
-export interface Versuche {[key: string]: Probe}
+export interface Versuche {[key: string]: Probe | string}
 
 export interface Probe {[key: string]: string}
 
@@ -31,6 +31,7 @@ export const defaultProbe: Probe = {
 }
 
 export const defaultVersuche: Versuche = {
+    "Versuche ID": '',
     'Probe 1': defaultProbe
 }
 

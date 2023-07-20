@@ -172,6 +172,15 @@ li input,
     flex-grow: 1;
 }
 
+.table-li input {
+    flex-grow: 0;
+    min-width: 177px;
+}
+
+.position-holder {
+    flex-grow: 1;
+}
+
 .sub-box-sub {
     display: flex;
     flex-wrap: nowrap;
