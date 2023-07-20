@@ -65,14 +65,16 @@
         </li>
     </ul>
     <ul>
-        <li *ngFor="let key of getObjectKeys(newFileData)" class="table-versuch">
+        <li *ngFor="let key of (getObjectKeys(newFileData) | excludeItem: ['Remark'])" class="table-versuch">
             <div class="table-li">
                 <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
-                <span>{{ key }}</span>
+                <label>{{ key }} ID: </label>
+                <input type="search" [(ngModel)]="newFileData[key]['Versuche ID']" placeholder="Ex. test_1 2023">
+                <p class="position-holder"></p>
                 <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
                 <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
             </div>
-            <div class="table-probes" *ngFor="let probe of getObjectKeys(newFileData[key])">
+            <div class="table-probes" *ngFor="let probe of (getObjectKeys(newFileData[key]) | excludeItem: ['Remark', 'Versuche ID'])">
                     <div class="red-line" *ngIf="deletedItemItems.indexOf(transformer(key,probe)) != -1"></div>
                     <div class="red-line-big" *ngIf="deletedItems.indexOf(key) != -1"></div>
                     <label class="table-line-head">{{ makeIndex(probe) }} |</label>

@@ -103,7 +103,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   addNewItemItems(itemName: string) {
-    this.newFileData[itemName][`Probe ${Object.keys(this.newFileData[itemName]).length + 1}`] = cloneDeep(defaultProbe)
+    this.newFileData[itemName][`Probe ${Object.keys(this.newFileData[itemName]).length}`] = cloneDeep(defaultProbe)
   }
 
   updateKey() {
@@ -283,10 +283,13 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   search(data_type: string) {
+    this.idList = []
     if (data_type != 'Sample ID') {
       this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
         this.idList = JSON.parse(res)
       })
+    } else{
+      this.idList = []
     }
   }
 
