@@ -6,10 +6,10 @@ import { QueryNeo4jService } from '../app-services';
   templateUrl: './unit-analyse-select-menu.component.html',
   styleUrls: ['./unit-analyse-select-menu.component.css']
 })
-export class UnitAnalyseSelectMenuComponent {
+export class UnitAnalyseSelectMenuComponent implements OnChanges {
   @Input() which: readonly ("experiment" | "pre-data" | "post-data" | "cpa" | "process")[] = []
 
-  selectedId!: string
+  selectedId: string = ''
 
   translate: { [k: string]: ("Experiment" | "PreData" | "PostData" | "CPA" | "Process") } = {
     "experiment": 'Experiment',
@@ -19,8 +19,11 @@ export class UnitAnalyseSelectMenuComponent {
     "process": 'Process'
   }
 
+  ngOnChanges() {
+    this.selectedId = ''
+  }
+
   onDataReceived(data:{translate_which:string, selectedId:string}){
     this.selectedId = data['selectedId']
   }
-
 }
