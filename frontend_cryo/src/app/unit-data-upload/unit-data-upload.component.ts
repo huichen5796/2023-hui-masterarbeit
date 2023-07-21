@@ -15,7 +15,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
   @Input() onlyDir!: boolean;
   @Input() allowMultiple!: boolean;
   @Input() allowFolder!: boolean;
-  @Input() data_type!: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process';
+  @Input() data_type!: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process';
 
   dataStoreStatus: 'error' | 'success' | 'pending' = 'pending'
 
@@ -41,15 +41,15 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(){
-    if (this.data_type == 'cpa'){
+    if (this.data_type == 'CPA'){
       this.defaultData = defaultCpaData
-    } else if (this.data_type == 'exp'){
+    } else if (this.data_type == 'Experiment'){
       this.defaultData = defaultExperiment
-    } else if (this.data_type == 'pre_data'){
+    } else if (this.data_type == 'PreData'){
       this.defaultData = defaultPrePostData
-    } else if (this.data_type == 'post_data'){
+    } else if (this.data_type == 'PostData'){
       this.defaultData = defaultPrePostData
-    } else if (this.data_type == 'process'){
+    } else if (this.data_type == 'Process'){
       this.defaultData = defaultProcess
     }
   }

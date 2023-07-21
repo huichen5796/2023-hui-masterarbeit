@@ -22,7 +22,7 @@ export class QueryNeo4jService {
     return promise
   }
 
-  feedNeo4j(data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process', file_name: string): Promise<string> {
+  feedNeo4j(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process', file_name: string): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
       this.http.get(`${backendUrl}/feedInNeo/?data_type=${data_type}&file_name=${file_name}&data_store=${dataStoreName}`)
         .subscribe((rep: any) => {
@@ -45,6 +45,16 @@ export class QueryNeo4jService {
   queryOneNode(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process', ID: string): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
       this.http.get(`${backendUrl}/queryOneNode/?data_type=${data_type}&ID=${ID}`)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
+
+  duplicateCheck(data_type: string, ID: string): Promise<string> {
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.get(`${backendUrl}/duplicateCheck/?data_type=${data_type}&ID=${ID}`)
         .subscribe((rep: any) => {
           resolve(rep)
         })

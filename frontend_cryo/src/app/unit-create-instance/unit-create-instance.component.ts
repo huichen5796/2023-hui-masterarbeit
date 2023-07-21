@@ -13,7 +13,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   error: { [key: string]: string } = { fileName: '', cpaIndex: '' }
 
   @Input() defaultData!: CpaStructur | OtherStructur | ExperimentStructur
-  @Input() data_type!: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process';
+  @Input() data_type!: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process';
 
   newFileData!: any //CpaValueStructur | OtherStructur
 
@@ -91,7 +91,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   addNewItem() {
-    if (this.data_type != 'exp') {
+    if (this.data_type != 'Experiment') {
       this.currrentKey = ''
       this.newFileData[this.currrentKey] = ''
       //this.newFileData = {...this.newFileData}
@@ -110,13 +110,25 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   checkFileName() {
-
-    if (this.currentFileName.includes('/') || this.currentFileName.includes('\\') || this.currentFileName.includes('.')) {
+    if (this.currentFileName.includes('/') || this.currentFileName.includes('\\')) {
       this.error['fileName'] = 'type1'
     } else if (this.currentFileName == '') {
       this.error['fileName'] = 'type2'
     } else {
-      this.error['fileName'] = 'none'
+      let data_type = ''
+      if (this.data_type == 'CPA') {
+        data_type = this.currentType
+      } else {
+        data_type = this.data_type
+      }
+
+      this.queryNeo4jService.duplicateCheck(data_type, this.currentFileName).then((res) => {
+        if (res) {
+          this.error['fileName'] = 'type3'
+        } else {
+          this.error['fileName'] = 'none'
+        }
+      })
     }
   }
 
@@ -126,25 +138,39 @@ export class UnitCreateInstanceComponent implements OnInit {
     } else if (this.currentCpaIndex == '') {
       this.error['cpaIndex'] = 'type2'
     } else {
-      this.error['cpaIndex'] = 'none'
+      this.queryNeo4jService.duplicateCheck('CPA', this.currentCpaIndex).then((res) => {
+        if (res) {
+          this.error['cpaIndex'] = 'type3'
+        } else {
+          this.error['cpaIndex'] = 'none'
+        }
+      })
     }
   }
 
   newFile() {
-    if (this.data_type != 'cpa') {
+    console.log(this.newFileData)
+    console.log(this.currentFileName)
+    if (this.data_type != 'CPA') {
       this.currentCpaIndex = 'default'
     }
 
     if (this.currentFileName != '' && this.currentCpaIndex != '') {
       if (this.error['fileName'] == 'none') {
         delete this.newFileData['']
-        if (this.data_type == 'cpa') {
+        if (this.data_type == 'CPA') {
           this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
         }
-        else if (this.data_type == 'exp') {
+        else if (this.data_type == 'Experiment') {
           this.currentFileName = `${this.currentFileName}.json`
         }
         else {
+          if (this.data_type == 'Process') {
+            this.newFileData['Process ID'] = this.currentFileName
+          }
+          else {
+            this.newFileData['Sample ID'] = this.currentFileName
+          }
           this.currentFileName = `${this.currentFileName}.txt`
         }
 
@@ -220,10 +246,10 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   reloadConfigFile() {
-    if (this.data_type == 'cpa') {
+    if (this.data_type == 'CPA') {
       this.newFileData = cloneDeep(this.defaultData)[this.currentType]
     }
-    else if (this.data_type == 'exp') {
+    else if (this.data_type == 'Experiment') {
       this.newFileData = cloneDeep(this.defaultData)
     }
     else {
@@ -239,7 +265,7 @@ export class UnitCreateInstanceComponent implements OnInit {
 
   editCreatedFiles(fileName: string) {
     this.newFileData = this.memory[fileName][0]
-    if (this.data_type == 'cpa') {
+    if (this.data_type == 'CPA') {
       this.currentCpaIndex = fileName.split('/')[0]
       this.currentType = fileName.split('/')[1]
       this.currentFileName = fileName.split('/')[2].split('.')[0]
@@ -247,11 +273,22 @@ export class UnitCreateInstanceComponent implements OnInit {
       this.currentFileName = fileName.split('.')[0]
     }
 
+    if (this.data_type == 'Process') {
+      delete this.newFileData['Process ID']
+    }
+    else if (this.data_type == 'PreData' || this.data_type == 'PostData') {
+      delete this.newFileData['Sample ID']
+    }
+
     this.deletedItems = this.memory[fileName][1]
     this.deletedItemItems = this.memory[fileName][2]
     delete this.memory[fileName]
     delete this.selectedFiles[fileName]
     this.createdFiles = this.createdFiles.filter(item => item.file_name != fileName)
+    this.checkFileName()
+    if (this.data_type == 'CPA'){
+      this.checkCpaIndex()
+    }
   }
 
   onSelecteChips(event: any) {
@@ -292,15 +329,16 @@ export class UnitCreateInstanceComponent implements OnInit {
     if (data_type != 'Sample ID') {
       this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
         this.idList[data_type] = JSON.parse(res)
-        this.idList = {...this.idList}
+        this.idList = { ...this.idList }
       })
     } else {
       this.idList[data_type] = []
-      this.idList = {...this.idList}
+      this.idList = { ...this.idList }
     }
   }
 
   transformer(itemKey: string, itemItem: string) {
     return `${itemKey}-${itemItem}`
   }
+
 }
