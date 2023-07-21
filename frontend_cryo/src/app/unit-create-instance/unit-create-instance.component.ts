@@ -149,8 +149,6 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   newFile() {
-    console.log(this.newFileData)
-    console.log(this.currentFileName)
     if (this.data_type != 'CPA') {
       this.currentCpaIndex = 'default'
     }
