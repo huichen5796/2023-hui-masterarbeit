@@ -18,12 +18,12 @@
         (blur)="checkCpaIndex()" style="width: 80px;">
     <label *ngIf="data_type == 'CPA'" style="margin-right: 0px;">/{{ currentType }}/</label>
     <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">.txt
-    <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">'/', '\' and '.' shall not be
+    <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">'/', '\' shall not be
         used.</mat-error>
-    <mat-error *ngIf="error['cpaIndex'] == 'type2'">cpa index is required.</mat-error>
-    <mat-error *ngIf="error['cpaIndex'] == 'type3'">cpa index is used.</mat-error>
-    <mat-error *ngIf="error['fileName'] == 'type2'">file name is required.</mat-error>
-    <mat-error *ngIf="error['fileName'] == 'type3'">file name is used.</mat-error>
+    <mat-error *ngIf="error['cpaIndex'] == 'type2'">CPA ID is required.</mat-error>
+    <mat-error *ngIf="error['cpaIndex'] == 'type3'">CPA ID is used.</mat-error>
+    <mat-error *ngIf="error['fileName'] == 'type2'">{{ data_type }} ID is required.</mat-error>
+    <mat-error *ngIf="error['fileName'] == 'type3'">{{ data_type }} ID is used.</mat-error>
 
     <ul>
         <li *ngFor="let key of getObjectKeys(newFileData)">
@@ -52,9 +52,9 @@
     <label>File name / Experiment ID:</label>
     <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
     <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">
-        '/', '\' and '.' shall not beused.</mat-error>
-    <mat-error *ngIf="error['fileName'] == 'type2'">file name is required.</mat-error>
-    <mat-error *ngIf="error['fileName'] == 'type3'">file name is used.</mat-error>
+        '/', '\' shall not beused.</mat-error>
+    <mat-error *ngIf="error['fileName'] == 'type2'">Experiment ID is required.</mat-error>
+    <mat-error *ngIf="error['fileName'] == 'type3' && currentFileName != ''">Experiment ID is used, the following will be added to old experiment.</mat-error>
     <ul>
         <li class="table-versuch">
             <div class="table-probes">
@@ -103,7 +103,6 @@
     </ul>
 </div>
 
-<p>{{ newFileData | json }}</p>
 <label class="label-create" (click)="newFile()">create this file</label>
 
 <h2>created files:

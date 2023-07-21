@@ -19,4 +19,5 @@ export class SeiteDataAnalyseComponent {
   isSelected(value: string): boolean {
     return value === this.which[0];
   }
+  
 }

@@ -149,57 +149,61 @@ export class UnitCreateInstanceComponent implements OnInit {
   }
 
   newFile() {
-    if (this.data_type != 'CPA') {
-      this.currentCpaIndex = 'default'
+    this.checkFileName()
+    if (this.data_type == 'CPA') {
+      this.checkCpaIndex()
+      if (this.error['fileName'] == 'none' && this.error['cpaIndex'] == 'none') {
+        this.fileCreater()
+      }
     }
-
-    if (this.currentFileName != '' && this.currentCpaIndex != '') {
+    else if (this.data_type == 'Experiment') {
+      if (this.error['fileName'] == 'none' || this.error['fileName'] == 'type3') {
+        this.fileCreater()
+      }
+    }
+    else {
       if (this.error['fileName'] == 'none') {
-        delete this.newFileData['']
-        if (this.data_type == 'CPA') {
-          this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
-        }
-        else if (this.data_type == 'Experiment') {
-          this.currentFileName = `${this.currentFileName}.json`
-        }
-        else {
-          if (this.data_type == 'Process') {
-            this.newFileData['Process ID'] = this.currentFileName
-          }
-          else {
-            this.newFileData['Sample ID'] = this.currentFileName
-          }
-          this.currentFileName = `${this.currentFileName}.txt`
-        }
-
-        this.memory[this.currentFileName] = [cloneDeep(this.newFileData), this.deletedItems, this.deletedItemItems]
-
-        for (let deletedItemItem of this.deletedItemItems) {
-          const key = deletedItemItem.split('-')[0]
-          const probe = deletedItemItem.split('-')[1]
-          delete this.newFileData[key][probe]
-        }
-
-        for (let deletedItem of this.deletedItems) {
-          delete this.newFileData[deletedItem]
-        }
-
-        this.deletedItems = []
-        this.fileTransferService.fileCreate(this.currentFileName, this.data_type, this.newFileData).then((res) => {
-          this.createdFiles = [...this.createdFiles.filter(item => item.file_name !== JSON.parse(res.replace(/'/g, '"'))[0].file_name)]
-          this.createdFiles.push(...(JSON.parse(res.replace(/'/g, '"'))))
-          this.selectedFiles[this.currentFileName] = this.createdFiles[this.createdFiles.length - 1]['neo4j']
-          this.reloadConfigFile()
-        })
-      }
-    } else {
-      if (this.currentFileName == '') {
-        this.error['fileName'] = 'type2'
-      }
-      if (this.currentCpaIndex == '') {
-        this.error['cpaIndex'] = 'type2'
+        this.fileCreater()
       }
     }
+  }
+
+  fileCreater() {
+    delete this.newFileData['']
+    if (this.data_type == 'CPA') {
+      this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
+    }
+    else if (this.data_type == 'Experiment') {
+      this.newFileData['Experiment ID'] = this.currentFileName
+      this.currentFileName = `${this.currentFileName}.json`
+    }
+    else {
+      if (this.data_type == 'Process') {
+        this.newFileData['Process ID'] = this.currentFileName
+      }
+      else {
+        this.newFileData['Sample ID'] = this.currentFileName
+      }
+      this.currentFileName = `${this.currentFileName}.txt`
+    }
+
+    this.memory[this.currentFileName] = [cloneDeep(this.newFileData), this.deletedItems, this.deletedItemItems]
+
+    for (let deletedItemItem of this.deletedItemItems) {
+      const key = deletedItemItem.split('-')[0]
+      const probe = deletedItemItem.split('-')[1]
+      delete this.newFileData[key][probe]
+    }
+
+    for (let deletedItem of this.deletedItems) {
+      delete this.newFileData[deletedItem]
+    }
+    this.fileTransferService.fileCreate(this.currentFileName, this.data_type, this.newFileData).then((res) => {
+      this.createdFiles = [...this.createdFiles.filter(item => item.file_name !== JSON.parse(res.replace(/'/g, '"'))[0].file_name)]
+      this.createdFiles.push(...(JSON.parse(res.replace(/'/g, '"'))))
+      this.selectedFiles[this.currentFileName] = this.createdFiles[this.createdFiles.length - 1]['neo4j']
+      this.reloadConfigFile()
+    })
   }
 
   getObjectKeys(obj: any): string[] {
@@ -277,6 +281,9 @@ export class UnitCreateInstanceComponent implements OnInit {
     else if (this.data_type == 'PreData' || this.data_type == 'PostData') {
       delete this.newFileData['Sample ID']
     }
+    else if (this.data_type == 'Experiment') {
+      delete this.newFileData['Experiment ID']
+    }
 
     this.deletedItems = this.memory[fileName][1]
     this.deletedItemItems = this.memory[fileName][2]
@@ -284,7 +291,7 @@ export class UnitCreateInstanceComponent implements OnInit {
     delete this.selectedFiles[fileName]
     this.createdFiles = this.createdFiles.filter(item => item.file_name != fileName)
     this.checkFileName()
-    if (this.data_type == 'CPA'){
+    if (this.data_type == 'CPA') {
       this.checkCpaIndex()
     }
   }
