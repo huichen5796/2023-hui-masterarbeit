@@ -40,7 +40,6 @@ export const defaultExperiment: ExperimentStructur = {
 }
 
 export const defaultPrePostData: { [key: string]: string } = {
-    "Sample ID": "",
     "RunDate": "",
     "Viability (%)": "",
     "Total cells / ml (x 10^6)": "",
@@ -84,7 +83,6 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
 }
 
 export const defaultProcess: { [key: string]: string } = {
-    "Process ID": "",
     "Freezing device": "",
     "Cooling rate": "",
     "Preservation container": "",

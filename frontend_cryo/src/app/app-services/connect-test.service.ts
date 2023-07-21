@@ -32,7 +32,7 @@ export class ConnectTestService {
     return promise
   }
 
-  testDataStoreFile(data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process'): Promise<any> {
+  testDataStoreFile(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process'): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
       this.http.get(`${backendUrl}/buildOneType/?store_name=${dataStoreName}&data_type=${data_type}`)
         .subscribe((rep: any) => {
@@ -59,7 +59,7 @@ export class ConnectTestService {
     return promise
   }
 
-  cleanDataStoreFile(data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process'): Promise<any> {
+  cleanDataStoreFile(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process'): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
       this.http.get(`${backendUrl}/deleteOneType/?store_name=${dataStoreName}&data_type=${data_type}`)
         .subscribe((rep: any) => {

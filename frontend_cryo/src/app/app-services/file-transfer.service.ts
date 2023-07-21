@@ -12,11 +12,11 @@ export class FileTransferService {
     private http: HttpClient,
   ) { }
 
-  fileUpload(selectedFile: FileList, data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process'): Promise<any> {
+  fileUpload(selectedFile: FileList, data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process'): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
       const formData = new FormData();
       for (let i = 0; i < selectedFile.length; i++) {
-        if (data_type == 'cpa') {
+        if (data_type == 'CPA') {
           formData.append('files', selectedFile[i], selectedFile[i].webkitRelativePath);
         } else {
           formData.append('files', selectedFile[i], selectedFile[i].name);
@@ -32,7 +32,7 @@ export class FileTransferService {
     return promise
   }
 
-  fileCreate(file_name:string, data_type: 'pre_data' | 'post_data' | 'cpa' | 'exp' | 'process', data: {}):Promise<any> {
+  fileCreate(file_name:string, data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process', data: {}):Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
       const formData = new FormData();
       formData.append('files', new Blob([JSON.stringify(data)], { type: 'application/json' }), file_name);
