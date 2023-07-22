@@ -55,7 +55,6 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
         "CPA ID": ""
     },
     "DSC": {
-        "File ID": "",
         "Curve": {
             "Temp./\u00b0C": [],
             "Time/min": [],
@@ -65,20 +64,16 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
         }
     },
     "FTIR": {
-        "File ID": "",
         "Curve": {
             "Wavenumber/cm^-1": [],
             "Absorbance/A": []
         }
     },
     "Cryomicroscopy": {
-        "File ID": ""
     },
     "Osmolality": {
-        "File ID": ""
     },
     "Viscosity": {
-        "File ID": ""
     }
 }
 

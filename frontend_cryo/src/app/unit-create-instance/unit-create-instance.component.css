@@ -5,7 +5,6 @@ label {
 .label-create {
     display: inline-block;
     padding: 5px 10px;
-    padding-bottom: 7px;
     background-color: #1976d2;
     color: #fff;
     border: none;
@@ -16,6 +15,21 @@ label {
     font-size: 16px;
     margin-bottom: 10px;
     margin-top: 10px;
+}
+
+.label-reload {
+    display: inline-block;
+    padding: 5px 10px;
+    color: yellow;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    transform: translateX(8px);
+    text-decoration: underline;
 }
 
 .label-edit {
@@ -88,6 +102,7 @@ h2 {
 mat-error {
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     margin-left: 10px;
+    display: block;
 }
 
 .file-box {
@@ -97,6 +112,7 @@ mat-error {
     color: #fff;
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     overflow-y: scroll;
+    position: relative;;
 }
 
 .add-new {
@@ -216,7 +232,7 @@ li input,
 }
 
 .type-box {
-    transform: translateY(8px);
+    transform: translateY(0px);
     margin-right: 10px;
 }
 

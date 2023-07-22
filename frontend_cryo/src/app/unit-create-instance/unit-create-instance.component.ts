@@ -152,8 +152,10 @@ export class UnitCreateInstanceComponent implements OnInit {
     this.checkFileName()
     if (this.data_type == 'CPA') {
       this.checkCpaIndex()
-      if (this.error['fileName'] == 'none' && this.error['cpaIndex'] == 'none') {
-        this.fileCreater()
+      if (this.error['fileName'] == 'none') {
+        if (this.error['cpaIndex'] == 'none' || this.error['cpaIndex'] == 'type3'){
+          this.fileCreater()
+        }
       }
     }
     else if (this.data_type == 'Experiment') {
@@ -171,6 +173,7 @@ export class UnitCreateInstanceComponent implements OnInit {
   fileCreater() {
     delete this.newFileData['']
     if (this.data_type == 'CPA') {
+      this.newFileData[`${this.currentType} ID`] = this.currentFileName
       this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
     }
     else if (this.data_type == 'Experiment') {
@@ -283,6 +286,9 @@ export class UnitCreateInstanceComponent implements OnInit {
     }
     else if (this.data_type == 'Experiment') {
       delete this.newFileData['Experiment ID']
+    } 
+    else if (this.data_type == 'CPA'){
+      delete this.newFileData[`${fileName.split('/')[1]} ID`]
     }
 
     this.deletedItems = this.memory[fileName][1]
@@ -322,12 +328,7 @@ export class UnitCreateInstanceComponent implements OnInit {
     "Process ID": 'Process'
   }
 
-  idList: { [key: string]: string[] } = {
-    "PreData ID": [],
-    "PostData ID": [],
-    "CPA ID": [],
-    "Process ID": []
-  }
+  idList: { [key: string]: string[] } = {}
 
   search(data_type: string) {
     this.idList[data_type] = []
