@@ -268,3 +268,23 @@ li input,
     padding: 0px;
     font-size: small;
 }
+
+textarea {
+    min-height: 19.6px;
+    padding: 0px;
+    flex-grow: 1;
+}
+
+input, textarea {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    padding: 0px 4px;
+}
+
+.textarea-shell, app-unit-show-in-table {
+    flex-grow: 1;
+}
+
+li {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
