@@ -6,7 +6,7 @@
     <label class="label-reload" (click)="reloadConfigFile()">Reload Template</label>
     <label *ngIf="data_type == 'Process'">File name / Process ID:</label>
     <label *ngIf="data_type == 'PreData' || data_type == 'PostData'">File name / Sample ID:</label>
-    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (input)="checkFileName()">
+    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
     <mat-error *ngIf="error['fileName'] == 'type1'">'/', '\' shall not be used.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type2'">{{ data_type }} ID is required.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type3'">{{ data_type }} ID is used.</mat-error>
@@ -41,7 +41,7 @@
     <div>
         <label class="label-reload" (click)="reloadConfigFile()">Reload Template</label>
         <label>Input or select CPA ID:</label>
-        <input #inputType type="search" [(ngModel)]="currentCpaIndex" placeholder="Ex. CPA1" (input)="checkCpaIndex()"
+        <input #inputType type="search" [(ngModel)]="currentCpaIndex" placeholder="Ex. CPA1" (blur)="checkCpaIndex()"
             [matAutocomplete]="autoType" (click)="search('CPA ID')">
         <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete">
             <mat-option *ngFor="let id of idList['CPA ID']" [value]="id" class="option">
@@ -90,7 +90,7 @@
 <div class="file-box" *ngIf="data_type == 'Experiment'">
     <label class="label-reload" (click)="reloadConfigFile()">Reload Template</label>
     <label>File name / Experiment ID:</label>
-    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (input)="checkFileName()">
+    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
     <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">
         '/', '\' shall not beused.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type2'">Experiment ID is required.</mat-error>
