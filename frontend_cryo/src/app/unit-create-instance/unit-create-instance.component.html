@@ -6,7 +6,7 @@
     <label class="label-reload" (click)="reloadConfigFile()">Reload Template</label>
     <label *ngIf="data_type == 'Process'">File name / Process ID:</label>
     <label *ngIf="data_type == 'PreData' || data_type == 'PostData'">File name / Sample ID:</label>
-    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
+    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (input)="checkFileName()">
     <mat-error *ngIf="error['fileName'] == 'type1'">'/', '\' shall not be used.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type2'">{{ data_type }} ID is required.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type3'">{{ data_type }} ID is used.</mat-error>
@@ -15,9 +15,11 @@
         <li *ngFor="let key of getObjectKeys(newFileData)">
             <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
             <label>· {{ key }}</label>
-            <input matInput type="search" *ngIf="key == ''" [(ngModel)]="currrentKey" (blur)="updateKey()">
+            <textarea matInput type="search" rows="1" *ngIf="key == ''" [(ngModel)]="currrentKey"
+                (blur)="updateKey()"></textarea>
             <label>:</label>
-            <input matInput type="search" *ngIf="isString(newFileData[key])" [(ngModel)]="newFileData[key]">
+            <textarea matInput type="search" rows="1" *ngIf="isString(newFileData[key])"
+                [(ngModel)]="newFileData[key]"></textarea>
             <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
             <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
         </li>
@@ -39,7 +41,7 @@
     <div>
         <label class="label-reload" (click)="reloadConfigFile()">Reload Template</label>
         <label>Input or select CPA ID:</label>
-        <input #inputType type="search" [(ngModel)]="currentCpaIndex" placeholder="Ex. CPA1" (blur)="checkCpaIndex()"
+        <input #inputType type="search" [(ngModel)]="currentCpaIndex" placeholder="Ex. CPA1" (input)="checkCpaIndex()"
             [matAutocomplete]="autoType" (click)="search('CPA ID')">
         <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete">
             <mat-option *ngFor="let id of idList['CPA ID']" [value]="id" class="option">
@@ -55,8 +57,10 @@
 
     <ul>
         <li>
-            <label>· {{ currentType }} ID:</label>
-            <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
+            <label>· {{ currentType }} ID</label>
+            <label>:</label>
+            <textarea type="search" [(ngModel)]="currentFileName" rows="1" placeholder="Ex. test_1 2023"
+                (blur)="checkFileName()"></textarea>
             <u class="add-delete"></u>
         </li>
         <mat-error *ngIf="error['fileName'] == 'type2'">{{ currentType }} ID is required.</mat-error>
@@ -64,16 +68,16 @@
         <li *ngFor="let key of getObjectKeys(newFileData)">
             <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
             <label>· {{ key }}</label>
-            <input matInput type="search" *ngIf="key == ''" [(ngModel)]="currrentKey" (blur)="updateKey()">
+            <textarea matInput type="search" rows="1" *ngIf="key == ''" [(ngModel)]="currrentKey"
+                (blur)="updateKey()"></textarea>
             <label>:</label>
-            <input matInput type="search" *ngIf="isString(newFileData[key])" [(ngModel)]="newFileData[key]">
-            <div *ngIf="!isString(newFileData[key])" class="sub-box">
-                <div *ngFor="let item of getObjectKeys(newFileData[key])" class="sub-box-sub">
-                    <label>- {{ item }}</label>
-                    <label>:</label>
-                    <input matInput type="search" [(ngModel)]="newFileData[key][item]">
-                </div>
-            </div>
+            <ng-container *ngIf="key == 'Curve'" class="textarea-shell">
+                <textarea matInput type="search" rows="1" *ngIf="!showTableOrNot"
+                [(ngModel)]="newFileData[key]" (blur)="showTable(true)"></textarea>
+                <app-unit-show-in-table *ngIf="showTableOrNot" [textareaContent] = 'newFileData[key]' (dblclick)="showTable(false)"></app-unit-show-in-table>
+            </ng-container>
+            <textarea matInput type="search" rows="1" *ngIf="key != 'Curve'"
+                [(ngModel)]="newFileData[key]"></textarea>
             <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
             <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
         </li>
@@ -86,7 +90,7 @@
 <div class="file-box" *ngIf="data_type == 'Experiment'">
     <label class="label-reload" (click)="reloadConfigFile()">Reload Template</label>
     <label>File name / Experiment ID:</label>
-    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (blur)="checkFileName()">
+    <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023" (input)="checkFileName()">
     <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">
         '/', '\' shall not beused.</mat-error>
     <mat-error *ngIf="error['fileName'] == 'type2'">Experiment ID is required.</mat-error>
@@ -108,7 +112,8 @@
         <li *ngFor="let key of (getObjectKeys(newFileData) | excludeItem: ['Remark'])" class="table-versuch">
             <div class="table-li">
                 <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
-                <label>{{ key }} ID: </label>
+                <label>{{ key }} ID</label>
+                <label>:</label>
                 <input type="search" [(ngModel)]="newFileData[key]['Versuche ID']" placeholder="Ex. test_1 2023">
                 <p class="position-holder"></p>
                 <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
@@ -151,46 +156,22 @@
         <u>delete all</u></button>
 </h2>
 
-<div *ngIf="data_type != 'CPA'">
-    <ul *ngIf="createdFiles.length == 0">
-        --none--
-    </ul>
-    <div *ngIf="createdFiles.length > 0" class="tab-box">
-        <mat-selection-list (selectionChange)="onSelected($event)">
-            <mat-list-option *ngFor="let file of createdFiles" [value]="file.file_name"
-                [selected]="selectedOrNot(file)">
-                <div>{{ file.file_name }} <u (click)="editCreatedFiles(file.file_name)" class="edit">edit</u></div>
-                <div class="option-box">
-                    <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}</div>
-                    <div [ngClass]="selectedFiles[file.file_name] + 'file'">
-                        <p *ngIf="selectedFiles[file.file_name] != 'see-error-detail'">save: {{
-                            selectedFiles[file.file_name] }}</p>
-                        <p *ngIf="selectedFiles[file.file_name] == 'see-error-detail'">save: error <u>see detail</u></p>
-                    </div>
-                </div>
-            </mat-list-option>
-        </mat-selection-list>
-    </div>
-</div>
 
-<div *ngIf="data_type == 'CPA'">
-    <ul *ngIf="createdFiles.length == 0">
-        --none--
-    </ul>
-    <div *ngIf="createdFiles.length > 0" class="tab-box">
-        <mat-selection-list (selectionChange)="onSelected($event)">
-            <mat-list-option *ngFor="let file of createdFiles" [value]="file.file_name"
-                [selected]="selectedOrNot(file)">
-                <div>{{ file.file_name }} <u (click)="editCreatedFiles(file.file_name)" class="edit">edit</u></div>
-                <div class="option-box">
-                    <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}</div>
-                    <div [ngClass]="selectedFiles[file.file_name] + 'file'">
-                        <p *ngIf="selectedFiles[file.file_name] != 'see-error-detail'">save: {{
-                            selectedFiles[file.file_name] }}</p>
-                        <p *ngIf="selectedFiles[file.file_name] == 'see-error-detail'">save: error <u>see detail</u></p>
-                    </div>
+<ul *ngIf="createdFiles.length == 0">
+    --none--
+</ul>
+<div *ngIf="createdFiles.length > 0" class="tab-box">
+    <mat-selection-list (selectionChange)="onSelected($event)">
+        <mat-list-option *ngFor="let file of createdFiles" [value]="file.file_name" [selected]="selectedOrNot(file)">
+            <div>{{ file.file_name }} <u (click)="editCreatedFiles(file.file_name)" class="edit">edit</u></div>
+            <div class="option-box">
+                <div [ngClass]="file.result.replace(' ', '-') + 'file'">upload: {{ file.result }}</div>
+                <div [ngClass]="selectedFiles[file.file_name] + 'file'">
+                    <p *ngIf="selectedFiles[file.file_name] != 'see-error-detail'">save: {{
+                        selectedFiles[file.file_name] }}</p>
+                    <p *ngIf="selectedFiles[file.file_name] == 'see-error-detail'">save: error <u>see detail</u></p>
                 </div>
-            </mat-list-option>
-        </mat-selection-list>
-    </div>
+            </div>
+        </mat-list-option>
+    </mat-selection-list>
 </div>

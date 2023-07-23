@@ -55,19 +55,10 @@ export const defaultCpaData: { [key: string]: { [key: string]: ({ [key: string]:
         "CPA ID": ""
     },
     "DSC": {
-        "Curve": {
-            "Temp./\u00b0C": [],
-            "Time/min": [],
-            "DSC/(mW/mg)": [],
-            "Sensit./(uV/mW)": [],
-            "Segment": []
-        }
+        "Curve": "Temp./\u00b0C;Time/min;DSC/(mW/mg);Sensit./(uV/mW);Segment\n"
     },
     "FTIR": {
-        "Curve": {
-            "Wavenumber/cm^-1": [],
-            "Absorbance/A": []
-        }
+        "Curve": "Wavenumber/cm^-1;Absorbance/A\n"
     },
     "Cryomicroscopy": {
     },

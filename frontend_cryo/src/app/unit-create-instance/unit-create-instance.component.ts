@@ -266,6 +266,7 @@ export class UnitCreateInstanceComponent implements OnInit {
     this.deletedItemItems = []
     this.error = { fileName: '', cpaIndex: '' }
     this.currrentKey = ''
+    this.showTableOrNot = true
   }
 
   editCreatedFiles(fileName: string) {
@@ -347,4 +348,9 @@ export class UnitCreateInstanceComponent implements OnInit {
     return `${itemKey}-${itemItem}`
   }
 
+  showTableOrNot:boolean = true
+
+  showTable(orNot:boolean){
+    this.showTableOrNot = orNot
+  }
 }

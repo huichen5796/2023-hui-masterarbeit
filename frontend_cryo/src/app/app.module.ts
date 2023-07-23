@@ -66,6 +66,7 @@ import { UnitAnalyseCpaComponent } from './unit-analyse-cpa/unit-analyse-cpa.com
 import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse-process.component';
 import { UnitAnalyseSelectListComponent } from './unit-analyse-select-list/unit-analyse-select-list.component';
 import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-analyse-select-menu.component';
+import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-table.component';
 
 
 @NgModule({
@@ -93,6 +94,7 @@ import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-
     UnitAnalyseSelectListComponent,
     UnitAnalyseSelectMenuComponent,
     ExcludeItemPipe,
+    UnitShowInTableComponent,
   ],
   imports: [
     BrowserModule,
