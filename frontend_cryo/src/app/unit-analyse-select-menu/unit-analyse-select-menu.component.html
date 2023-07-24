@@ -2,11 +2,21 @@
     <div class="left">
         <h2>- {{ which }} -</h2>
 
-        <app-unit-analyse-select-list [translate_which]="[translate[which[0]]]"
-            (openSearch)="onDataReceived($event)"></app-unit-analyse-select-list>
+        <div class="list-box-ower">
+            <mat-list cdkListbox class="list-box">
+                <mat-list-item *ngFor="let value of idList" [cdkOption]="value" title="{{value}}" (click)="setSelect(value)">
+                    <span *ngIf="isSelected(value)" class="focus">{{ value }}</span>
+                    <span *ngIf="!isSelected(value)" class="action">{{ value }}</span>
+                </mat-list-item>
+            </mat-list>
+        </div>
     </div>
-    <div class="right" *ngIf="selectedId">
-        <app-unit-analyse-cell *ngIf="which[0] == 'pre-data' || which[0] == 'post-data'"
-            [openSearch]="{translate_which:translate[which[0]], selectedId:selectedId}"></app-unit-analyse-cell>
+    <div class="right" *ngIf="selectedId != []">
+        <app-unit-analyse-cell *ngIf="which[0] == 'PreData'"
+            [openSearch]="{which:which[0], selectedId:selectedId}" (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-cell>
+        <app-unit-analyse-cell *ngIf="which[0] == 'PostData'"
+            [openSearch]="{which:which[0], selectedId:selectedId}" (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-cell>
+        <app-unit-analyse-process *ngIf="which[0] == 'Process'"
+            [openSearch]="{which:which[0], selectedId:selectedId}" (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-process>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 
 @Component({
@@ -6,10 +6,12 @@ import { QueryNeo4jService } from '../app-services';
   templateUrl: './unit-analyse-cell.component.html',
   styleUrls: ['./unit-analyse-cell.component.css']
 })
-export class UnitAnalyseCellComponent {
-  @Input() openSearch!: { translate_which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string }
+export class UnitAnalyseCellComponent implements OnChanges{
+  @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
+  @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
-  callBack!: any
+  callBacks: any[] = []
+  minimizeItems:string[] = []
 
   itemShow: { [key: string]: string[] } = {
     Viability: ["Viability_(%)", "Total_cells_/_ml_(x_10^6)", "Total_viable_cells_/_ml_(x_10^6)"],
@@ -21,15 +23,19 @@ export class UnitAnalyseCellComponent {
     private queryNeo4jService: QueryNeo4jService,
   ) { }
 
-  searchOne(ID: string, data_type: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
-    this.queryNeo4jService.queryOneNode(data_type, ID).then((res) => {
-      this.callBack = res
+  searchOne(ID: readonly string[], data_type: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
+    ID.forEach((element) => {
+      this.queryNeo4jService.queryOneNode(data_type, element).then((res) => {
+        this.callBacks.push(res)
+      })
     })
+
   }
 
   ngOnChanges() {
-    if (this.openSearch['selectedId']) {
-      this.searchOne(this.openSearch['selectedId'], this.openSearch['translate_which'])
+    this.callBacks = []
+    if (this.openSearch['selectedId'].length !==0) {
+      this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
     }
   }
 
@@ -40,5 +46,17 @@ export class UnitAnalyseCellComponent {
     else {
       return Object.keys(obj);
     }
+  }
+  delete(item:string) {
+    this.deleteOne.emit(item)
+  }
+
+  minimize(value:string){
+    if (this.minimizeItems.indexOf(value) == -1) {
+      this.minimizeItems.push(value)
+    } else{
+      this.minimizeItems = this.minimizeItems.filter((item: string) => item !== value);
+    }
+    this.minimizeItems = [...this.minimizeItems]
   }
 }

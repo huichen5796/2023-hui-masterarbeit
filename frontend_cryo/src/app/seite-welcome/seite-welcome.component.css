@@ -95,6 +95,7 @@ a.card .material-icons path {
     height: auto;
     width: 168px;
     font-size: large;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 }
 
 .card-container .card:not(.highlight-card) {

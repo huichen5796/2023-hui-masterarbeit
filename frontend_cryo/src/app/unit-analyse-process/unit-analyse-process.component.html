@@ -1,1 +1,23 @@
-<p>unit-analyse-process works!</p>
+<mat-card class="example-card" *ngFor="let callBack of callBacks">
+    <div class="button-delete">
+        <button mat-icon-button color="primary" *ngIf="minimizeItems.indexOf(callBack['Process_ID']) == -1" (click)="minimize(callBack['Process_ID'])">
+            <mat-icon>unfold_less</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" *ngIf="minimizeItems.indexOf(callBack['Process_ID']) != -1" (click)="minimize(callBack['Process_ID'])">
+            <mat-icon>unfold_more</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="delete(callBack['Process_ID'])">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-card-header>
+        <mat-card-title>{{ callBack['Process_ID'] }}</mat-card-title>
+        <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="content-box" *ngIf="minimizeItems.indexOf(callBack['Process_ID']) == -1">
+        <div *ngFor="let topItem of topItems">
+            <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
+        </div>
+    </mat-card-content>
+</mat-card>

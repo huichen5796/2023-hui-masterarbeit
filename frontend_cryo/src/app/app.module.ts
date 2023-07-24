@@ -37,6 +37,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTreeModule } from '@angular/material/tree';
 import { CdkListboxModule } from '@angular/cdk/listbox';
+import { MatBadgeModule } from '@angular/material/badge';
 
 // Pipes //
 import { ExcludeItemPipe } from "./app-pipes";
@@ -64,7 +65,6 @@ import { UnitAnalyseCellComponent } from './unit-analyse-cell/unit-analyse-cell.
 import { UnitAnalyseExperimentComponent } from './unit-analyse-experiment/unit-analyse-experiment.component';
 import { UnitAnalyseCpaComponent } from './unit-analyse-cpa/unit-analyse-cpa.component';
 import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse-process.component';
-import { UnitAnalyseSelectListComponent } from './unit-analyse-select-list/unit-analyse-select-list.component';
 import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-analyse-select-menu.component';
 import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-table.component';
 
@@ -91,7 +91,6 @@ import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-tabl
     UnitAnalyseExperimentComponent,
     UnitAnalyseCpaComponent,
     UnitAnalyseProcessComponent,
-    UnitAnalyseSelectListComponent,
     UnitAnalyseSelectMenuComponent,
     ExcludeItemPipe,
     UnitShowInTableComponent,
@@ -103,6 +102,7 @@ import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-tabl
     MatFormFieldModule,
     MatDialogModule,
     MatTreeModule,
+    MatBadgeModule,
     CdkListboxModule,
     MatStepperModule,
     MatInputModule,
