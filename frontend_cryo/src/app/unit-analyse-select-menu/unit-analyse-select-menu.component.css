@@ -3,6 +3,7 @@
     flex-direction: row;
     justify-content: left;
     width: 100%;
+    justify-content: space-between;
 }
 .left{
 
@@ -10,4 +11,34 @@
 
 .right{
     
+}
+
+
+h2 {
+    padding: 0px;
+    margin: 0px;
+}
+
+.focus {
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.action:hover, .focus:hover {
+    cursor: pointer;
+}
+
+
+.list-box-ower {
+    height: 468px;
+    max-width: 280px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.list-box {
+    height: 100%;
+    width: calc(100% + 50px);
+    max-width: 300px;
+    overflow-y: scroll;
 }

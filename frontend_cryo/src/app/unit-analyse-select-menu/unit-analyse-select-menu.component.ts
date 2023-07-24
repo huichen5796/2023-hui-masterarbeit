@@ -7,23 +7,39 @@ import { QueryNeo4jService } from '../app-services';
   styleUrls: ['./unit-analyse-select-menu.component.css']
 })
 export class UnitAnalyseSelectMenuComponent implements OnChanges {
-  @Input() which: readonly ("experiment" | "pre-data" | "post-data" | "cpa" | "process")[] = []
+  @Input() which: readonly ("Experiment" | "PreData" | "PostData" | "CPA" | "Process")[] = []
 
-  selectedId: string = ''
+  selectedId: string[] = []
 
-  translate: { [k: string]: ("Experiment" | "PreData" | "PostData" | "CPA" | "Process") } = {
-    "experiment": 'Experiment',
-    "pre-data": 'PreData',
-    "post-data": 'PostData',
-    "cpa": 'CPA',
-    "process": 'Process'
-  }
+  idList!: string[]
+
+  constructor(
+    private queryNeo4jService: QueryNeo4jService,
+  ) { }
 
   ngOnChanges() {
-    this.selectedId = ''
+    this.selectedId = []
+    if (this.which[0]) {
+      this.queryNeo4jService.queryOneType(this.which[0]).then((res) => {
+        this.idList = JSON.parse(res)
+      })
+    }
   }
 
-  onDataReceived(data:{translate_which:string, selectedId:string}){
-    this.selectedId = data['selectedId']
+  isSelected(value: string): boolean {
+    return this.selectedId.indexOf(value) != -1
+  }
+
+  OnDeleteOne(item: string) {
+    this.selectedId = this.selectedId.filter((element: string) => element !== item);
+  }
+
+  setSelect(value: string) {
+    if (this.selectedId.indexOf(value) == -1) {
+      this.selectedId.push(value)
+    } else{
+      this.selectedId = this.selectedId.filter((item: string) => item !== value);
+    }
+    this.selectedId = [...this.selectedId]
   }
 }

@@ -7,10 +7,10 @@ import { Component } from '@angular/core';
 })
 export class SeiteDataAnalyseComponent {
   listItems: { [ket: string]: string[] } = {
-    "analyse of": ["experiment", "pre-data", "post-data", "cpa", "process"]
+    "analyse of": ["Experiment", "PreData", "PostData", "CPA", "Process"]
   }
 
-  which: readonly ("experiment" | "pre-data" | "post-data" | "cpa" | "process")[] = []
+  which: readonly ("Experiment" | "PreData" | "PostData" | "CPA" | "Process")[] = []
 
   getObjectKeys(obj: any): string[] {
     return Object.keys(obj);
