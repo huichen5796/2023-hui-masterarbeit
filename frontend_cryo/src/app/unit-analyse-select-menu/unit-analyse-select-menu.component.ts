@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 
 @Component({
@@ -17,14 +17,17 @@ export class UnitAnalyseSelectMenuComponent implements OnChanges {
     private queryNeo4jService: QueryNeo4jService,
   ) { }
 
-  ngOnChanges() {
+
+  ngOnChanges(changes: SimpleChanges): void {
     this.selectedId = []
+    this.idList = []
     if (this.which[0]) {
       this.queryNeo4jService.queryOneType(this.which[0]).then((res) => {
         this.idList = JSON.parse(res)
       })
     }
   }
+
 
   isSelected(value: string): boolean {
     return this.selectedId.indexOf(value) != -1

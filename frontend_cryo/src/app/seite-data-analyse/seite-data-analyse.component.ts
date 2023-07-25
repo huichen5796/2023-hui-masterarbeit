@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-seite-data-analyse',
@@ -12,6 +12,8 @@ export class SeiteDataAnalyseComponent {
 
   which: readonly ("Experiment" | "PreData" | "PostData" | "CPA" | "Process")[] = []
 
+  constructor( private cdref: ChangeDetectorRef ) {}   
+
   getObjectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
@@ -19,5 +21,9 @@ export class SeiteDataAnalyseComponent {
   isSelected(value: string): boolean {
     return value === this.which[0];
   }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
+ }
   
 }
