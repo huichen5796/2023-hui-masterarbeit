@@ -6,12 +6,11 @@ import { QueryNeo4jService } from '../app-services';
   templateUrl: './unit-analyse-cell.component.html',
   styleUrls: ['./unit-analyse-cell.component.css']
 })
-export class UnitAnalyseCellComponent implements OnChanges{
+export class UnitAnalyseCellComponent implements OnChanges {
   @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
   callBacks: any[] = []
-  minimizeItems:string[] = []
 
   itemShow: { [key: string]: string[] } = {
     Viability: ["Viability_(%)", "Total_cells_/_ml_(x_10^6)", "Total_viable_cells_/_ml_(x_10^6)"],
@@ -34,7 +33,17 @@ export class UnitAnalyseCellComponent implements OnChanges{
 
   ngOnChanges() {
     this.callBacks = []
-    if (this.openSearch['selectedId'].length !==0) {
+    this.containerOffset = 0;
+    this.isAtStart = true;
+    if (this.openSearch['selectedId'].length == 1) {
+      this.isAtEnd = true;
+    } else if (this.openSearch['selectedId'].length == 0) {
+      this.isAtEnd = true;
+    } else {
+      this.isAtEnd = false;
+    }
+
+    if (this.openSearch['selectedId'].length !== 0) {
       this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
     }
   }
@@ -47,16 +56,30 @@ export class UnitAnalyseCellComponent implements OnChanges{
       return Object.keys(obj);
     }
   }
-  delete(item:string) {
+  delete(item: string) {
     this.deleteOne.emit(item)
   }
 
-  minimize(value:string){
-    if (this.minimizeItems.indexOf(value) == -1) {
-      this.minimizeItems.push(value)
-    } else{
-      this.minimizeItems = this.minimizeItems.filter((item: string) => item !== value);
-    }
-    this.minimizeItems = [...this.minimizeItems]
+  currentIndex = 0;
+  containerOffset = 0;
+  cardWidth = 400;
+  isAtStart = true;
+  isAtEnd = true;
+
+  slideLeft() {
+    this.currentIndex = Math.max(this.currentIndex - 1, 0);
+    this.containerOffset = -this.currentIndex * this.cardWidth;
+    this.updateButtonStates();
+  }
+
+  slideRight() {
+    this.currentIndex = Math.min(this.currentIndex + 1, this.callBacks.length - 1);
+    this.containerOffset = -this.currentIndex * this.cardWidth;
+    this.updateButtonStates();
+  }
+
+  updateButtonStates() {
+    this.isAtStart = this.currentIndex === 0;
+    this.isAtEnd = this.currentIndex === this.callBacks.length - 1;
   }
 }
