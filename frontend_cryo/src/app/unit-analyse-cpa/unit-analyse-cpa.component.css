@@ -1,0 +1,63 @@
+.content-box {
+    margin-top: 20px;
+}
+
+.key {
+    font-weight: bold;
+}
+
+.example-card {
+    font-family: var(--mdc-typography-subtitle2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
+    position: relative;
+    text-align: left;
+    overflow: hidden;
+    width: 400px;
+}
+
+.button-delete {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    transform: translateY(-10px);
+}
+
+.mat-mdc-card {
+    border: solid;
+    border-width: 2px;
+    border-color: black;
+}
+
+.container {
+    display: flex;
+    width: 400px;
+    height: 100%;
+    transition: transform 0.3s ease;
+    width: auto;
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.box {
+    width: 400px;
+    height: auto;
+    overflow: hidden;
+    display: flex;
+}
+
+.flat-button{
+    width: 20px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+    background-color: white;
+}
+
+.button-icon:hover{
+    opacity: 0.5;
+}

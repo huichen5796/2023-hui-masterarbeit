@@ -7,8 +7,7 @@ import { QueryNeo4jService } from '../app-services';
   styleUrls: ['./unit-analyse-process.component.css']
 })
 export class UnitAnalyseProcessComponent implements OnChanges {
-
-@Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
+  @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
   callBacks: any[] = []
@@ -42,15 +41,15 @@ export class UnitAnalyseProcessComponent implements OnChanges {
     this.callBacks = []
     this.containerOffset = 0;
     this.isAtStart = true;
-    if (this.openSearch['selectedId'].length == 1){
+    if (this.openSearch['selectedId'].length == 1) {
       this.isAtEnd = true;
-    } else if (this.openSearch['selectedId'].length == 0){
+    } else if (this.openSearch['selectedId'].length == 0) {
       this.isAtEnd = true;
-    }else{
+    } else {
       this.isAtEnd = false;
     }
 
-    if (this.openSearch['selectedId'].length !==0) {
+    if (this.openSearch['selectedId'].length !== 0) {
       this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
     }
   }
@@ -63,7 +62,7 @@ export class UnitAnalyseProcessComponent implements OnChanges {
       return Object.keys(obj);
     }
   }
-  delete(item:string) {
+  delete(item: string) {
     this.deleteOne.emit(item)
   }
 

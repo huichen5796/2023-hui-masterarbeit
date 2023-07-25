@@ -15,5 +15,9 @@
             (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-cell>
         <app-unit-analyse-process *ngIf="which[0] == 'Process'" [openSearch]="{which:which[0], selectedId:selectedId}"
             (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-process>
+        <app-unit-analyse-experiment *ngIf="which[0] == 'Experiment'" [openSearch]="{which:which[0], selectedId:selectedId}"
+            (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-experiment>
+        <app-unit-analyse-cpa *ngIf="which[0] == 'CPA'" [openSearch]="{which:which[0], selectedId:selectedId}"
+            (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-cpa>
     </div>
 </div>
