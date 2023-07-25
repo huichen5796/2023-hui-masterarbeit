@@ -1,16 +1,24 @@
+.title{
+    margin: 10px 0px;
+}
 .content{
     display: flex;
     flex-direction: row;
     justify-content: left;
     width: 100%;
     justify-content: space-between;
+    max-height: 600px;
+    margin-bottom: 50px;
 }
 .left{
-
+    width: 50%;
 }
 
 .right{
-    
+    width: 50%;
+    text-align: center;
+    padding: 20px;
+    padding-top: 0px;
 }
 
 
@@ -28,17 +36,12 @@ h2 {
     cursor: pointer;
 }
 
-
-.list-box-ower {
-    height: 468px;
-    max-width: 280px;
-    overflow-y: hidden;
-    overflow-x: hidden;
-}
-
 .list-box {
     height: 100%;
-    width: calc(100% + 50px);
     max-width: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
+}
+
+.mdc-list{
+    padding:0px
 }

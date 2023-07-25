@@ -61,4 +61,24 @@ export class QueryNeo4jService {
     })
     return promise
   }
+
+  queryOneExperiment(ID: string): Promise<string> {
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.get(`${backendUrl}/queryOneExperiment/${ID}`)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
+
+  queryOneCPA(ID: string): Promise<string> {
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.get(`${backendUrl}/queryOneCPA/${ID}`)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
 }
