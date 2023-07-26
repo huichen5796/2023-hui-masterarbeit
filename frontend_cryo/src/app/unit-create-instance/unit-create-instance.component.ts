@@ -173,20 +173,20 @@ export class UnitCreateInstanceComponent implements OnInit {
   fileCreater() {
     delete this.newFileData['']
     if (this.data_type == 'CPA') {
-      this.newFileData[`${this.currentType} ID`] = this.currentFileName
+      // this.newFileData[`${this.currentType} ID`] = this.currentFileName
       this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
     }
     else if (this.data_type == 'Experiment') {
-      this.newFileData['Experiment ID'] = this.currentFileName
+      // this.newFileData['Experiment ID'] = this.currentFileName
       this.currentFileName = `${this.currentFileName}.json`
     }
     else {
-      if (this.data_type == 'Process') {
-        this.newFileData['Process ID'] = this.currentFileName
-      }
-      else {
-        this.newFileData['Sample ID'] = this.currentFileName
-      }
+      // if (this.data_type == 'Process') {
+      //   this.newFileData['Process ID'] = this.currentFileName
+      // }
+      // else {
+      //   this.newFileData['Sample ID'] = this.currentFileName
+      // }
       this.currentFileName = `${this.currentFileName}.txt`
     }
 

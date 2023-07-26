@@ -40,6 +40,8 @@ export class UnitAnalyseCpaComponent {
   ngOnChanges() {
     this.callBacks = []
     this.containerOffset = 0;
+    this.showAnalyse = false
+    this.toShow = {}
     this.isAtStart = true;
     if (this.openSearch['selectedId'].length == 1) {
       this.isAtEnd = true;
@@ -87,5 +89,12 @@ export class UnitAnalyseCpaComponent {
   updateButtonStates() {
     this.isAtStart = this.currentIndex === 0;
     this.isAtEnd = this.currentIndex === this.callBacks.length - 1;
+  }
+  showAnalyse:boolean = false
+  toShow:any = {}
+
+  doShow(callBack:any){
+    this.showAnalyse = true
+    this.toShow = callBack
   }
 }

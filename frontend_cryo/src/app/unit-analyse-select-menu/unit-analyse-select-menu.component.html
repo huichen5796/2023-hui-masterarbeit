@@ -1,23 +1,31 @@
-<h2 class="title">- {{ which }} -</h2>
-<div class="content">
-    <div class="left">
-        <mat-list cdkListbox class="list-box">
-            <button mat-menu-item *ngFor="let value of idList" title="{{value}}" (click)="setSelect(value)">
-                <span *ngIf="isSelected(value)" class="focus">{{ value }}</span>
-                <span *ngIf="!isSelected(value)" class="action">{{ value }}</span>
-            </button>
-        </mat-list>
-    </div>
-    <div class="right" *ngIf="selectedId != []">
+<mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side" opened>
+        <h2 class="title" *ngIf="which[0]">- {{ which }} -</h2>
+        <div class="left">
+            <mat-list cdkListbox class="list-box">
+                <button mat-menu-item *ngFor="let value of idList" title="{{value}}" (click)="setSelect(value)">
+                    <span *ngIf="isSelected(value)" class="focus">{{ value }}</span>
+                    <span *ngIf="!isSelected(value)" class="action">{{ value }}</span>
+                </button>
+            </mat-list>
+        </div>
+    </mat-drawer>
+
+    <div class="example-sidenav-content" *ngIf="selectedId != []">
         <app-unit-analyse-cell *ngIf="which[0] == 'PreData'" [openSearch]="{which:which[0], selectedId:selectedId}"
             (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-cell>
         <app-unit-analyse-cell *ngIf="which[0] == 'PostData'" [openSearch]="{which:which[0], selectedId:selectedId}"
             (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-cell>
         <app-unit-analyse-process *ngIf="which[0] == 'Process'" [openSearch]="{which:which[0], selectedId:selectedId}"
             (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-process>
-        <app-unit-analyse-experiment *ngIf="which[0] == 'Experiment'" [openSearch]="{which:which[0], selectedId:selectedId}"
+        <app-unit-analyse-experiment *ngIf="which[0] == 'Experiment'"
+            [openSearch]="{which:which[0], selectedId:selectedId}"
             (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-experiment>
         <app-unit-analyse-cpa *ngIf="which[0] == 'CPA'" [openSearch]="{which:which[0], selectedId:selectedId}"
             (deleteOne)="OnDeleteOne($event)"></app-unit-analyse-cpa>
+        <button type="button" mat-button (click)="drawer.toggle()" class="toggle">
+            <mat-icon [class.mirror-icon]="drawer.opened">arrow_forward_ios</mat-icon>
+        </button>
     </div>
-</div>
+
+</mat-drawer-container>
