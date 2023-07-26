@@ -12,7 +12,6 @@ export class UnitAnalyseExperimentComponent {
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
   callBacks: any[] = []
-  hidden:boolean = false
 
   constructor(
     private queryNeo4jService: QueryNeo4jService,
@@ -26,7 +25,7 @@ export class UnitAnalyseExperimentComponent {
     })
 
   }
-
+  hidden:boolean = false
   ngOnChanges() {
     this.callBacks = []
     this.containerOffset = 0;
