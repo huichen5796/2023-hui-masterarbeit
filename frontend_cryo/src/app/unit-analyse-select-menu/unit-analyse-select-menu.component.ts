@@ -1,13 +1,15 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-unit-analyse-select-menu',
   templateUrl: './unit-analyse-select-menu.component.html',
   styleUrls: ['./unit-analyse-select-menu.component.css']
 })
-export class UnitAnalyseSelectMenuComponent implements OnChanges {
+export class UnitAnalyseSelectMenuComponent implements OnChanges, AfterViewInit {
   @Input() which: readonly ("Experiment" | "PreData" | "PostData" | "CPA" | "Process")[] = []
+  @ViewChild('drawer') drawer!: MatSidenav;
 
   selectedId: string[] = []
 
@@ -16,12 +18,15 @@ export class UnitAnalyseSelectMenuComponent implements OnChanges {
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) { }
-
+  ngAfterViewInit(): void {
+    this.drawer.close()
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.selectedId = []
     this.idList = []
     if (this.which[0]) {
+      this.drawer.open()
       this.queryNeo4jService.queryOneType(this.which[0]).then((res) => {
         this.idList = JSON.parse(res)
       })
@@ -45,4 +50,5 @@ export class UnitAnalyseSelectMenuComponent implements OnChanges {
     }
     this.selectedId = [...this.selectedId]
   }
+
 }

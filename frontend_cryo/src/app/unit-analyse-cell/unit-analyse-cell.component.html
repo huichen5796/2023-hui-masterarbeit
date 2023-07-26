@@ -1,29 +1,42 @@
 <div class="main">
-    <button (click)="slideLeft()" class="flat-button"><mat-icon *ngIf="!isAtStart" class="button-icon" style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_left</mat-icon></button>
-    <div class="box">
-        <div class="container" [style.transform]="'translateX(' + containerOffset + 'px)'" *ngFor="let callBack of callBacks">
-            <mat-card class="example-card">
-                <div class="button-delete">
-                    <button mat-icon-button (click)="delete(callBack['Sample_ID'])">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </div>
-    
-                <mat-card-header>
-                    <mat-card-title>{{ callBack['Sample_ID'] }}</mat-card-title>
-                    <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content class="content-box">
-                    <div *ngFor="let topItem of topItems">
-                        <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
+    <button mat-button (click)="viewData()" class="view">
+        <mat-icon *ngIf="!hidden">fullscreen_exit</mat-icon>
+        <mat-icon *ngIf="hidden">fullscreen</mat-icon>
+    </button>
+    <div class="show" *ngIf="!hidden">
+        <button (click)="slideLeft()" class="flat-button"><mat-icon *ngIf="!isAtStart" class="button-icon"
+                style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_left</mat-icon></button>
+        <div class="box">
+            <div class="container" [style.transform]="'translateX(' + containerOffset + 'px)'"
+                *ngFor="let callBack of callBacks">
+                <mat-card class="example-card" (dblclick)="doShow(callBack)">
+                    <div class="button-delete">
+                        <button mat-icon-button (click)="delete(callBack['Sample_ID'])">
+                            <mat-icon>fullscreen_exit</mat-icon>
+                        </button>
                     </div>
-                    <div *ngFor="let key of getObjectKeys(itemShow)">
-                        <mat-card-subtitle>{{ key }}: </mat-card-subtitle>
-                        <p *ngFor="let item of itemShow[key]"><span class="key">{{ item }}:</span> {{ callBack[item] }}</p>
-                    </div>
-                </mat-card-content>
-            </mat-card>
+
+                    <mat-card-header>
+                        <mat-card-title>{{ callBack['Sample_ID'] }}</mat-card-title>
+                        <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content class="content-box">
+                        <div *ngFor="let topItem of topItems">
+                            <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
+                        </div>
+                        <div *ngFor="let key of getObjectKeys(itemShow)">
+                            <mat-card-subtitle>{{ key }}: </mat-card-subtitle>
+                            <p *ngFor="let item of itemShow[key]"><span class="key">{{ item }}:</span> {{ callBack[item]
+                                }}</p>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
         </div>
+        <button (click)="slideRight()" class="flat-button"><mat-icon *ngIf="!isAtEnd" class="button-icon"
+                style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
     </div>
-    <button (click)="slideRight()" class="flat-button"><mat-icon *ngIf="!isAtEnd" class="button-icon" style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
+    <div class="analyse" *ngIf="showAnalyse">
+        <div style="width: 100%;height: 100%; color: white;">{{toShow|json}}</div>
+    </div>
 </div>

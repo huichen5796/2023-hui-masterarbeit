@@ -13,18 +13,6 @@ export class UnitAnalyseExperimentComponent {
 
   callBacks: any[] = []
 
-  topItems: string[] = [
-    "Freezing_device",
-    "Cooling_rate",
-    "Preservation_container",
-    "Storage_temperature",
-    "Storage_medium",
-    "Storage_duration",
-    "Thawing_temperature",
-    "Washing_steps",
-    "Dilution_medium",
-    "Dilution_factor"
-  ]
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) { }
@@ -37,11 +25,14 @@ export class UnitAnalyseExperimentComponent {
     })
 
   }
-
+  hidden:boolean = false
   ngOnChanges() {
     this.callBacks = []
     this.containerOffset = 0;
+    this.showAnalyse = false
+    this.toShow = {}
     this.isAtStart = true;
+    this.hidden = false
     if (this.openSearch['selectedId'].length == 1) {
       this.isAtEnd = true;
     } else if (this.openSearch['selectedId'].length == 0) {
@@ -64,7 +55,8 @@ export class UnitAnalyseExperimentComponent {
     }
   }
   delete(item: string) {
-    this.deleteOne.emit(item)
+    // this.deleteOne.emit(item)
+    this.hidden = true
   }
 
   currentIndex = 0;
@@ -88,5 +80,17 @@ export class UnitAnalyseExperimentComponent {
   updateButtonStates() {
     this.isAtStart = this.currentIndex === 0;
     this.isAtEnd = this.currentIndex === this.callBacks.length - 1;
+  }
+
+  showAnalyse:boolean = false
+  toShow:any = {}
+
+  doShow(callBack:any){
+    this.showAnalyse = true
+    this.toShow = callBack
+  }
+
+  viewData(){
+    this.hidden=!this.hidden
   }
 }
