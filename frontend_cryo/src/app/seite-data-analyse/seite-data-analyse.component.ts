@@ -11,8 +11,9 @@ export class SeiteDataAnalyseComponent {
   }
 
   which: ("Experiment" | "PreData" | "PostData" | "CPA" | "Process")[] = []
+  history: any = ''
 
-  constructor( private cdref: ChangeDetectorRef ) {}   
+  constructor(private cdref: ChangeDetectorRef) { }
 
   getObjectKeys(obj: any): string[] {
     return Object.keys(obj);
@@ -24,10 +25,12 @@ export class SeiteDataAnalyseComponent {
 
   ngAfterContentChecked() {
     this.cdref.detectChanges();
- }
+  }
 
- setWhich(value:"Experiment" | "PreData" | "PostData" | "CPA" | "Process"){
-  this.which = [value]
- }
-  
+  setWhich(value: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
+    this.history = this.which
+    if (this.history != value) {
+      this.which = [value]
+    }
+  }
 }

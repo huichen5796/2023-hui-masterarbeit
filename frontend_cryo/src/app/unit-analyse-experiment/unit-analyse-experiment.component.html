@@ -1,5 +1,9 @@
 <div class="main">
-    <div class="show">
+    <button mat-button (click)="viewData()" class="view">
+        <mat-icon *ngIf="!hidden">fullscreen_exit</mat-icon>
+        <mat-icon *ngIf="hidden">fullscreen</mat-icon>
+    </button>
+    <div class="show" *ngIf="!hidden">
         <button (click)="slideLeft()" class="flat-button"><mat-icon *ngIf="!isAtStart" class="button-icon"
                 style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_left</mat-icon></button>
         <div class="box">
@@ -8,7 +12,7 @@
                 <mat-card class="example-card" (dblclick)="doShow(callBack)">
                     <div class="button-delete">
                         <button mat-icon-button (click)="delete(callBack['experiment']['Experiment_ID'])">
-                            <mat-icon>close</mat-icon>
+                            <mat-icon>fullscreen_exit</mat-icon>
                         </button>
                     </div>
 
@@ -17,21 +21,23 @@
                         <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content class="content-box">
-                        <div *ngFor="let versuch of callBack['child']; let i = index">
+                        <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
                             <p><span class="key">versuch {{i+1}}: </span>{{ versuch['versuch']['Versuch_ID'] }}</p>
-                            <mat-accordion>
-                                <mat-expansion-panel *ngFor="let probe of versuch['probes']; let i = index">
-                                  <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        <span class="key">probe {{i+1}}</span>
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        {{probe['Sample_ID']}}
-                                    </mat-panel-description>
-                                  </mat-expansion-panel-header>
-                                  <p *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID']"><span class="key">{{key}}: </span>{{ probe[key] }}</p>
+                            <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <span class="key">probe {{i+1}}</span>
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            {{probe['Sample_ID']}}
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <p
+                                        *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
+                                        <span class="key">{{key}}: </span>{{ probe[key] }}</p>
                                 </mat-expansion-panel>
-                              </mat-accordion>
+                            </mat-accordion>
                         </div>
                     </mat-card-content>
                 </mat-card>

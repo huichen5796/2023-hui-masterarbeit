@@ -37,7 +37,7 @@ h2 {
 .example-sidenav-content {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
     /* display: flex;
     justify-content: space-between; */
 }
