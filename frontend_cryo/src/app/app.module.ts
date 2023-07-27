@@ -38,6 +38,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTreeModule } from '@angular/material/tree';
 import { CdkListboxModule } from '@angular/cdk/listbox';
 import { MatBadgeModule } from '@angular/material/badge';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 // Pipes //
 import { ExcludeItemPipe } from "./app-pipes";
@@ -126,6 +127,7 @@ import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-tabl
     MatPaginatorModule,
     MatFormFieldModule,
     MatToolbarModule,
+    OverlayModule,
     MatInputModule,
     MatSortModule,
     MatProgressSpinnerModule,

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { QueryNeo4jService } from '../app-services';
+import { QueryNeo4jService, CalculatorService } from '../app-services';
 
 @Component({
   selector: 'app-unit-analyse-cell',
@@ -18,24 +18,41 @@ export class UnitAnalyseCellComponent implements OnChanges {
   }
 
   topItems: string[] = ["Sample_ID", "RunDate", "Machine"]
+
+  tableHeader = ['Sample_ID', ...this.itemShow['Viability'], ...this.itemShow['Morphology']]
   constructor(
     private queryNeo4jService: QueryNeo4jService,
+    private calculatorService: CalculatorService,
   ) { }
+
+  result:any = {"Sample_ID": 'CONCLUSION'}
 
   searchOne(ID: readonly string[], data_type: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
     ID.forEach((element) => {
       this.queryNeo4jService.queryOneNode(data_type, element).then((res) => {
         this.callBacks.push(res)
+        this.callBacks = [...this.callBacks]
+        if (ID.length === this.callBacks.length && this.callBacks.length !==0){
+          this.tableHeader.forEach(item=>{
+            if (['Sample_ID', 'Cell_type'].indexOf(item) === -1){
+              this.calculatorService.getMeanAndVariance(this.callBacks.map(obj => obj[item])).then((res)=>{
+                this.result[item] = res
+                this.result = {...this.result}
+              })
+            }
+          })
+        }
       })
     })
 
+  }
+  makeSource():any {
+      return this.callBacks.concat(this.result)
   }
   hidden:boolean = false
   ngOnChanges() {
     this.callBacks = []
     this.containerOffset = 0;
-    this.showAnalyse = false
-    this.toShow = {}
     this.isAtStart = true;
     this.hidden = false
     if (this.openSearch['selectedId'].length == 1) {
@@ -86,13 +103,8 @@ export class UnitAnalyseCellComponent implements OnChanges {
     this.isAtStart = this.currentIndex === 0;
     this.isAtEnd = this.currentIndex === this.callBacks.length - 1;
   }
-  showAnalyse:boolean = false
-  toShow:any = {}
 
-  doShow(callBack:any){
-    this.showAnalyse = true
-    this.toShow = callBack
-  }
+
   viewData(){
     this.hidden=!this.hidden
   }

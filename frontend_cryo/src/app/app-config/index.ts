@@ -20,14 +20,14 @@ export interface ExperimentStructur {[key: string]: Versuche | string}
 
 export interface Versuche {[key: string]: Probe | string}
 
-export interface Probe {[key: string]: string}
+export interface Probe {[key: string]: string|string[]}
 
 export const defaultProbe: Probe = {
     "Sample ID": '',
     "CPA ID": '', 
     "Process ID": '', 
-    "PreData ID": '', 
-    "PostData ID": ''
+    "PreData ID": [], 
+    "PostData ID": []
 }
 
 export const defaultVersuche: Versuche = {

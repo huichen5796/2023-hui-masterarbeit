@@ -1,4 +1,4 @@
-.main{
+.main {
     width: calc(100% - 20px);
     height: auto;
     min-height: 590px;
@@ -55,7 +55,6 @@
 .analyse {
     width: auto;
     height: 100%;
-    background-color: black;
 }
 
 .box {
@@ -66,7 +65,7 @@
     align-items: center;
 }
 
-.flat-button{
+.flat-button {
     width: 20px;
     height: 20px;
     border: none;
@@ -74,16 +73,34 @@
     background-color: white;
 }
 
-.button-icon:hover{
+.button-icon:hover {
     opacity: 0.5;
 }
 
-.view{
+.view {
     position: absolute;
     left: 0px;
-    top:40px;
+    top: 40px;
     min-width: 0px;
     padding: 0px;
     min-height: none;
     padding-left: 10px;
+}
+
+.demo-table {
+    width: auto;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+    border-color: currentColor;
+}
+
+.demo-row-is-clicked {
+    font-weight: bold;
 }
