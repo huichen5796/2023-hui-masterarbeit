@@ -170,40 +170,12 @@ li,
     min-width: 550px;
 }
 
-.sub-box {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: column;
-}
-
 li label,
-li input,
-li u,
-.sub-box {
+li u {
     flex: 0 0 auto;
-}
-
-li input,
-.sub-box {
-    flex-grow: 1;
-}
-
-.table-li input {
-    flex-grow: 0;
-    min-width: 177px;
 }
 
 .position-holder {
-    flex-grow: 1;
-}
-
-.sub-box-sub {
-    display: flex;
-    flex-wrap: nowrap;
-}
-
-.sub-box-sub input {
-    flex: 0 0 auto;
     flex-grow: 1;
 }
 
@@ -248,14 +220,17 @@ li input,
     flex-wrap: nowrap;
     flex-direction: row;
     flex-grow: 1;
+    width: 100px;
 }
 
 .table-cell {
-    width: 24%;
+    width: calc(20% - 2px);
     text-align: center;
     border: solid;
     border-color: #fff;
     border-width: 1px;
+    display: block;
+    position: relative;
 }
 
 .table-head .table-cell {
@@ -270,12 +245,9 @@ li input,
 }
 
 textarea {
-    min-height: 19.6px;
+    min-height: 20px;
     padding: 0px;
     flex-grow: 1;
-}
-
-input, textarea {
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     padding: 0px 4px;
 }
@@ -288,3 +260,28 @@ li {
     margin-top: 2px;
     margin-bottom: 2px;
 }
+
+.exp-input{
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+}
+
+.table-cell-input {
+    width: 20%;
+    text-align: center;
+    border: solid;
+    border-color: black;
+    border-width: 1px;
+    display: block;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+::ng-deep .mat-mdc-select-value{
+    color: white !important;
+ }

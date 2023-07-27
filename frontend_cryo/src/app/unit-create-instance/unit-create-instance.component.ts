@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CpaStructur, CpaValueStructur, ExperimentStructur, OtherStructur, defaultProbe, defaultVersuche } from '../app-config';
 import { FileTransferService, QueryNeo4jService } from '../app-services';
 import { cloneDeep } from 'lodash-es';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-unit-create-instance',
@@ -153,7 +155,7 @@ export class UnitCreateInstanceComponent implements OnInit {
     if (this.data_type == 'CPA') {
       this.checkCpaIndex()
       if (this.error['fileName'] == 'none') {
-        if (this.error['cpaIndex'] == 'none' || this.error['cpaIndex'] == 'type3'){
+        if (this.error['cpaIndex'] == 'none' || this.error['cpaIndex'] == 'type3') {
           this.fileCreater()
         }
       }
@@ -267,6 +269,7 @@ export class UnitCreateInstanceComponent implements OnInit {
     this.error = { fileName: '', cpaIndex: '' }
     this.currrentKey = ''
     this.showTableOrNot = true
+    this.idList = {}
   }
 
   editCreatedFiles(fileName: string) {
@@ -287,8 +290,8 @@ export class UnitCreateInstanceComponent implements OnInit {
     }
     else if (this.data_type == 'Experiment') {
       delete this.newFileData['Experiment ID']
-    } 
-    else if (this.data_type == 'CPA'){
+    }
+    else if (this.data_type == 'CPA') {
       delete this.newFileData[`${fileName.split('/')[1]} ID`]
     }
 
@@ -332,7 +335,6 @@ export class UnitCreateInstanceComponent implements OnInit {
   idList: { [key: string]: string[] } = {}
 
   search(data_type: string) {
-    this.idList[data_type] = []
     if (data_type != 'Sample ID') {
       this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
         this.idList[data_type] = JSON.parse(res)
@@ -348,9 +350,13 @@ export class UnitCreateInstanceComponent implements OnInit {
     return `${itemKey}-${itemItem}`
   }
 
-  showTableOrNot:boolean = true
+  showTableOrNot: boolean = true
 
-  showTable(orNot:boolean){
+  showTable(orNot: boolean) {
     this.showTableOrNot = orNot
+  }
+
+  remove(value:string, key: string, probe: string, cell: string){
+    this.newFileData[key][probe][cell] = this.newFileData[key][probe][cell].filter((item:string) => item !== value)
   }
 }

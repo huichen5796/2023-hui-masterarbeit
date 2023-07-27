@@ -9,7 +9,7 @@
         <div class="box">
             <div class="container" [style.transform]="'translateX(' + containerOffset + 'px)'"
                 *ngFor="let callBack of callBacks">
-                <mat-card class="example-card" (dblclick)="doShow(callBack)">
+                <mat-card class="example-card">
                     <div class="button-delete">
                         <button mat-icon-button (click)="delete(callBack['Sample_ID'])">
                             <mat-icon>fullscreen_exit</mat-icon>
@@ -36,7 +36,16 @@
         <button (click)="slideRight()" class="flat-button"><mat-icon *ngIf="!isAtEnd" class="button-icon"
                 style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
     </div>
-    <div class="analyse" *ngIf="showAnalyse">
-        <div style="width: 100%;height: 100%; color: white;">{{toShow|json}}</div>
+    <div class="analyse" *ngIf="callBacks.length">
+        <table mat-table [dataSource]="makeSource()" class="mat-elevation-z8 demo-table">
+            <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
+                <th mat-header-cell *matHeaderCellDef>{{item}}</th>
+                <td mat-cell *matCellDef="let element">{{element[item]}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
+            <tr mat-row *matRowDef="let row; columns: tableHeader"></tr>
+        </table>
+
     </div>
 </div>
