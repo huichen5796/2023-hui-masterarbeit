@@ -40,12 +40,17 @@
         <table mat-table [dataSource]="makeSource()" class="mat-elevation-z8 demo-table">
             <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
                 <th mat-header-cell *matHeaderCellDef>{{item}}</th>
-                <td mat-cell *matCellDef="let element">{{element[item]}}</td>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element[item]">
+                        <span *ngIf="isString(element[item])">{{element[item]}}</span>
+                    <span *ngIf="!isString(element[item])">{{element[item]['mean']}} (SE: {{element[item]['SE']}})</span>
+                    </div>
+                    
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
-            <tr mat-row *matRowDef="let row; columns: tableHeader"></tr>
+            <tr mat-row (click)="clickedRow(row)" *matRowDef="let row; columns: tableHeader"></tr>
         </table>
-
     </div>
 </div>

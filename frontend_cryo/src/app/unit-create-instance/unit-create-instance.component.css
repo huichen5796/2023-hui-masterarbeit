@@ -186,10 +186,12 @@ li u {
     width: calc(100% - 50px);
     height: 100%;
     background-color: rgb(15, 15, 16);
+    z-index: 999;
 }
 
 .red-line-big {
     width: calc(100% + 6px);
+    z-index: 999;
 }
 
 .edit {
@@ -236,6 +238,7 @@ li u {
 .table-head .table-cell {
     color: #fff;
     font-weight: bold;
+    z-index:0;
 }
 
 .option {

@@ -108,4 +108,18 @@ export class UnitAnalyseCellComponent implements OnChanges {
   viewData(){
     this.hidden=!this.hidden
   }
+  clickedRow(row:any){
+    if (this.callBacks.indexOf(row) != -1){
+      const position = -this.cardWidth * this.callBacks.indexOf(row)
+      if (this.containerOffset != position){
+        this.currentIndex = this.callBacks.indexOf(row)
+        this.containerOffset = position
+        this.hidden = false
+        this.updateButtonStates();
+      }
+    }
+  }
+  isString(input: any): boolean {
+    return typeof input === 'string';
+  }
 }
