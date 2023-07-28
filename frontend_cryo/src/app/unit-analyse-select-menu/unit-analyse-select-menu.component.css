@@ -59,3 +59,8 @@ h2 {
 .mirror-icon {
     transform: scaleX(-1);
   }
+
+  .example-margin{
+    margin: 0;
+    transform: translateX(-10px);
+  }

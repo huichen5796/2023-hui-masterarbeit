@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { MatSidenav } from '@angular/material/sidenav';
 
@@ -51,4 +51,13 @@ export class UnitAnalyseSelectMenuComponent implements OnChanges, AfterViewInit 
     this.selectedId = [...this.selectedId]
   }
 
+  selectAll(event:any){
+    if (event.checked){
+      this.selectedId = this.idList
+    this.selectedId = [...this.selectedId]
+    }else{
+      this.selectedId = []
+    }
+    
+  }
 }

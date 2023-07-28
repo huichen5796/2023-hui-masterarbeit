@@ -89,6 +89,7 @@
 
 .demo-table {
     width: auto;
+    margin-left: 10px;
 }
 
 .mat-mdc-row .mat-mdc-cell {
@@ -102,5 +103,11 @@
 }
 
 .demo-row-is-clicked {
-    font-weight: bold;
+    color: #1976d2;
+}
+
+.mat-elevation-z8.demo-table tr:last-child td,
+.mat-elevation-z8.demo-table tr td:first-child,
+.mat-elevation-z8.demo-table tr th {
+  font-weight: bold;
 }
