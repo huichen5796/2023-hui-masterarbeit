@@ -81,4 +81,14 @@ export class QueryNeo4jService {
     })
     return promise
   }
+
+  buildColumn(pre_data_list: string[], post_data_list: string[], key:String): Promise<string> {
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.get(`${backendUrl}/buildColumn/?predata=${JSON.stringify(pre_data_list)}&postdata=${JSON.stringify(post_data_list)}&key=${key}`)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
 }

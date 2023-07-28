@@ -48,11 +48,12 @@
                 style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
     </div>
     <div class="analyse" *ngIf="showAnalyse">
-        <mat-grid-list cols="2" rowHeight="2:1">
-            <mat-grid-tile>1</mat-grid-tile>
+        <!-- <mat-grid-list cols="2" rowHeight="2:1">
+            <mat-grid-tile><app-unit-highcharts-graph></app-unit-highcharts-graph></mat-grid-tile>
             <mat-grid-tile>2</mat-grid-tile>
             <mat-grid-tile>3</mat-grid-tile>
             <mat-grid-tile>4</mat-grid-tile>
-          </mat-grid-list>
+          </mat-grid-list> -->
+          <app-unit-highcharts-graph [experiment]="toShow"></app-unit-highcharts-graph>
     </div>
 </div>

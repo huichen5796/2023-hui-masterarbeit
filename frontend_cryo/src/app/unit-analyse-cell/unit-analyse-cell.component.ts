@@ -119,4 +119,7 @@ export class UnitAnalyseCellComponent implements OnChanges {
       }
     }
   }
+  isString(input: any): boolean {
+    return typeof input === 'string';
+  }
 }
