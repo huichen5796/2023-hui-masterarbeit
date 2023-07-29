@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-unit-analyse-select-menu',
@@ -10,6 +11,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 export class UnitAnalyseSelectMenuComponent implements OnChanges, AfterViewInit {
   @Input() which: readonly ("Experiment" | "PreData" | "PostData" | "CPA" | "Process")[] = []
   @ViewChild('drawer') drawer!: MatSidenav;
+  @ViewChild('checkbox') checkbox!: MatCheckbox;
 
   selectedId: string[] = []
 
@@ -25,6 +27,10 @@ export class UnitAnalyseSelectMenuComponent implements OnChanges, AfterViewInit 
   ngOnChanges(changes: SimpleChanges): void {
     this.selectedId = []
     this.idList = []
+    if (this.checkbox){
+      this.checkbox.checked = false
+    }
+    
     if (this.which[0]) {
       this.drawer.open()
       this.queryNeo4jService.queryOneType(this.which[0]).then((res) => {
