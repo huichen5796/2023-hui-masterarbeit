@@ -15,25 +15,32 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
   selectedItem: string = this.selectItem[0]
   type: any = 'column'
   Highcharts: typeof Highcharts = Highcharts;
+  tableHeader: string[] = ["group1", "group2", "meandiff", "p-adj", "lower", "upper", "reject"]
+  classColors: { [key: string]: string } = {}
 
   chartOptions!: Highcharts.Options
   dataStorage: { [key: string]: { preData: any, postData: any } } = {} //number | string[]
   categories: string[] = []
   plotBands: { from: number, to: number, color: string, label: { text: string } }[] = []
   show: boolean = false
-  classColors: { [key: string]: string } = {}
+  tableData: { [key: string]: any } = {}
+  showTable: boolean = false
 
   chartOptions_average_versuch!: Highcharts.Options
   dataStorage_average_versuch: { [key: string]: { preData: any, postData: any } } = {} //number | string[]
   categories_average_versuch: string[] = []
   plotBands_average_versuch: { from: number, to: number, color: string, label: { text: string } }[] = []
   show_average_versuch: boolean = false
+  tableData_average_versuch: { [key: string]: any } = {}
+  showTable_average_versuch: boolean = false
 
   chartOptions_average_probe!: Highcharts.Options
   dataStorage_average_probe: { [key: string]: { preData: any, postData: any } } = {} //number | string[]
   categories_average_probe: string[] = []
   plotBands_average_probe: { from: number, to: number, color: string, label: { text: string } }[] = []
   show_average_probe: boolean = false
+  tableData_average_probe: { [key: string]: any } = {}
+  showTable_average_probe: boolean = false
 
   constructor(
     private queryNeo4jService: QueryNeo4jService,
@@ -54,6 +61,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
 
   loadChartOptions() {
     if (this.experiment) {
+      this.dataStorage = {}
       this.experiment['child'].forEach((versuch: any) => {
         versuch['probes'].forEach((probe: any) => {
           this.dataStorage[probe['Unique_ID']] = { preData: probe['PreData_ID'], postData: probe['PostData_ID'] }
@@ -81,6 +89,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           if (index === this.categories.length) {
             this.updateChartOptions()
             this.show = true
+            this.anovaTest()
           }
         })
       })
@@ -135,8 +144,23 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
     };
   }
 
+  anovaTest() {
+    this.tableData = {}
+    this.showTable = false
+    this.experiment['child'].forEach((versuch: any) => {
+      versuch['probes'].forEach((probe: any) => {
+        this.tableData[probe['Unique_ID']] = probe['PostData_ID']
+      })
+    })
+    this.queryNeo4jService.buildAnovaTable(this.tableData, this.selectedItem).then((res: any) => {
+      this.tableData = res
+      this.showTable = true
+    })
+  }
+
   loadAverageNachVersuch() {
     if (this.experiment) {
+      this.dataStorage_average_versuch = {}
       this.experiment['child'].forEach((versuch: any) => {
         let preData_list: any[] = []
         let postData_list: any[] = []
@@ -165,10 +189,27 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           if (index === this.categories_average_versuch.length) {
             this.updateAverageNachVersuch()
             this.show_average_versuch = true
+            this.anovaTestNachVersuch()
           }
         })
       })
     }
+  }
+
+  anovaTestNachVersuch() {
+    this.tableData = {}
+    this.showTable = false
+    this.experiment['child'].forEach((versuch: any) => {
+      let postData_list: any[] = []
+      versuch['probes'].forEach((probe: any) => {
+        postData_list = postData_list.concat(probe['PostData_ID'])
+      })
+      this.tableData_average_versuch[versuch['versuch']['Versuch_ID']] = postData_list
+    })
+    this.queryNeo4jService.buildAnovaTable(this.tableData_average_versuch, this.selectedItem).then((res: any) => {
+      this.tableData_average_versuch = res
+      this.showTable_average_versuch = true
+    })
   }
 
   updateAverageNachVersuch() {
@@ -261,10 +302,36 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           if (index === this.categories_average_probe.length) {
             this.updateAverageNachProbe()
             this.show_average_probe = true
+            this.anovaTestNachProbe()
           }
         })
       })
     }
+  }
+
+  anovaTestNachProbe() {
+    this.tableData = {}
+    this.showTable = false
+    let dS: { [key: string]: [] } = {}
+    this.experiment['child'].forEach((versuch: any) => {
+      versuch['probes'].forEach((probe: any) => {
+        dS[probe['Unique_ID']] = probe['PostData_ID']
+      })
+    })
+
+    for (const key in dS) {
+      const newKey = key.split('*-*')[2]
+      if (newKey) {
+        if (!this.tableData_average_probe[newKey]) {
+          this.tableData_average_probe[newKey] = []
+        }
+        this.tableData_average_probe[newKey]= this.tableData_average_probe[newKey].concat(dS[key]);
+      }
+    }
+    this.queryNeo4jService.buildAnovaTable(this.tableData_average_probe, this.selectedItem).then((res: any) => {
+      this.tableData_average_probe = res
+      this.showTable_average_probe = true
+    })
   }
 
   updateAverageNachProbe() {
@@ -322,6 +389,10 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
     else {
       return Object.keys(obj);
     }
+  }
+
+  setGreen(value:any){
+    return value === true
   }
 }
 

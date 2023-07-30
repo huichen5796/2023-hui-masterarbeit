@@ -19,4 +19,14 @@ export class CalculatorService {
     })
     return promise
   }
+
+  anovaTest(data: { [k: string]: string[] }): Promise<any> {
+    var promise = new Promise<any>((resolve, reject) => {
+      this.http.get(`${backendUrl}/anovaTest/${JSON.stringify(data)}`)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
 }
