@@ -1,20 +1,36 @@
-.vertikal{
+.vertikal {
     display: flex;
     flex-direction: column;
 }
 
-.row{
+.row {
     display: flex;
     flex-shrink: 0;
+    align-items: center;
+    text-align: center;
 }
 
-highcharts-chart{
+highcharts-chart {
     flex-shrink: 0;
     flex-grow: 0;
     max-height: 400px;
+    margin-right: 30px;
 }
 
 .green {
-    color:rgb(7, 219, 7);
+    color: rgb(7, 219, 7);
     font-weight: bold;
+}
+
+.example-table-container {
+    height: 400px;
+    overflow: auto;
+    display: block;
+    padding: 40px
+}
+.label{
+    font-size: large;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
