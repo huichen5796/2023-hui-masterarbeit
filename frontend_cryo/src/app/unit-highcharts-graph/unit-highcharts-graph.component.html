@@ -5,8 +5,58 @@
   </mat-select>
 </mat-form-field>
 
-<highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions" *ngIf="show"></highcharts-chart>
+<div class="vertikal">
+  <div class="row">
+    <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions" *ngIf="show"></highcharts-chart>
+    <table mat-table [dataSource]="tableData['Tukey HSD 0.05']" class="mat-elevation-z8 demo-table" *ngIf="showTable">
+      <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
+        <th mat-header-cell *matHeaderCellDef>{{item}}</th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="element[item] || item == 'reject'">
+            <span *ngIf="element[item] || item == 'reject'" [class.green]="setGreen(element[item])">{{element[item]}}</span>
+          </div>
 
-<highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions_average_versuch" *ngIf="show_average_versuch"></highcharts-chart>
+        </td>
+      </ng-container>
 
-<highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions_average_probe" *ngIf="show_average_probe"></highcharts-chart>
+      <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
+      <tr mat-row *matRowDef="let row; columns: tableHeader"></tr>
+    </table>
+  </div>
+  <div class="row">
+    <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions_average_versuch"
+      *ngIf="show_average_versuch"></highcharts-chart>
+      <table mat-table [dataSource]="tableData_average_versuch['Tukey HSD 0.05']" class="mat-elevation-z8 demo-table" *ngIf="showTable_average_versuch">
+        <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
+          <th mat-header-cell *matHeaderCellDef>{{item}}</th>
+          <td mat-cell *matCellDef="let element">
+            <div *ngIf="element[item] || item == 'reject'">
+              <span *ngIf="element[item] || item == 'reject'" [class.green]="setGreen(element[item])">{{element[item]}}</span>
+            </div>
+  
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableHeader"></tr>
+      </table>
+  </div>
+  <div class="row">
+    <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions_average_probe"
+      *ngIf="show_average_probe"></highcharts-chart>
+      <table mat-table [dataSource]="tableData_average_probe['Tukey HSD 0.05']" class="mat-elevation-z8 demo-table" *ngIf="showTable_average_probe">
+        <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
+          <th mat-header-cell *matHeaderCellDef>{{item}}</th>
+          <td mat-cell *matCellDef="let element">
+            <div *ngIf="element[item] || item == 'reject'">
+              <span *ngIf="element[item] || item == 'reject'" [class.green]="setGreen(element[item])">{{element[item]}}</span>
+            </div>
+  
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableHeader"></tr>
+      </table>
+  </div>
+</div>

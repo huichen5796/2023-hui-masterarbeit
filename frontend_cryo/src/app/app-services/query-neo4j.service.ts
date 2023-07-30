@@ -82,9 +82,20 @@ export class QueryNeo4jService {
     return promise
   }
 
-  buildColumn(pre_data_list: string[], post_data_list: string[], key:String): Promise<string> {
+  buildColumn(pre_data_list: string[], post_data_list: string[], key:string): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
       this.http.get(`${backendUrl}/buildColumn/?predata=${JSON.stringify(pre_data_list)}&postdata=${JSON.stringify(post_data_list)}&key=${key}`)
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
+
+  buildAnovaTable(post_data_list: { [k: string]: string[] }, key:string): Promise<string> {
+    console.log(key)
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.get(`${backendUrl}/buildAnovaTable/?postdata=${JSON.stringify(post_data_list)}&key=${key}`)
         .subscribe((rep: any) => {
           resolve(rep)
         })

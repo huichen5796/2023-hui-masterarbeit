@@ -1,0 +1,20 @@
+.vertikal{
+    display: flex;
+    flex-direction: column;
+}
+
+.row{
+    display: flex;
+    flex-shrink: 0;
+}
+
+highcharts-chart{
+    flex-shrink: 0;
+    flex-grow: 0;
+    max-height: 400px;
+}
+
+.green {
+    color:rgb(7, 219, 7);
+    font-weight: bold;
+}
