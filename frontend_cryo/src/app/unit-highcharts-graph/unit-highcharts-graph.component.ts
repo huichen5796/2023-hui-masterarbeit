@@ -93,13 +93,27 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           this.dataStorage[probe_id] = { preData: { mean: pre_mean, SE: pre_SE }, postData: { mean: post_mean, SE: post_SE } }
           index += 1
           if (index === this.categories.length) {
-            this.updateChartOptions()
-            this.show = true
             this.anovaTest()
           }
         })
       })
     }
+  }
+
+  anovaTest() {
+    this.tableData = {}
+    this.showTable = false
+    this.experiment['child'].forEach((versuch: any) => {
+      versuch['probes'].forEach((probe: any) => {
+        this.tableData[probe['Unique_ID']] = probe['PostData_ID']
+      })
+    })
+    this.queryNeo4jService.buildAnovaTable(this.tableData, this.selectedItem).then((res: any) => {
+      this.tableData = res
+      this.showTable = true
+      this.updateChartOptions()
+      this.show = true
+    })
   }
 
   updateChartOptions() {
@@ -109,7 +123,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
       }
     }
     let dataSumme = this.dataSumme
-    console.log(dataSumme)
+    let tableData = this.tableData
     this.chartOptions = {
       title: {
         text: this.experiment['experiment']['Experiment_ID']
@@ -161,24 +175,20 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
         {
           name: 'CI 95%',
           type: 'errorbar',
-          data: this.categories.map(probeId => [this.dataStorage[probeId]['postData']['mean'] - 1.96 * this.dataStorage[probeId]['postData']['SE'], this.dataStorage[probeId]['postData']['mean'] + 1.96 * this.dataStorage[probeId]['postData']['SE']])
+          data: this.categories.map(probeId => [this.dataStorage[probeId]['postData']['mean'] - 1.96 * this.dataStorage[probeId]['postData']['SE'], this.dataStorage[probeId]['postData']['mean'] + 1.96 * this.dataStorage[probeId]['postData']['SE']]),
+          dataLabels: {
+            enabled: true,
+            formatter: function () {
+              console.log(this)
+              if (this.point.high === this.y) {
+                return tableData['Tukey Group'][this.point.category];
+              }
+              return null;
+            },
+          },
         }
       ]
     };
-  }
-
-  anovaTest() {
-    this.tableData = {}
-    this.showTable = false
-    this.experiment['child'].forEach((versuch: any) => {
-      versuch['probes'].forEach((probe: any) => {
-        this.tableData[probe['Unique_ID']] = probe['PostData_ID']
-      })
-    })
-    this.queryNeo4jService.buildAnovaTable(this.tableData, this.selectedItem).then((res: any) => {
-      this.tableData = res
-      this.showTable = true
-    })
   }
 
   loadAverageNachVersuch() {
@@ -213,8 +223,6 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           this.dataStorage_average_versuch[versuch_id] = { preData: { mean: pre_mean, SE: pre_SE }, postData: { mean: post_mean, SE: post_SE } }
           index += 1
           if (index === this.categories_average_versuch.length) {
-            this.updateAverageNachVersuch()
-            this.show_average_versuch = true
             this.anovaTestNachVersuch()
           }
         })
@@ -235,6 +243,8 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
     this.queryNeo4jService.buildAnovaTable(this.tableData_average_versuch, this.selectedItem).then((res: any) => {
       this.tableData_average_versuch = res
       this.showTable_average_versuch = true
+      this.updateAverageNachVersuch()
+      this.show_average_versuch = true
     })
   }
 
@@ -245,6 +255,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
       }
     }
     let dataSumme_average_versuch = this.dataSumme_average_versuch
+    let tableData_average_versuch = this.tableData_average_versuch
     this.chartOptions_average_versuch = {
       title: {
         text: this.experiment['experiment']['Experiment_ID']
@@ -274,7 +285,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           data: this.categories_average_versuch.map(probeId => this.dataStorage_average_versuch[probeId]['preData']['mean']),
           tooltip: {
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = '+ dataSumme_average_versuch[this.category]['preData'];
+              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + dataSumme_average_versuch[this.category]['preData'];
             }
           },
         },
@@ -289,14 +300,24 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           data: this.categories_average_versuch.map(probeId => this.dataStorage_average_versuch[probeId]['postData']['mean']),
           tooltip: {
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = '+ dataSumme_average_versuch[this.category]['postData'];
+              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + dataSumme_average_versuch[this.category]['postData'];
             }
           },
         },
         {
           name: 'CI 95%',
           type: 'errorbar',
-          data: this.categories_average_versuch.map(probeId => [this.dataStorage_average_versuch[probeId]['postData']['mean'] - 1.96 * this.dataStorage_average_versuch[probeId]['postData']['SE'], this.dataStorage_average_versuch[probeId]['postData']['mean'] + 1.96 * this.dataStorage_average_versuch[probeId]['postData']['SE']])
+          data: this.categories_average_versuch.map(probeId => [this.dataStorage_average_versuch[probeId]['postData']['mean'] - 1.96 * this.dataStorage_average_versuch[probeId]['postData']['SE'], this.dataStorage_average_versuch[probeId]['postData']['mean'] + 1.96 * this.dataStorage_average_versuch[probeId]['postData']['SE']]),
+          dataLabels: {
+            enabled: true,
+            formatter: function () {
+              console.log(this)
+              if (this.point.high === this.y) {
+                return tableData_average_versuch['Tukey Group'][this.point.category];
+              }
+              return null;
+            },
+          },
         }
       ]
     };
@@ -345,8 +366,6 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           this.dataStorage_average_probe[versuch_id] = { preData: { mean: pre_mean, SE: pre_SE }, postData: { mean: post_mean, SE: post_SE } }
           index += 1
           if (index === this.categories_average_probe.length) {
-            this.updateAverageNachProbe()
-            this.show_average_probe = true
             this.anovaTestNachProbe()
           }
         })
@@ -376,6 +395,8 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
     this.queryNeo4jService.buildAnovaTable(this.tableData_average_probe, this.selectedItem).then((res: any) => {
       this.tableData_average_probe = res
       this.showTable_average_probe = true
+      this.updateAverageNachProbe()
+      this.show_average_probe = true
     })
   }
 
@@ -386,6 +407,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
       }
     }
     let dataSumme_average_probe = this.dataSumme_average_probe
+    let tableData_average_probe = this.tableData_average_probe
     this.chartOptions_average_probe = {
       title: {
         text: this.experiment['experiment']['Experiment_ID']
@@ -399,19 +421,20 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           text: this.selectedItem
         }
       },
-      plotOptions: {
-        errorbar: {
-          // dataLabels: {
-          //   enabled: true,
-          //   formatter: function () {
-          //     if (this.point.high === this.y) {
-          //       return this.y;
-          //     }
-          //     return null;
-          //   },
-          // },
-        }
-      },
+      // plotOptions: {
+      //   errorbar: {
+      //     dataLabels: {
+      //       enabled: true,
+      //       formatter: function () {
+      //         console.log(this)
+      //         if (this.point.high === this.y) {
+      //           return tableData_average_probe['Tukey Group'][this.point.category];
+      //         }
+      //         return null;
+      //       },
+      //     },
+      //   }
+      // },
       series: [
         {
           name: 'pre data',
@@ -419,7 +442,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           data: this.categories_average_probe.map(probeId => this.dataStorage_average_probe[probeId]['preData']['mean']),
           tooltip: {
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = '+ dataSumme_average_probe[this.category]['preData'];
+              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + dataSumme_average_probe[this.category]['preData'];
             }
           },
         },
@@ -434,14 +457,24 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           data: this.categories_average_probe.map(probeId => this.dataStorage_average_probe[probeId]['postData']['mean']),
           tooltip: {
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = '+ dataSumme_average_probe[this.category]['postData'];
+              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + dataSumme_average_probe[this.category]['postData'];
             }
           },
         },
         {
           name: 'CI 95%',
           type: 'errorbar',
-          data: this.categories_average_probe.map(probeId => [this.dataStorage_average_probe[probeId]['postData']['mean'] - 1.96 * this.dataStorage_average_probe[probeId]['postData']['SE'], this.dataStorage_average_probe[probeId]['postData']['mean'] + 1.96 * this.dataStorage_average_probe[probeId]['postData']['SE']])
+          data: this.categories_average_probe.map(probeId => [this.dataStorage_average_probe[probeId]['postData']['mean'] - 1.96 * this.dataStorage_average_probe[probeId]['postData']['SE'], this.dataStorage_average_probe[probeId]['postData']['mean'] + 1.96 * this.dataStorage_average_probe[probeId]['postData']['SE']]),
+          dataLabels: {
+            enabled: true,
+            formatter: function () {
+              console.log(this)
+              if (this.point.high === this.y) {
+                return tableData_average_probe['Tukey Group'][this.point.category];
+              }
+              return null;
+            },
+          }
         }
       ]
     };
@@ -459,7 +492,7 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
   setGreen(value: any) {
     return value === true
   }
-  
+
 }
 
 
