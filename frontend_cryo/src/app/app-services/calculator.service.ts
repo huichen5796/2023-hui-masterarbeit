@@ -11,8 +11,12 @@ export class CalculatorService {
   ) { }
 
   getMeanAndVariance(dataList: string[]): Promise<any> {
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify({
+      'data': dataList
+    });
     var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`${backendUrl}/getMeanAndVariance/${JSON.stringify(dataList)}`)
+      this.http.post(`${backendUrl}/getMeanAndVariance/`, body, {'headers': headers})
         .subscribe((rep: any) => {
           resolve(rep)
         })

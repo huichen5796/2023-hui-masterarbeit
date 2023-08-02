@@ -83,8 +83,14 @@ export class QueryNeo4jService {
   }
 
   buildColumn(pre_data_list: string[], post_data_list: string[], key:string): Promise<string> {
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify({
+      'predata': pre_data_list,
+      'postdata': post_data_list,
+      'key':key
+    });
     var promise = new Promise<string>((resolve, reject) => {
-      this.http.get(`${backendUrl}/buildColumn/?predata=${JSON.stringify(pre_data_list)}&postdata=${JSON.stringify(post_data_list)}&key=${key}`)
+      this.http.post(`${backendUrl}/buildColumn/`, body, {'headers':headers})
         .subscribe((rep: any) => {
           resolve(rep)
         })
@@ -93,9 +99,13 @@ export class QueryNeo4jService {
   }
 
   buildAnovaTable(post_data_list: { [k: string]: string[] }, key:string): Promise<string> {
-    console.log(key)
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify({
+      'postdata': post_data_list,
+      'key':key
+    });
     var promise = new Promise<string>((resolve, reject) => {
-      this.http.get(`${backendUrl}/buildAnovaTable/?postdata=${JSON.stringify(post_data_list)}&key=${key}`)
+      this.http.post(`${backendUrl}/buildAnovaTable/`, body, {'headers': headers})
         .subscribe((rep: any) => {
           resolve(rep)
         })
