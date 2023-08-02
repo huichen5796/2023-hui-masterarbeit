@@ -179,7 +179,6 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           dataLabels: {
             enabled: true,
             formatter: function () {
-              console.log(this)
               if (this.point.high === this.y) {
                 return tableData['Tukey Group'][this.point.category];
               }
@@ -311,7 +310,6 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           dataLabels: {
             enabled: true,
             formatter: function () {
-              console.log(this)
               if (this.point.high === this.y) {
                 return tableData_average_versuch['Tukey Group'][this.point.category];
               }
@@ -468,7 +466,6 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
           dataLabels: {
             enabled: true,
             formatter: function () {
-              console.log(this)
               if (this.point.high === this.y) {
                 return tableData_average_probe['Tukey Group'][this.point.category];
               }
