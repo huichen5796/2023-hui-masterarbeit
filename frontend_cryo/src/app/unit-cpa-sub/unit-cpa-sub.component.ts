@@ -87,8 +87,9 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
           lineWidth: 0.5,
           name: "Wavenumber/cm^-1",
           tooltip: {
+            headerFormat: '<span style="color:{series.color}">\u25CF </span><span>{series.name}: <b>{point.x}</b></span><br/>',
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + 'Absorbance/A' + ': <b>' + this.y;
+              return '<span style="color:white">\u25CF</span> ' + 'Absorbance/A' + ': <b>' + this.y;
             }
           },
           dataGrouping: {
@@ -155,8 +156,9 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
           data: this.curve["DSC/(mW/mg)"].map((item, index) => [Number(this.curve['Time/min'][index]), Number(item)]),
           name: "DSC/(mW/mg)",
           tooltip: {
+            headerFormat: '<span style="color:{series.color}">\u25CF </span><span>Time/min: <b>{point.x}</b></span><br/>',
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + "DSC/(mW/mg)" + ': <b>' + this.y;
+              return '<span style="color:white">\u25CF</span> ' + "DSC/(mW/mg)" + ': <b>' + this.y;
             }
           },
         },
@@ -165,8 +167,9 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
           data: this.curve["Temp./\u00b0C"].map((item, index) => [Number(this.curve['Time/min'][index]), Number(item)]),
           name: "Temp./\u00b0C",
           tooltip: {
+            headerFormat: '<span style="color:{series.color}">\u25CF </span><span>Time/min: <b>{point.x}</b></span><br/>',
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + "Temp./\u00b0C" + ': <b>' + this.y;
+              return '<span style="color:white">\u25CF</span> ' + "Temp./\u00b0C" + ': <b>' + this.y;
             }
           },
           yAxis: 1
@@ -176,8 +179,9 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
           data: this.curve["Sensit./(uV/mW)"].map((item, index) => [Number(this.curve['Time/min'][index]), Number(item)]),
           name: "Sensit./(uV/mW)",
           tooltip: {
+            headerFormat: '<span style="color:{series.color}">\u25CF </span><span>Time/min: <b>{point.x}</b></span><br/>',
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + "Sensit./(uV/mW)" + ': <b>' + this.y;
+              return '<span style="color:white">\u25CF</span> ' + "Sensit./(uV/mW)" + ': <b>' + this.y;
             }
           },
         },
@@ -187,8 +191,9 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
 
           name: "Segment",
           tooltip: {
+            headerFormat: '<span style="color:{series.color}">\u25CF </span><span>Time/min: <b>{point.x}</b></span><br/>',
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + "Segment" + ': <b>' + this.y;
+              return '<span style="color:white">\u25CF</span> ' + "Segment" + ': <b>' + this.y;
             }
           },
         },
@@ -236,8 +241,9 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
           data: this.curve["Temp./\u00b0C"].map((item, index) => [Number(item), Number(this.curve['DSC/(mW/mg)'][index])]),
           name: "Temp./\u00b0C",
           tooltip: {
+            headerFormat: '<span style="color:{series.color}">\u25CF </span><span>{series.name}: <b>{point.x}</b></span><br/>',
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + "Temp./\u00b0C" + ': <b>' + this.y;
+              return '<span style="color: white">\u25CF</span> ' + "DSC/(mW/mg)" + ': <b>' + this.y;
             }
           },
         },
