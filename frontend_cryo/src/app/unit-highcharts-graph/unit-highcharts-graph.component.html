@@ -9,7 +9,8 @@
   <div class="row">
     <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions" *ngIf="show"></highcharts-chart>
     <div class="example-table-container" *ngIf="showTable">
-      <div class="label">One-Way ANOVA: (F: {{ tableData['F-statistic'] }}, p: {{ tableData['p-value'] }}) + Tukey</div>
+      <div class="title-table">{{ experiment['experiment']['Experiment_ID'] }}</div>
+      <div class="subtitle-table">One-Way ANOVA: (F: {{ tableData['F-statistic'] }}, p: {{ tableData['p-value'] }}) + Tukey</div>
       <table mat-table [dataSource]="tableData['Tukey HSD 0.05']" class="mat-elevation-z8">
         <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
           <th mat-header-cell *matHeaderCellDef>{{item}}</th>
@@ -32,7 +33,8 @@
     <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions_average_versuch"
       *ngIf="show_average_versuch"></highcharts-chart>
     <div class="example-table-container" *ngIf="showTable_average_versuch">
-      <div class="label">One-Way ANOVA: (F: {{ tableData_average_versuch['F-statistic'] }}, p: {{
+      <div class="title-table">{{ experiment['experiment']['Experiment_ID'] }}</div>
+      <div class="subtitle-table">One-Way ANOVA: (F: {{ tableData_average_versuch['F-statistic'] }}, p: {{
         tableData_average_versuch['p-value'] }}) + Tukey</div>
       <table mat-table [dataSource]="tableData_average_versuch['Tukey HSD 0.05']" class="mat-elevation-z8 demo-table">
         <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
@@ -56,7 +58,8 @@
     <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions_average_probe"
       *ngIf="show_average_probe"></highcharts-chart>
     <div class="example-table-container" *ngIf="showTable_average_probe">
-      <div class="label">One-Way ANOVA: (F: {{ tableData_average_probe['F-statistic'] }}, p: {{
+      <div class="title-table">{{ experiment['experiment']['Experiment_ID'] }}</div>
+      <div class="subtitle-table">One-Way ANOVA: (F: {{ tableData_average_probe['F-statistic'] }}, p: {{
         tableData_average_probe['p-value'] }}) + Tukey</div>
       <table mat-table [dataSource]="tableData_average_probe['Tukey HSD 0.05']" class="mat-elevation-z8 demo-table">
         <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">

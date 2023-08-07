@@ -11,19 +11,6 @@ export class UnitAnalyseCpaComponent {
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
   callBacks: any[] = []
-
-  topItems: string[] = [
-    "Freezing_device",
-    "Cooling_rate",
-    "Preservation_container",
-    "Storage_temperature",
-    "Storage_medium",
-    "Storage_duration",
-    "Thawing_temperature",
-    "Washing_steps",
-    "Dilution_medium",
-    "Dilution_factor"
-  ]
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) { }

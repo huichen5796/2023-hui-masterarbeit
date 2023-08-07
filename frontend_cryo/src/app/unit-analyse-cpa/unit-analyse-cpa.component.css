@@ -4,7 +4,6 @@
     min-height: 590px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding-left: 20px;
 }
 
@@ -55,7 +54,9 @@
 .analyse {
     width: auto;
     height: 100%;
-    background-color: black;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
 }
 
 .box {
@@ -86,4 +87,11 @@
     padding: 0px;
     min-height: none;
     padding-left: 10px;
+}
+
+.row {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    text-align: center;
 }

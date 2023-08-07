@@ -176,7 +176,18 @@ export class UnitCreateInstanceComponent implements OnInit {
     delete this.newFileData['']
     if (this.data_type == 'CPA') {
       // this.newFileData[`${this.currentType} ID`] = this.currentFileName
-      this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
+      if (this.currentType == 'DSC'){
+        this.newFileData['IDENTITY'] = this.currentFileName
+        this.newFileData['FILE'] =`${this.currentFileName}.ngb-sd7`
+        this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
+      }
+      else if (this.currentType == 'FTIR'){
+        this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.asc`
+      }
+      else{
+        this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
+      }
+      
     }
     else if (this.data_type == 'Experiment') {
       // this.newFileData['Experiment ID'] = this.currentFileName

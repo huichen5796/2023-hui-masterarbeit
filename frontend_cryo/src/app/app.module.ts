@@ -38,7 +38,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTreeModule } from '@angular/material/tree';
 import { CdkListboxModule } from '@angular/cdk/listbox';
 import { MatBadgeModule } from '@angular/material/badge';
-import {OverlayModule} from '@angular/cdk/overlay';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 // Pipes //
 import { ExcludeItemPipe } from "./app-pipes";
@@ -68,6 +68,7 @@ import { UnitAnalyseCpaComponent } from './unit-analyse-cpa/unit-analyse-cpa.com
 import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse-process.component';
 import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-analyse-select-menu.component';
 import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-table.component';
+import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
 
 
 @NgModule({
@@ -95,6 +96,7 @@ import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-tabl
     UnitAnalyseSelectMenuComponent,
     ExcludeItemPipe,
     UnitShowInTableComponent,
+    UnitCpaSubComponent,
   ],
   imports: [
     BrowserModule,

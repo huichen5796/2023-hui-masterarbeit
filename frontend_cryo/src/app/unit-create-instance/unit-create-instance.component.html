@@ -57,15 +57,15 @@
 
     <ul>
         <li>
-            <label>· {{ currentType }} ID</label>
+            <label>· FILE / IDENTITY</label>
             <label>:</label>
             <textarea type="search" [(ngModel)]="currentFileName" rows="1" placeholder="Ex. test_1 2023"
-                (blur)="checkFileName()"></textarea>
-            <u class="add-delete"></u>
+                (blur)="checkFileName()"></textarea><span *ngIf="currentType === 'DSC'">.ngb-sd7</span>
+            <u class="add-delete" style="cursor:unset;"></u>
         </li>
-        <mat-error *ngIf="error['fileName'] == 'type2'">{{ currentType }} ID is required.</mat-error>
-        <mat-error *ngIf="error['fileName'] == 'type3'">{{ currentType }} ID is used.</mat-error>
-        <li *ngFor="let key of getObjectKeys(newFileData)">
+        <mat-error *ngIf="error['fileName'] == 'type2'">FILE / IDENTITY is required.</mat-error>
+        <mat-error *ngIf="error['fileName'] == 'type3'">FILE / IDENTITY is used.</mat-error>
+        <li *ngFor="let key of getObjectKeys(newFileData) | excludeItem: ['FILE', 'IDENTITY']">
             <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
             <label>· {{ key }}</label>
             <textarea matInput type="search" rows="1" *ngIf="key == ''" [(ngModel)]="currrentKey"

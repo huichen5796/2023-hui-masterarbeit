@@ -21,10 +21,9 @@
                         <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content class="content-box">
-                        <!-- <div *ngFor="let topItem of topItems">
-                        <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
-                    </div> -->
-                        <p>{{ callBack | json }}</p>
+                        <div *ngFor="let sub of callBack['child']">
+                            <p><span class="key">{{ sub['class'] }} ID: </span>{{ sub['unique_id'] }}</p>
+                        </div>
                     </mat-card-content>
                 </mat-card>
             </div>
@@ -33,6 +32,6 @@
                 style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
     </div>
     <div class="analyse" *ngIf="showAnalyse">
-        <div style="width: 100%;height: 100%; color: white;">{{toShow|json}}</div>
+        <div class="row" *ngFor="let sub of toShow['child']"><app-unit-cpa-sub [cpa_id]="toShow['cpa']['CPA_ID']" [sub]="sub"></app-unit-cpa-sub></div>
     </div>
 </div>
