@@ -211,9 +211,6 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
         text: `${this.sub.unique_id}`
       },
       xAxis: {
-        title: {
-          text: "Temp./\u00b0C"
-        },
         labels: {
           format: '{value}\u00b0'
         }
