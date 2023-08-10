@@ -21,9 +21,25 @@
                         <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content class="content-box">
-                        <div *ngFor="let sub of callBack['child']">
-                            <p><span class="key">{{ sub['class'] }} ID: </span>{{ sub['unique_id'] }}</p>
-                        </div>
+                        <mat-accordion *ngFor="let sub of callBack['child']">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <span class="key">{{ sub['class'] }} </span>
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                        
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+                                <p>
+                                    <span class="key">{{sub['class']}}_ID: </span>{{ sub['unique_id'] }}
+                                </p>
+                                <p
+                                    *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
+                                    <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
+                                </p>
+                            </mat-expansion-panel>
+                        </mat-accordion>
                     </mat-card-content>
                 </mat-card>
             </div>

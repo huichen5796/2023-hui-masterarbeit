@@ -33,10 +33,13 @@
                                             {{probe['Sample_ID']}}
                                         </mat-panel-description>
                                     </mat-expansion-panel-header>
-                                    <p
-                                        *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
-                                        <span class="key">{{key}}: </span>{{ probe[key] |json }}
-                                    </p>
+                                    <div *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
+                                        <span class="key">{{key}}: </span>
+                                        <div *ngIf="parseArray(probe[key])">
+                                            <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
+                                        </div>
+                                        <span *ngIf="!parseArray(probe[key])">{{ probe[key] }}</span>
+                                    </div>
                                 </mat-expansion-panel>
                             </mat-accordion>
                         </div>

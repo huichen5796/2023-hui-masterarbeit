@@ -131,11 +131,11 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
           title: {
             text: 'Values'
           },
-          opposite: true
         }, {
           title: {
             text: "Temp./\u00b0C"
-          }
+          },
+          opposite: true
         }],
       // tooltip: {
       //   valueSuffix: ' (1000 MT)'
