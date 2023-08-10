@@ -89,4 +89,7 @@ export class UnitAnalyseCpaComponent {
   viewData(){
     this.hidden=!this.hidden
   }
+  emm(input:string){
+    return input+'_ID'
+  }
 }

@@ -91,3 +91,7 @@
 mat-grid-tile {
     background: lightblue;
   }
+
+  .onecell{
+    margin:0px
+  }

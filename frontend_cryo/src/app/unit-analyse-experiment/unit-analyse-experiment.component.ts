@@ -93,4 +93,15 @@ export class UnitAnalyseExperimentComponent {
   viewData(){
     this.hidden=!this.hidden
   }
+
+  parseArray(input: any): boolean {
+    try {
+      if (Array.isArray(input)) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
 }
