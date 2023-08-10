@@ -36,10 +36,10 @@
         <button (click)="slideRight()" class="flat-button"><mat-icon *ngIf="!isAtEnd" class="button-icon"
                 style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
     </div>
-    <div class="analyse" *ngIf="callBacks.length">
-        <table mat-table [dataSource]="makeSource()" class="mat-elevation-z8 demo-table">
+    <div class="analyse" *ngIf="showTable">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" matSort>
             <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">
-                <th mat-header-cell *matHeaderCellDef>{{item}}</th>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>{{item}}</th>
                 <td mat-cell *matCellDef="let element">
                     <div *ngIf="element[item]">
                         <span *ngIf="isString(element[item])">{{element[item]}}</span>
@@ -52,5 +52,6 @@
             <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
             <tr mat-row (click)="clickedRow(row)" *matRowDef="let row; columns: tableHeader"></tr>
         </table>
+        
     </div>
 </div>
