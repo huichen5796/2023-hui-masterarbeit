@@ -1,43 +1,54 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { QueryNeo4jService, CalculatorService } from '../app-services';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-unit-analyse-cell',
   templateUrl: './unit-analyse-cell.component.html',
   styleUrls: ['./unit-analyse-cell.component.css']
 })
-export class UnitAnalyseCellComponent implements OnChanges {
+export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
   @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
-
   callBacks: any[] = []
-
+  dataSource = new MatTableDataSource([])
+  showTable: boolean = false
   itemShow: { [key: string]: string[] } = {
     Viability: ["Viability_(%)", "Total_cells_/_ml_(x_10^6)", "Total_viable_cells_/_ml_(x_10^6)"],
     Morphology: ["Average_diameter_(microns)", "Average_circularity", "Cell_type"],
   }
-
   topItems: string[] = ["Sample_ID", "RunDate", "Machine"]
-
   tableHeader = ['Sample_ID', ...this.itemShow['Viability'], ...this.itemShow['Morphology']]
+  hidden: boolean = false
+  currentIndex = 0;
+  containerOffset = 0;
+  cardWidth = 400;
+  isAtStart = true;
+  isAtEnd = true;
+
   constructor(
     private queryNeo4jService: QueryNeo4jService,
     private calculatorService: CalculatorService,
+    private _liveAnnouncer: LiveAnnouncer
   ) { }
 
-  result:any = {"Sample_ID": 'CONCLUSION'}
+  result: any = { "Sample_ID": 'CONCLUSION' }
 
   searchOne(ID: readonly string[], data_type: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
     ID.forEach((element) => {
       this.queryNeo4jService.queryOneNode(data_type, element).then((res) => {
         this.callBacks.push(res)
         this.callBacks = [...this.callBacks]
-        if (ID.length === this.callBacks.length && this.callBacks.length !==0){
-          this.tableHeader.forEach(item=>{
-            if (['Sample_ID', 'Cell_type'].indexOf(item) === -1){
-              this.calculatorService.getMeanAndVariance(this.callBacks.map(obj => obj[item])).then((res)=>{
+        if (ID.length === this.callBacks.length && this.callBacks.length !== 0) {
+          this.tableHeader.forEach(item => {
+            if (['Sample_ID', 'Cell_type'].indexOf(item) === -1) {
+              this.calculatorService.getMeanAndVariance(this.callBacks.map(obj => obj[item])).then((res) => {
                 this.result[item] = res
-                this.result = {...this.result}
+                this.result = { ...this.result }
+                this.dataSource = new MatTableDataSource(this.makeSource())
+                this.ngAfterViewInit()
               })
             }
           })
@@ -46,12 +57,14 @@ export class UnitAnalyseCellComponent implements OnChanges {
     })
 
   }
-  makeSource():any {
-      return this.callBacks.concat(this.result)
+  makeSource(): any {
+    this.showTable = true
+    return this.callBacks.concat(this.result)
   }
-  hidden:boolean = false
   ngOnChanges() {
     this.callBacks = []
+    this.showTable = false
+    this.dataSource = new MatTableDataSource([])
     this.containerOffset = 0;
     this.isAtStart = true;
     this.hidden = false
@@ -81,12 +94,6 @@ export class UnitAnalyseCellComponent implements OnChanges {
     this.hidden = true
   }
 
-  currentIndex = 0;
-  containerOffset = 0;
-  cardWidth = 400;
-  isAtStart = true;
-  isAtEnd = true;
-
   slideLeft() {
     this.currentIndex = Math.max(this.currentIndex - 1, 0);
     this.containerOffset = -this.currentIndex * this.cardWidth;
@@ -105,13 +112,13 @@ export class UnitAnalyseCellComponent implements OnChanges {
   }
 
 
-  viewData(){
-    this.hidden=!this.hidden
+  viewData() {
+    this.hidden = !this.hidden
   }
-  clickedRow(row:any){
-    if (this.callBacks.indexOf(row) != -1){
+  clickedRow(row: any) {
+    if (this.callBacks.indexOf(row) != -1) {
       const position = -this.cardWidth * this.callBacks.indexOf(row)
-      if (this.containerOffset != position){
+      if (this.containerOffset != position) {
         this.currentIndex = this.callBacks.indexOf(row)
         this.containerOffset = position
         this.hidden = false
@@ -121,5 +128,50 @@ export class UnitAnalyseCellComponent implements OnChanges {
   }
   isString(input: any): boolean {
     return typeof input === 'string';
+  }
+
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  // /** Announce the change in sort state for assistive technology. */
+  // announceSortChange(sortState: Sort) {
+  //   console.log(sortState)
+  //   if (sortState.direction) {
+  //     this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+  //   } else {
+  //     this._liveAnnouncer.announce('Sorting cleared');
+  //   }
+  // }
+
+  sortData(sort: Sort): void {
+    const data: any = this.dataSource.data.slice();
+    if (!sort.active || sort.direction === '') {
+      this.dataSource.data = data;
+      return;
+    }
+
+    this.dataSource.data = data.sort((a: any, b: any) => {
+      if (a['Sample_ID'] == 'CONCLUSION' || b['Sample_ID'] == 'CONCLUSION') {
+        return 1
+      }
+      else {
+        let isAsc: boolean = sort.direction === 'asc';
+        return this.compare(a[sort.active], b[sort.active], isAsc,);
+      }
+    }
+    );
+    this.dataSource = new MatTableDataSource(this.dataSource.data);
+  }
+  compare(a: any, b: any, isAsc: boolean): number {
+    if (a < b) {
+      return -1 * (isAsc ? 1 : -1);
+    } else if (a > b) {
+      return 1 * (isAsc ? 1 : -1);
+    } else {
+      return 0 * (isAsc ? 1 : -1);
+    }
   }
 }
