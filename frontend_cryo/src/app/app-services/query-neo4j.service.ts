@@ -98,10 +98,19 @@ export class QueryNeo4jService {
     return promise
   }
 
-  buildAnovaTable(post_data_list: { [k: string]: string[] }, key:string): Promise<string> {
+  buildAnovaTable(data: { [k: string]: { [k: string]: string[] } }, key:string): Promise<string> {
+
+    let postObject:{[key:string]: string[]} = {};
+    let preObject:{[key:string]:string[]} = {};
+
+    for (const [key, value] of Object.entries(data)) {
+      postObject[key] = value['post']
+      preObject[key] = value['pre']
+    }
     const headers = { 'content-type': 'application/json'}  
     const body=JSON.stringify({
-      'postdata': post_data_list,
+      'postdata': postObject,
+      'predata': preObject,
       'key':key
     });
     var promise = new Promise<string>((resolve, reject) => {
