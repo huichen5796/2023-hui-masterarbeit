@@ -5,13 +5,8 @@
     text-align: center;
     font-family: "Nunito Sans";
     max-width: 1000px;
-    padding-top: 120px;
-    padding-bottom: 70px;
-}
-
-a.card:visited,
-a.start-card:visited {
-    text-decoration: none;
+    padding-top: 110px;
+    padding-bottom: 60px;
 }
 
 a.card:hover,
@@ -23,18 +18,11 @@ a.start-card:hover {
 
 .content {
     display: flex;
-    margin: 82px auto 16px;
-    padding: 0 16px;
+    margin-top: 30px;
+    margin: 30px auto 20px;
     max-width: 70%;
     flex-direction: column;
     align-items: center;
-}
-
-svg#saeule {
-    width: 80px;
-    position: absolute;
-    left: -10px;
-    top: -24px;
 }
 
 .material-icons {
@@ -60,7 +48,7 @@ a.card .material-icons path {
 .card {
     all: unset;
     border-radius: 4px;
-    border: 1px solid #eee;
+    border: 2px solid #e3e2e2;
     background-color: #fafafa;
     height: 40px;
     width: 200px;
@@ -94,7 +82,7 @@ a.card .material-icons path {
     color: #1976d2;
 }
 
-.card-container .card:not(:last-child) {
+.card-container .card {
     margin-right: 0;
 }
 
@@ -103,11 +91,11 @@ a.card .material-icons path {
     width: 168px;
 }
 
-.card-container .card:not(.highlight-card) {
+.card-container .card {
     cursor: pointer;
 }
 
-.card-container .card:not(.highlight-card):hover {
+.card-container .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
 }
@@ -117,7 +105,7 @@ a.card .material-icons path {
     box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
 }
 
-.card-container .card:not(.highlight-card):hover .material-icons path {
+.card-container .card:hover .material-icons path {
     fill: rgb(105, 103, 103);
 }
 
@@ -188,11 +176,6 @@ svg#clouds {
     bottom: -160px;
     z-index: -10;
     width: 110%;
-}
-
-.space{
-    height: 50px;
-    width: 100%;
 }
 
 .highlight{

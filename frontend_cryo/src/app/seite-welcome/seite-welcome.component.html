@@ -7,7 +7,7 @@
     </a>
 
     <!-- Functions -->
-    <div class="space" id="function" *ngIf="!side"></div>
+    <div style="height: 50px;" id="function" *ngIf="!side"></div>
     <h2>Functions</h2>
     <p *ngIf="!side">What could you do next with this?</p>
 
@@ -19,7 +19,8 @@
     </div>
 
     <!-- Resources -->
-    <div class="space" id="resources" *ngIf="!side"></div>
+    <div style="height: 50px;" id="resources" *ngIf="!side"></div>
+    <div style="height: 10px;" id="resources" *ngIf="side"></div>
     <h2>Resources</h2>
     <p *ngIf="!side">Here are some links to help you get started:</p>
 
