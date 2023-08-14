@@ -7,25 +7,12 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    margin: 8px 0;
-}
-
-p {
-    margin: 0;
-}
-
 .spacer {
     flex: 1;
 }
 
 .toolbar {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     right: 0;
@@ -35,6 +22,7 @@ p {
     background-color: #1976d2;
     color: #fff;
     font-weight: 600;
+    z-index: 99;
 }
 
 .toolbar img {
@@ -63,6 +51,7 @@ a.contact:hover {
     margin: 0px;
     transform:translateY(6px)
 }
+
 .contact-button{
     transform: translateY(-4px);
 }

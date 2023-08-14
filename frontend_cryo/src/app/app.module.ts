@@ -52,7 +52,6 @@ import { SeiteAboutThisComponent } from './seite-about-this/seite-about-this.com
 import { SeiteTechnologyComponent } from './seite-technology/seite-technology.component';
 import { SeiteDatabaseComponent } from './seite-database/seite-database.component';
 import { SeiteNnComponent } from './seite-nn/seite-nn.component';
-import { SeiteStartComponent } from './seite-start/seite-start.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { UnitBackendCheckComponent } from './unit-backend-check/unit-backend-check.component';
 import { UnitDatabaseCheckComponent } from './unit-database-check/unit-database-check.component';
@@ -61,7 +60,6 @@ import { UnitHighchartsGraphComponent } from './unit-highcharts-graph/unit-highc
 import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-instance.component';
 import { SeiteDataStorageComponent } from './seite-data-storage/seite-data-storage.component';
 import { SeiteDataAnalyseComponent } from './seite-data-analyse/seite-data-analyse.component';
-import { UnitTopGuideComponent } from './unit-top-guide/unit-top-guide.component';
 import { UnitAnalyseCellComponent } from './unit-analyse-cell/unit-analyse-cell.component';
 import { UnitAnalyseExperimentComponent } from './unit-analyse-experiment/unit-analyse-experiment.component';
 import { UnitAnalyseCpaComponent } from './unit-analyse-cpa/unit-analyse-cpa.component';
@@ -69,6 +67,7 @@ import { UnitAnalyseProcessComponent } from './unit-analyse-process/unit-analyse
 import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-analyse-select-menu.component';
 import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-table.component';
 import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
+import { SeiteStartComponent } from './seite-start/seite-start.component';
 
 
 @NgModule({
@@ -80,7 +79,6 @@ import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
     SeiteTechnologyComponent,
     SeiteDatabaseComponent,
     SeiteNnComponent,
-    SeiteStartComponent,
     UnitBackendCheckComponent,
     UnitDatabaseCheckComponent,
     UnitDataUploadComponent,
@@ -88,7 +86,6 @@ import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
     UnitCreateInstanceComponent,
     SeiteDataStorageComponent,
     SeiteDataAnalyseComponent,
-    UnitTopGuideComponent,
     UnitAnalyseCellComponent,
     UnitAnalyseExperimentComponent,
     UnitAnalyseCpaComponent,
@@ -97,6 +94,7 @@ import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
     ExcludeItemPipe,
     UnitShowInTableComponent,
     UnitCpaSubComponent,
+    SeiteStartComponent,
   ],
   imports: [
     BrowserModule,

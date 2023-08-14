@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-seite-welcome',
@@ -6,6 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./seite-welcome.component.css']
 })
 export class SeiteWelcomeComponent {
+  @Input() side: boolean = false
+  @Input() highlight: string = 'none'
   resourcesCards: { href: string, icon: string, span: string }[] = [
     { href: '/about-us', icon: 'perm_identity', span: 'About Us' },
     { href: '/about-this', icon: 'help_outline', span: 'About This' },
@@ -15,10 +17,14 @@ export class SeiteWelcomeComponent {
   ]
 
   functionCards: { icon: string, span: string, href: string }[] = [
-    { icon: 'storage', span: 'Data storage', href:'/data-storage' },
-    { icon: 'insert_chart_outlined', span: 'Data analyse', href:'/data-analyse' },
-    { icon: 'bubble_chart', span: 'Survivalrate predict', href:'/data-storage' },
-    { icon: 'trending_up', span: 'Parameter optimize', href:'/data-storage' },
-    { icon: 'favorite_border', span: 'Feedback', href:'/data-storage' }
+    { icon: 'storage', span: 'Data storage', href: '/start/data-storage' },
+    { icon: 'insert_chart_outlined', span: 'Data analyse', href: '/start/data-analyse' },
+    { icon: 'bubble_chart', span: 'Survivalrate predict', href: '/start/survivalrate-predict' },
+    { icon: 'trending_up', span: 'Parameter optimize', href: '/start/parameter-optimize' },
+    { icon: 'favorite_border', span: 'Feedback', href: '/start/feedback' }
   ]
+
+  check(input:string){
+    return input === this.highlight
+  }
 }

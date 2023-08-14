@@ -7,7 +7,7 @@
             <mat-panel-title *ngIf="data_type == 'Experiment'">
                 Uploader: EXPERIMENT
             </mat-panel-title>
-            <mat-panel-description [ngSwitch]="dataStoreStatus">
+            <!-- <mat-panel-description [ngSwitch]="dataStoreStatus">
                 <pre *ngSwitchDefault class="basic">Trying to Connect Server...</pre>
                 <pre *ngSwitchCase="'success'" class="connected">Server status: healthy</pre>
                 <pre *ngSwitchCase="'error'" class="disconnected">Server status: abnormal</pre>
@@ -15,7 +15,7 @@
                     <mat-spinner mode="indeterminate" [diameter]="13" class="spinner"
                         *ngIf="dataStoreStatus == 'pending'"></mat-spinner>
                 </div>
-            </mat-panel-description>
+            </mat-panel-description> -->
         </mat-expansion-panel-header>
 
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">

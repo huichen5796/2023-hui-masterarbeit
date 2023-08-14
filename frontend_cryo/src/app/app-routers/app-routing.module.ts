@@ -18,9 +18,12 @@ const routes: Routes = [
   { path: 'technology', component: SeiteTechnologyComponent },
   { path: 'database', component: SeiteDatabaseComponent },
   { path: 'nn', component: SeiteNnComponent },
-  { path: 'start', component: SeiteStartComponent },
-  { path: 'data-storage', component: SeiteDataStorageComponent },
-  { path: 'data-analyse', component: SeiteDataAnalyseComponent },
+  { path: 'start', component: SeiteStartComponent, children: [
+    { path: '', redirectTo: 'guide', pathMatch: 'full' }, // Redirect /nn to /nn/guide
+    { path: 'guide', component: SeiteDataAnalyseComponent },
+    { path: 'data-storage', component: SeiteDataStorageComponent },
+    { path: 'data-analyse', component: SeiteDataAnalyseComponent },
+  ]},
 ];
 
 @NgModule({

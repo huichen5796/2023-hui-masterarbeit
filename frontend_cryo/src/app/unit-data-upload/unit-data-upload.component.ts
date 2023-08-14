@@ -25,7 +25,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fileTransferService: FileTransferService,
-    private connectTestService: ConnectTestService,
+    // private connectTestService: ConnectTestService,
     private queryNeo4jService:QueryNeo4jService
   ) {
 
@@ -55,12 +55,15 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.connectTestService.cleanDataStoreFile(this.data_type).then((rep) => {
-      this.dataStoreStatus = rep
-      this.uploadedFiles = []
+    // this.connectTestService.cleanDataStoreFile(this.data_type).then((rep) => {
+    //   this.dataStoreStatus = rep
+    //   this.uploadedFiles = []
+    //   this.selectedFiles = {};
+    //   this.clearFileInput()
+    // })
+    this.uploadedFiles = []
       this.selectedFiles = {};
       this.clearFileInput()
-    })
   }
 
   onFileSelected(event: any) {
