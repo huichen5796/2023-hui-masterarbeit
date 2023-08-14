@@ -12,7 +12,7 @@
     <p *ngIf="!side">What could you do next with this?</p>
 
     <div class="card-container">
-        <a href="{{ card['href'] }}" *ngFor="let card of functionCards" class="card">
+        <a href="{{ card['href'] }}" *ngFor="let card of functionCards" class="card" [class.highlight]="check(card['href'])">
             <mat-icon>{{ card['icon'] }}</mat-icon>
             <span>{{ card['span'] }}</span>
         </a>
