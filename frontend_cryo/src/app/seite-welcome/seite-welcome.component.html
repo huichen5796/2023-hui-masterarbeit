@@ -1,42 +1,27 @@
 <div class="content" role="main">
 
-    <!-- Highlight Card -->
-    <div class="card highlight-card card-big">
-        <svg id="saeule" xmlns="http://www.w3.org/2000/svg" width="101.678" height="101.678"
-            viewBox="0 0 101.678 101.678">
-            <g id="Group_83" data-name="Group 83" transform="translate(-141 -696)">
-                <rect id="rectangle" x="141" y="696" width="101.678" height="101.678" rx="10" ry="10" fill="none"
-                    stroke="#1976d2" stroke-width="2" />
-                <g transform="translate(166, 721)">
-                    <rect x="0" y="20" width="10" height="40" rx="5" ry="5" fill="#f5f5f5" />
-                    <rect x="15" y="0" width="10" height="60" rx="5" ry="5" fill="#f5f5f5" />
-                    <rect x="30" y="15" width="10" height="45" rx="5" ry="5" fill="#f5f5f5" />
-                    <rect x="45" y="30" width="10" height="30" rx="5" ry="5" fill="#f5f5f5" />
-                </g>
-            </g>
-        </svg>
-        <span>Documentation and Analysis of Cryopreservation for Cell Suspensions</span>
-    </div>
+    <h1 class="title" *ngIf="!side">Documentation and Analysis of Cryopreservation for Cell Suspensions</h1>
 
-    <a class="start-card" href="/start">
+    <a class="start-card" href="#function" *ngIf="!side">
         <span>Get Started</span>
     </a>
 
     <!-- Functions -->
+    <div class="space" id="function" *ngIf="!side"></div>
     <h2>Functions</h2>
-    <p>What could you do next with this?</p>
+    <p *ngIf="!side">What could you do next with this?</p>
 
     <div class="card-container">
         <a href="{{ card['href'] }}" *ngFor="let card of functionCards" class="card">
             <mat-icon>{{ card['icon'] }}</mat-icon>
             <span>{{ card['span'] }}</span>
         </a>
-
     </div>
 
     <!-- Resources -->
+    <div class="space" id="resources" *ngIf="!side"></div>
     <h2>Resources</h2>
-    <p>Here are some links to help you get started:</p>
+    <p *ngIf="!side">Here are some links to help you get started:</p>
 
     <div class="card-container">
         <a class="card card-small" target="_blank" rel="noopener" *ngFor="let card of resourcesCards"
@@ -48,13 +33,13 @@
             </svg> </a>
     </div>
 
-    <div style="width: 70%; min-width: 400px;">
+    <!-- <div style="width: 70%; min-width: 400px;">
         <app-unit-backend-check></app-unit-backend-check>
         <app-unit-database-check></app-unit-database-check>
-    </div>
+    </div> -->
 
     <!-- Links -->
-    <div class="card-container">
+    <div class="card-container" *ngIf="!side">
         <a class="circle-link" title="Our Github" href="https://github.com/huichen5796/2023-hui-masterarbeit"
             target="_blank" rel="noopener">
             <img width="28" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png">
@@ -62,7 +47,7 @@
     </div>
 
     <!-- Footer -->
-    <footer>
+    <footer *ngIf="!side">
         It is useful?&nbsp;
         <a href="https://github.com/huichen5796/2023-hui-masterarbeit" target="_blank" rel="noopener"> Give our repo a
             star.
@@ -85,7 +70,7 @@
     </footer>
 
     <svg id="clouds" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677"
-        viewBox="0 0 2611.084 485.677">
+        viewBox="0 0 2611.084 485.677" *ngIf="!side">
         <title>Gray Clouds Background</title>
         <path id="Path_39" data-name="Path 39"
             d="M2379.709,863.793c10-93-77-171-168-149-52-114-225-105-264,15-75,3-140,59-152,133-30,2.83-66.725,9.829-93.5,26.25-26.771-16.421-63.5-23.42-93.5-26.25-12-74-77-130-152-133-39-120-212-129-264-15-54.084-13.075-106.753,9.173-138.488,48.9-31.734-39.726-84.4-61.974-138.487-48.9-52-114-225-105-264,15a162.027,162.027,0,0,0-103.147,43.044c-30.633-45.365-87.1-72.091-145.206-58.044-52-114-225-105-264,15-75,3-140,59-152,133-53,5-127,23-130,83-2,42,35,72,70,86,49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33,61.112,8.015,113.854-5.72,150.492-29.764a165.62,165.62,0,0,0,110.861-3.236c47,94,178,113,251,33,31.385,4.116,60.563,2.495,86.487-3.311,25.924,5.806,55.1,7.427,86.488,3.311,73,80,204,61,251-33a165.625,165.625,0,0,0,120,0c51,13,108,15,157-5a147.188,147.188,0,0,0,33.5-18.694,147.217,147.217,0,0,0,33.5,18.694c49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33C2446.709,1093.793,2554.709,922.793,2379.709,863.793Z"

@@ -1,4 +1,14 @@
-<div class="content" role="main">
-    <app-unit-top-guide [back]="''" [backUrl]="'/welcome'" [forward]="'data storage'" [forwardUrl]="'/data-storage'"></app-unit-top-guide>
-    <p>seite-get-started works!</p>
-</div>
+<mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side" position="start" opened>
+        <app-seite-welcome [side]=true></app-seite-welcome>
+    </mat-drawer>
+
+    <div class="example-sidenav-content">
+        <div (click)="drawer.toggle()" class="close">
+            <mat-icon *ngIf="drawer.opened">fullscreen</mat-icon>
+            <mat-icon *ngIf="!drawer.opened">fullscreen_exit</mat-icon>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+
+</mat-drawer-container>
