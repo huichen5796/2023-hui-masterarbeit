@@ -1,6 +1,7 @@
 h2 {
-    padding: 0px;
-    margin: 0px;
+    width: 100%;
+    text-align: center;
+    padding:20px 0px 0px;
 }
 
 .focus {
@@ -16,8 +17,6 @@ h2 {
 .list-box {
     height: 100%;
     max-width: 300px;
-    overflow-y: auto;
-    margin-top: 10px;
 }
 
 .mdc-list {
@@ -43,13 +42,15 @@ h2 {
 }
 
 .example-sidenav {
-    padding: 20px;
+    min-width: 200px;
+    display: flex;
+    text-align: left;
 }
 
-.toggle{
+.toggle {
     position: absolute;
     left: 0px;
-    top:0px;
+    top: 0px;
     min-width: 0px;
     padding: 0px;
     min-height: none;
@@ -58,9 +59,9 @@ h2 {
 
 .mirror-icon {
     transform: scaleX(-1);
-  }
+}
 
-  .example-margin{
+.example-margin {
     margin: 0;
-    transform: translateX(-10px);
-  }
+    transform: translateX(0px);
+}

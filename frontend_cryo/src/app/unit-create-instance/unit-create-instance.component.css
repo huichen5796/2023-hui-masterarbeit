@@ -52,12 +52,7 @@ pre {
 
 h2 {
     font-weight: normal;
-    display: flex;
-    justify-content: space-between;
-}
-
-.delete-all {
-    float: right;
+    padding: 10px 0px 10px;
 }
 
 .option-box {

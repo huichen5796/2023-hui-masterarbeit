@@ -1,6 +1,7 @@
 <mat-drawer-container class="example-container" autosize>
     <mat-drawer #drawer class="example-sidenav" mode="side" opened>
         <h2 class="title" *ngIf="which[0]">- {{ which }} -</h2>
+        <mat-divider></mat-divider>
         <mat-checkbox #checkbox class="example-margin" (change)="selectAll($event)"><u>select all</u></mat-checkbox>
         <div>
             <mat-list cdkListbox class="list-box">

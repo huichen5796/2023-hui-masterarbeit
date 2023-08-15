@@ -8,7 +8,7 @@
     <div class="main">
         <div class="top">
             <div *ngFor="let key of getObjectKeys(listItems)" class="top-content">
-                <h2>{{ key | uppercase }} :</h2>
+                <h2>{{ key | uppercase }}:</h2>
                 <mat-button-toggle-group>
                     <mat-button-toggle *ngFor="let value of listItems[key]" (click)="setWhich(value)">
                         <span *ngIf="value == which[0]" class="focus">{{ value | uppercase }}</span>
