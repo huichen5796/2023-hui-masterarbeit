@@ -137,10 +137,13 @@
                     </div>
                     <div class="table-cell-input"
                         *ngFor="let cell of getObjectKeys(newFileData[key][probe]) | excludeItem: ['CPA ID', 'Process ID', 'Sample ID']">
-                        <div *ngFor="let kk of newFileData[key][probe][cell]" (dblclick)="remove(kk, key, probe, cell)" style="height: 24px;background-color: white;color: black; border-bottom:solid; border-width: 1px;border-color: black;">
+                        <div *ngFor="let kk of newFileData[key][probe][cell]" (dblclick)="remove(kk, key, probe, cell)"
+                            style="height: 24px;background-color: white;color: black; border-bottom:solid; border-width: 1px;border-color: black;">
                             {{ kk }}</div>
-                        <mat-select [(value)]="newFileData[key][probe][cell]" multiple (click)="search(cell)" style="background-color: white; width: 100%;">
-                            <mat-option *ngFor="let id of idList[cell]" [value]="id" style="padding: 0px;">{{id}}</mat-option>
+                        <mat-select [(value)]="newFileData[key][probe][cell]" multiple (click)="search(cell)"
+                            style="background-color: white; width: 100%;">
+                            <mat-option *ngFor="let id of idList[cell]" [value]="id"
+                                style="padding: 0px;">{{id}}</mat-option>
                         </mat-select>
                     </div>
                 </div>
@@ -157,10 +160,10 @@
     </ul>
 </div>
 
-<label class="label-create" (click)="newFile()">create this file</label>
+<button class="label-create" (click)="newFile()">CREATE</button>
 
 <h2>created files:
-    <button mat-button color="primary" (click)="feedToDB()"><u>click here to feed all in database</u></button>
+    <button mat-button color="primary" (click)="feedToDB()"><u>feed all in database</u></button>
     <button mat-button color="warn" class="delete-all" (click)="deleteAll()">
         <u>delete all</u></button>
 </h2>
