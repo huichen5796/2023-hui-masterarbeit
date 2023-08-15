@@ -26,15 +26,14 @@ export class ConnectTestService {
       this.http.get(`${backendUrl}/buildDataStore/${dataStoreName}`)
         .subscribe((rep: any) => {
           resolve(rep)
-          console.log(rep)
         })
     })
     return promise
   }
 
-  testDataStoreFile(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process'): Promise<any> {
+  testDataStoreFile(data_type: ('PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process')[]): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`${backendUrl}/buildOneType/?store_name=${dataStoreName}&data_type=${data_type}`)
+      this.http.get(`${backendUrl}/checkIntegrity/?store_name=${dataStoreName}&data_type=${data_type}`)
         .subscribe((rep: any) => {
           resolve(rep)
         })
@@ -48,23 +47,6 @@ export class ConnectTestService {
         .subscribe((rep: any) => {
           if (rep=='success'){
             this.testDataStore().then((rep)=>{
-              resolve(rep)
-            })
-          }
-          else{
-            resolve('error')
-          }
-        })
-    })
-    return promise
-  }
-
-  cleanDataStoreFile(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process'): Promise<any> {
-    var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`${backendUrl}/deleteOneType/?store_name=${dataStoreName}&data_type=${data_type}`)
-        .subscribe((rep: any) => {
-          if (rep=='success'){
-            this.testDataStoreFile(data_type).then((rep)=>{
               resolve(rep)
             })
           }

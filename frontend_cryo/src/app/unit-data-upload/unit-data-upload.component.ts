@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../app-services';
 import { CpaStructur, ExperimentStructur, OtherStructur, defaultCpaData, defaultExperiment, defaultPrePostData, defaultProcess } from '../app-config';
 
@@ -7,10 +7,10 @@ import { CpaStructur, ExperimentStructur, OtherStructur, defaultCpaData, default
   templateUrl: './unit-data-upload.component.html',
   styleUrls: ['./unit-data-upload.component.css']
 })
-export class UnitDataUploadComponent implements OnInit, AfterViewInit {
+export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('fileInput1') fileInput1!: ElementRef;
   @ViewChild('fileInput2') fileInput2!: ElementRef;
-  
+
   uploadedFiles: { file_name: string, result: string, neo4j: string }[] = [];
   @Input() onlyDir!: boolean;
   @Input() allowMultiple!: boolean;
@@ -19,16 +19,22 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
 
   dataStoreStatus: 'error' | 'success' | 'pending' = 'pending'
 
-  selectedFiles: {[key:string]:string} = {}
+  selectedFiles: { [key: string]: string } = {}
 
   defaultData!: CpaStructur | OtherStructur | ExperimentStructur
 
   constructor(
     private fileTransferService: FileTransferService,
     // private connectTestService: ConnectTestService,
-    private queryNeo4jService:QueryNeo4jService
+    private queryNeo4jService: QueryNeo4jService
   ) {
 
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['data_type'].isFirstChange()) {
+      this.ngOnInit()
+      this.ngAfterViewInit()
+    }
   }
 
   clearFileInput() {
@@ -40,16 +46,16 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit(){
-    if (this.data_type == 'CPA'){
+  ngOnInit() {
+    if (this.data_type == 'CPA') {
       this.defaultData = defaultCpaData
-    } else if (this.data_type == 'Experiment'){
+    } else if (this.data_type == 'Experiment') {
       this.defaultData = defaultExperiment
-    } else if (this.data_type == 'PreData'){
+    } else if (this.data_type == 'PreData') {
       this.defaultData = defaultPrePostData
-    } else if (this.data_type == 'PostData'){
+    } else if (this.data_type == 'PostData') {
       this.defaultData = defaultPrePostData
-    } else if (this.data_type == 'Process'){
+    } else if (this.data_type == 'Process') {
       this.defaultData = defaultProcess
     }
   }
@@ -62,13 +68,14 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
     //   this.clearFileInput()
     // })
     this.uploadedFiles = []
-      this.selectedFiles = {};
-      this.clearFileInput()
+    this.selectedFiles = {};
+    this.clearFileInput()
   }
 
   onFileSelected(event: any) {
     const files: FileList = event.target.files;
     if (files.length > 0) {
+      console.log(this.fileInput1)
       this.fileTransferService.fileUpload(files, this.data_type).then((res) => {
         this.uploadedFiles = [...this.uploadedFiles, ...(JSON.parse(res.replace(/'/g, '"')))]
         this.uploadedFiles.forEach(file => {
@@ -78,11 +85,11 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selectedOrNot(file: { file_name: string, result: string, neo4j: string }){
-    if (file.neo4j == 'undo'){
+  selectedOrNot(file: { file_name: string, result: string, neo4j: string }) {
+    if (file.neo4j == 'undo') {
       return false
     }
-    else{
+    else {
       return true
     }
   }
@@ -98,11 +105,11 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
 
   onSelected(event: any) {
     if (event['options'][0]['_selected']) {
-      if (this.selectedFiles[event['options'][0]['_value']] == 'undo'){
+      if (this.selectedFiles[event['options'][0]['_value']] == 'undo') {
         this.selectedFiles[event['options'][0]['_value']] = 'waiting'
       }
     } else {
-      if (this.selectedFiles[event['options'][0]['_value']] == 'waiting'){
+      if (this.selectedFiles[event['options'][0]['_value']] == 'waiting') {
         this.selectedFiles[event['options'][0]['_value']] = 'undo'
       }
     }
@@ -110,7 +117,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
 
   feedToDB() {
     for (var file_name in this.selectedFiles) {
-      if (this.selectedFiles[file_name] == 'waiting'){
+      if (this.selectedFiles[file_name] == 'waiting') {
         var self = this;
         (function (fileName: string) {
           self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {
@@ -122,8 +129,8 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  deleteAll(){
-    if (confirm(`All about ${this.data_type} that not saved in the database will be lost! Are you sure to continue?`)){
+  deleteAll() {
+    if (confirm(`All about ${this.data_type} that not saved in the database will be lost! Are you sure to continue?`)) {
       this.ngAfterViewInit()
     }
   }

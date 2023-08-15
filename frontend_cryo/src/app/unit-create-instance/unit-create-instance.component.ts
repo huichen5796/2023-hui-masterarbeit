@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CpaStructur, CpaValueStructur, ExperimentStructur, OtherStructur, defaultProbe, defaultVersuche } from '../app-config';
 import { FileTransferService, QueryNeo4jService } from '../app-services';
 import { cloneDeep } from 'lodash-es';
@@ -10,7 +10,7 @@ import { ConnectionPositionPair } from '@angular/cdk/overlay';
   templateUrl: './unit-create-instance.component.html',
   styleUrls: ['./unit-create-instance.component.css']
 })
-export class UnitCreateInstanceComponent implements OnInit {
+export class UnitCreateInstanceComponent implements OnInit, OnChanges {
   currentFileName: string = ''
   error: { [key: string]: string } = { fileName: '', cpaIndex: '' }
 
@@ -40,6 +40,12 @@ export class UnitCreateInstanceComponent implements OnInit {
     private queryNeo4jService: QueryNeo4jService
   ) {
 
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['data_type'].isFirstChange()){
+      this.ngOnInit()
+    }
   }
 
   ngOnInit(): void {

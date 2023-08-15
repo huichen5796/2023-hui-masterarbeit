@@ -4,7 +4,7 @@ label {
 
 .label-create {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 10px;
     background-color: #1976d2;
     color: #fff;
     border: none;
@@ -12,7 +12,6 @@ label {
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    font-size: 16px;
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -20,7 +19,7 @@ label {
 .label-reload {
     display: inline-block;
     padding: 5px 10px;
-    color: yellow;
+    color: #1976d2;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -53,6 +52,8 @@ pre {
 
 h2 {
     font-weight: normal;
+    display: flex;
+    justify-content: space-between;
 }
 
 .delete-all {
@@ -94,7 +95,7 @@ h2 {
 }
 
 .tab-box {
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: scroll;
     width: 100%;
 }
@@ -107,12 +108,12 @@ mat-error {
 
 .file-box {
     padding: 10px;
-    max-height: 400px;
-    background-color: rgb(15, 15, 16);
-    color: #fff;
+    background-color: #e2e2e2;
+    color: black;
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-    overflow-y: scroll;
     position: relative;;
+    /* border:solid 1px;
+    border-radius: 4px; */
 }
 
 .add-new {
@@ -185,7 +186,7 @@ li u {
     position: absolute;
     width: calc(100% - 50px);
     height: 100%;
-    background-color: rgb(15, 15, 16);
+    background-color: #e2e2e2;
     z-index: 999;
 }
 
@@ -229,15 +230,15 @@ li u {
     width: calc(20% - 2px);
     text-align: center;
     border: solid;
-    border-color: #fff;
+    border-color: black;
     border-width: 1px;
     display: block;
     position: relative;
 }
 
 .table-head .table-cell {
-    color: #fff;
-    font-weight: bold;
+    color: black;
+    font-weight: normal;
     z-index:0;
 }
 

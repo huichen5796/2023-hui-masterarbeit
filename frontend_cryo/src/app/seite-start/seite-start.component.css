@@ -22,9 +22,10 @@
     width: 40px;
     height: 40px;
     cursor: pointer;
-    position: absolute;
+    position: relative;
     left: 10px;
-    top: 10px
+    top: 10px;
+    z-index: 99;
 }
 
 .close:hover{

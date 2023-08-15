@@ -8,13 +8,14 @@ tr{
 th, td {
     text-align: center;
     border: solid;
-    border-color: #fff;
+    border-color: black;
     border-width: 1px;
     flex-grow: 1;
+    font-weight: normal;
 }
 
 table {
-    color: #fff;
+    color: black;
     font-weight: bold;
     width: 100%;
 }
