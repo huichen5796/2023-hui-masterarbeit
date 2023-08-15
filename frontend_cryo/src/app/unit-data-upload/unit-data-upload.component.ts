@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FileTransferService, ConnectTestService, QueryNeo4jService } from '../app-services';
 import { CpaStructur, ExperimentStructur, OtherStructur, defaultCpaData, defaultExperiment, defaultPrePostData, defaultProcess } from '../app-config';
 
@@ -7,7 +7,7 @@ import { CpaStructur, ExperimentStructur, OtherStructur, defaultCpaData, default
   templateUrl: './unit-data-upload.component.html',
   styleUrls: ['./unit-data-upload.component.css']
 })
-export class UnitDataUploadComponent implements OnInit, AfterViewInit {
+export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('fileInput1') fileInput1!: ElementRef;
   @ViewChild('fileInput2') fileInput2!: ElementRef;
   
@@ -29,6 +29,11 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit {
     private queryNeo4jService:QueryNeo4jService
   ) {
 
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['data_type'].isFirstChange()){
+      this.ngOnInit()
+    }
   }
 
   clearFileInput() {
