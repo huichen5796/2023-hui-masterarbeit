@@ -1,7 +1,7 @@
 <div class="main">
     <mat-tab-group fitInkBarToContent>
         <mat-tab label="{{callBack['experiment']['Experiment_ID']}}" *ngFor="let callBack of callBacks">
-            <mat-card class="example-card" (dblclick)="doShow(callBack)">
+            <mat-card class="example-card">
                 <mat-card-header>
                     <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }}</mat-card-title>
                     <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
@@ -32,7 +32,7 @@
                     </div>
                 </mat-card-content>
             </mat-card>
+            <app-unit-highcharts-graph [experiment]="callBack"></app-unit-highcharts-graph>
         </mat-tab>
-        <app-unit-highcharts-graph [experiment]="toShow"></app-unit-highcharts-graph>
       </mat-tab-group>
 </div>
