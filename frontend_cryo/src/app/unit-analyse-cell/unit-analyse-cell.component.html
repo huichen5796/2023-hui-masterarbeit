@@ -1,5 +1,5 @@
 <div class="main">
-    <mat-tab-group fitInkBarToContent [selectedIndex]="selected">
+    <mat-tab-group fitInkBarToContent [selectedIndex]="selected" class="group">
         <mat-tab label="{{ callBack['Sample_ID'] }}" *ngFor="let callBack of callBacks">
             <mat-card class="example-card">
                 <mat-card-header>
@@ -21,6 +21,9 @@
             </mat-card>
         </mat-tab>
     </mat-tab-group>
+    <div style="height: 10px;width: 100%;"></div>
+    <mat-divider></mat-divider>
+    <div style="height: 10px;"></div>
     <div class="analyse" *ngIf="showTable">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" matSort
             (matSortChange)="sortData($event)">
@@ -32,13 +35,11 @@
                         <span *ngIf="!isString(element[item])">{{element[item]['mean']}} (SE:
                             {{element[item]['SE']}})</span>
                     </div>
-
                 </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
             <tr mat-row (click)="clickedRow(row)" *matRowDef="let row; columns: tableHeader"></tr>
         </table>
-
     </div>
 </div>

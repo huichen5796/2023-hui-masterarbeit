@@ -9,6 +9,10 @@
     justify-content: left;
 }
 
+.group{
+    width:100%;
+}
+
 .content-box {
     margin-top: 20px;
 }
@@ -22,16 +26,17 @@
     position: relative;
     text-align: left;
     overflow: hidden;
-    width: 800px;
+    width:100%;
+    margin: auto;
 }
 
 .onecell {
     margin: 0px
 }
 
-.demo-table {
-    width: auto;
-    margin-left: 10px;
+.analyse {
+    width: 100%;
+    overflow-x: auto;
 }
 
 .mat-mdc-row .mat-mdc-cell {

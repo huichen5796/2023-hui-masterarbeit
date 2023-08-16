@@ -25,8 +25,6 @@ export class UnitAnalyseCpaComponent {
   }
   ngOnChanges() {
     this.callBacks = []
-    this.showAnalyse = false
-    this.toShow = {}
     if (this.openSearch['selectedId'].length !== 0) {
       this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
     }
@@ -39,13 +37,6 @@ export class UnitAnalyseCpaComponent {
     else {
       return Object.keys(obj);
     }
-  }
-  showAnalyse:boolean = false
-  toShow:any = {}
-
-  doShow(callBack:any){
-    this.showAnalyse = true
-    this.toShow = callBack
   }
   emm(input:string){
     return input+'_ID'

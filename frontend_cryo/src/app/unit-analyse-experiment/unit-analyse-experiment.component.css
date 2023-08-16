@@ -9,6 +9,10 @@
     justify-content: left;
 }
 
+.group{
+    width:100%;
+}
+
 .content-box {
     margin-top: 20px;
 }
@@ -22,7 +26,8 @@
     position: relative;
     text-align: left;
     overflow: hidden;
-    width: 800px;
+    width:100%;
+    margin: auto;
 }
 
 .onecell {
