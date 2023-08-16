@@ -1,62 +1,41 @@
 <div class="main">
-    <button mat-button (click)="viewData()" class="view">
-        <mat-icon *ngIf="!hidden">fullscreen_exit</mat-icon>
-        <mat-icon *ngIf="hidden">fullscreen</mat-icon>
-    </button>
-    <div class="show" *ngIf="!hidden">
-        <button (click)="slideLeft()" class="flat-button"><mat-icon *ngIf="!isAtStart" class="button-icon"
-                style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_left</mat-icon></button>
-        <div class="box">
-            <div class="container" [style.transform]="'translateX(' + containerOffset + 'px)'"
-                *ngFor="let callBack of callBacks">
-                <mat-card class="example-card" (dblclick)="doShow(callBack)">
-                    <div class="button-delete">
-                        <button mat-icon-button (click)="delete(callBack['experiment']['Experiment_ID'])">
-                            <mat-icon>fullscreen_exit</mat-icon>
-                        </button>
-                    </div>
-
-                    <mat-card-header>
-                        <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }}</mat-card-title>
-                        <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content class="content-box">
-                        <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
-                            <p><span class="key">versuch {{i+1}}: </span>{{ versuch['versuch']['Versuch_ID'] }}</p>
-                            <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>
-                                            <span class="key">probe {{i+1}}</span>
-                                        </mat-panel-title>
-                                        <mat-panel-description>
-                                            {{probe['Sample_ID']}}
-                                        </mat-panel-description>
-                                    </mat-expansion-panel-header>
-                                    <div *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
-                                        <span class="key">{{key}}: </span>
-                                        <div *ngIf="parseArray(probe[key])">
-                                            <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
-                                        </div>
-                                        <span *ngIf="!parseArray(probe[key])">{{ probe[key] }}</span>
+    <mat-tab-group fitInkBarToContent class="group">
+        <mat-tab label="{{callBack['experiment']['Experiment_ID']}}" *ngFor="let callBack of callBacks">
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }}</mat-card-title>
+                    <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content-box">
+                    <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
+                        <p><span class="key">versuch {{i+1}}: </span>{{ versuch['versuch']['Versuch_ID'] }}</p>
+                        <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <span class="key">probe {{i+1}}</span>
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                        {{probe['Sample_ID']}}
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+                                <div
+                                    *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
+                                    <span class="key">{{key}}: </span>
+                                    <div *ngIf="parseArray(probe[key])">
+                                        <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
                                     </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
-        <button (click)="slideRight()" class="flat-button"><mat-icon *ngIf="!isAtEnd" class="button-icon"
-                style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
-    </div>
-    <div class="analyse" *ngIf="showAnalyse">
-        <!-- <mat-grid-list cols="2" rowHeight="2:1">
-            <mat-grid-tile><app-unit-highcharts-graph></app-unit-highcharts-graph></mat-grid-tile>
-            <mat-grid-tile>2</mat-grid-tile>
-            <mat-grid-tile>3</mat-grid-tile>
-            <mat-grid-tile>4</mat-grid-tile>
-          </mat-grid-list> -->
-          <app-unit-highcharts-graph [experiment]="toShow"></app-unit-highcharts-graph>
-    </div>
+                                    <span *ngIf="!parseArray(probe[key])">{{ probe[key] }}</span>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div style="height: 10px;"></div>
+            <mat-divider></mat-divider>
+            <div style="height: 10px;"></div>
+            <app-unit-highcharts-graph [experiment]="callBack"></app-unit-highcharts-graph>
+        </mat-tab>
+      </mat-tab-group>
 </div>

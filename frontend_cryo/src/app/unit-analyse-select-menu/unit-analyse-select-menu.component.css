@@ -1,11 +1,17 @@
 h2 {
-    padding: 0px;
-    margin: 0px;
+    width: 100%;
+    text-align: center;
+    padding:20px 0px 0px;
 }
 
 .focus {
     font-weight: bold;
     color: #1976d2;
+   display: inline-block;
+}
+
+.action, .focus {
+    text-align: center;
 }
 
 .action:hover,
@@ -15,9 +21,10 @@ h2 {
 
 .list-box {
     height: 100%;
-    max-width: 300px;
-    overflow-y: auto;
-    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }
 
 .mdc-list {
@@ -27,15 +34,13 @@ h2 {
 
 .example-container {
     min-width: 100%;
-    min-height: 600px;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-left: 1px solid rgba(0,0,0,.12);
+    border-right: 1px solid rgba(0,0,0,.12);
     display: block;
     position: relative;
-    margin-bottom: 50px;
 }
 
 .example-sidenav-content {
-    height: 100%;
     min-width: 100%;
     overflow: auto;
     /* display: flex;
@@ -43,13 +48,15 @@ h2 {
 }
 
 .example-sidenav {
-    padding: 20px;
+    min-width: 200px;
+    display: flex;
+    text-align: left;
 }
 
-.toggle{
+.toggle {
     position: absolute;
     left: 0px;
-    top:0px;
+    top: 0px;
     min-width: 0px;
     padding: 0px;
     min-height: none;
@@ -58,9 +65,23 @@ h2 {
 
 .mirror-icon {
     transform: scaleX(-1);
-  }
+}
 
-  .example-margin{
+.example-margin {
     margin: 0;
-    transform: translateX(-10px);
-  }
+    transform: translateX(0px);
+}
+
+.mdc-list-item{
+    overflow: visible;
+    display: inline-block;
+    min-height: 36px;
+    border: none;
+    margin: 0 6px 0;
+    line-height: 36px;
+}
+
+.list-item {
+    height: 36px;
+    line-height: 36px;
+}

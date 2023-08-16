@@ -1,7 +1,3 @@
-<div class="title-box">
-    <label class="label-edit">Edit File:</label>
-</div>
-
 <div class="file-box" *ngIf="data_type != 'Experiment' && data_type != 'CPA'">
     <label class="label-reload" (click)="reloadConfigFile()">Reload Template</label>
     <label *ngIf="data_type == 'Process'">File name / Process ID:</label>
@@ -161,8 +157,8 @@
 </div>
 
 <button class="label-create" (click)="newFile()">CREATE</button>
-
-<h2>created files:
+<mat-divider></mat-divider>
+<h2>CREATED FILES:
     <button mat-button color="primary" (click)="feedToDB()"><u>feed all in database</u></button>
     <button mat-button color="warn" class="delete-all" (click)="deleteAll()">
         <u>delete all</u></button>
