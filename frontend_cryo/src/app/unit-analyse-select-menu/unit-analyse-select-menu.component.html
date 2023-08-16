@@ -1,16 +1,16 @@
 <mat-drawer-container class="example-container" autosize>
     <mat-drawer #drawer class="example-sidenav" mode="side" opened>
-        <h2 class="title" *ngIf="which[0]">- {{ which }} -</h2>
-        <mat-divider></mat-divider>
+        <!-- <h2 class="title" *ngIf="which[0]">- {{ which }} -</h2>
+        <mat-divider></mat-divider> -->
         <mat-checkbox #checkbox class="example-margin" (change)="selectAll($event)"><u>select all</u></mat-checkbox>
-        <div>
-            <mat-list cdkListbox class="list-box">
-                <button mat-menu-item *ngFor="let value of idList" title="{{value}}" (click)="setSelect(value)">
-                    <span *ngIf="isSelected(value)" class="focus">{{ value }}</span>
-                    <span *ngIf="!isSelected(value)" class="action">{{ value }}</span>
-                </button>
-            </mat-list>
-        </div>
+        <mat-divider></mat-divider>
+        <mat-list cdkListbox class="list-box">
+            <button class="list-item" mat-menu-item *ngFor="let value of idList" title="{{value}}" (click)="setSelect(value)">
+                <div *ngIf="isSelected(value)" class="focus">{{ value }}</div>
+                <div *ngIf="!isSelected(value)" class="action">{{ value }}</div>
+            </button>
+        </mat-list>
+        <mat-divider></mat-divider>
     </mat-drawer>
 
     <div class="example-sidenav-content" *ngIf="selectedId != []">
