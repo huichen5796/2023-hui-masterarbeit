@@ -1,52 +1,35 @@
 <div class="main">
-    <button mat-button (click)="viewData()" class="view">
-        <mat-icon *ngIf="!hidden">fullscreen_exit</mat-icon>
-        <mat-icon *ngIf="hidden">fullscreen</mat-icon>
-    </button>
-    <div class="show" *ngIf="!hidden">
-        <button (click)="slideLeft()" class="flat-button"><mat-icon *ngIf="!isAtStart" class="button-icon"
-                style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_left</mat-icon></button>
-        <div class="box">
-            <div class="container" [style.transform]="'translateX(' + containerOffset + 'px)'"
-                *ngFor="let callBack of callBacks">
-                <mat-card class="example-card" (dblclick)="doShow(callBack)">
-                    <div class="button-delete">
-                        <button mat-icon-button (click)="delete(callBack['cpa']['CPA_ID'])">
-                            <mat-icon>fullscreen_exit</mat-icon>
-                        </button>
-                    </div>
-
-                    <mat-card-header>
-                        <mat-card-title>{{ callBack['cpa']['CPA_ID'] }}</mat-card-title>
-                        <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content class="content-box">
-                        <mat-accordion *ngFor="let sub of callBack['child']">
-                            <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        <span class="key">{{ sub['class'] }} </span>
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <p>
-                                    <span class="key">{{sub['class']}}_ID: </span>{{ sub['unique_id'] }}
-                                </p>
-                                <p
-                                    *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
-                                    <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
-                                </p>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
-        <button (click)="slideRight()" class="flat-button"><mat-icon *ngIf="!isAtEnd" class="button-icon"
-                style="transform: translateX(-8px) translateY(-2px);">keyboard_arrow_right</mat-icon></button>
-    </div>
+    <mat-tab-group fitInkBarToContent>
+        <mat-tab label="{{ callBack['cpa']['CPA_ID'] }}" *ngFor="let callBack of callBacks">
+            <mat-card class="example-card" (dblclick)="doShow(callBack)">
+                <mat-card-header>
+                    <mat-card-title>{{ callBack['cpa']['CPA_ID'] }}</mat-card-title>
+                    <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content-box">
+                    <mat-accordion *ngFor="let sub of callBack['child']">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span class="key">{{ sub['class'] }} </span>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <p>
+                                <span class="key">{{sub['class']}}_ID: </span>{{ sub['unique_id'] }}
+                            </p>
+                            <p
+                                *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
+                                <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
+                            </p>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-card-content>
+            </mat-card>
+        </mat-tab>
+    </mat-tab-group>
     <div class="analyse" *ngIf="showAnalyse">
         <div class="row" *ngFor="let sub of toShow['child']"><app-unit-cpa-sub [cpa_id]="toShow['cpa']['CPA_ID']" [sub]="sub"></app-unit-cpa-sub></div>
     </div>

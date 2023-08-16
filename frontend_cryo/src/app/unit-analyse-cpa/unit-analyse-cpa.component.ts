@@ -23,22 +23,10 @@ export class UnitAnalyseCpaComponent {
     })
 
   }
-  hidden:boolean = false
   ngOnChanges() {
     this.callBacks = []
-    this.containerOffset = 0;
     this.showAnalyse = false
     this.toShow = {}
-    this.isAtStart = true;
-    this.hidden = false
-    if (this.openSearch['selectedId'].length == 1) {
-      this.isAtEnd = true;
-    } else if (this.openSearch['selectedId'].length == 0) {
-      this.isAtEnd = true;
-    } else {
-      this.isAtEnd = false;
-    }
-
     if (this.openSearch['selectedId'].length !== 0) {
       this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
     }
@@ -52,42 +40,12 @@ export class UnitAnalyseCpaComponent {
       return Object.keys(obj);
     }
   }
-  delete(item: string) {
-    // this.deleteOne.emit(item)
-    this.hidden = true
-  }
-
-  currentIndex = 0;
-  containerOffset = 0;
-  cardWidth = 400;
-  isAtStart = true;
-  isAtEnd = true;
-
-  slideLeft() {
-    this.currentIndex = Math.max(this.currentIndex - 1, 0);
-    this.containerOffset = -this.currentIndex * this.cardWidth;
-    this.updateButtonStates();
-  }
-
-  slideRight() {
-    this.currentIndex = Math.min(this.currentIndex + 1, this.callBacks.length - 1);
-    this.containerOffset = -this.currentIndex * this.cardWidth;
-    this.updateButtonStates();
-  }
-
-  updateButtonStates() {
-    this.isAtStart = this.currentIndex === 0;
-    this.isAtEnd = this.currentIndex === this.callBacks.length - 1;
-  }
   showAnalyse:boolean = false
   toShow:any = {}
 
   doShow(callBack:any){
     this.showAnalyse = true
     this.toShow = callBack
-  }
-  viewData(){
-    this.hidden=!this.hidden
   }
   emm(input:string){
     return input+'_ID'

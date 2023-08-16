@@ -21,13 +21,7 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
   }
   topItems: string[] = ["Sample_ID", "RunDate", "Machine"]
   tableHeader = ['Sample_ID', ...this.itemShow['Viability'], ...this.itemShow['Morphology']]
-  hidden: boolean = false
-  currentIndex = 0;
-  containerOffset = 0;
-  cardWidth = 400;
-  isAtStart = true;
-  isAtEnd = true;
-
+  selected = 0
   constructor(
     private queryNeo4jService: QueryNeo4jService,
     private calculatorService: CalculatorService,
@@ -65,16 +59,6 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
     this.callBacks = []
     this.showTable = false
     this.dataSource = new MatTableDataSource([])
-    this.containerOffset = 0;
-    this.isAtStart = true;
-    this.hidden = false
-    if (this.openSearch['selectedId'].length == 1) {
-      this.isAtEnd = true;
-    } else if (this.openSearch['selectedId'].length == 0) {
-      this.isAtEnd = true;
-    } else {
-      this.isAtEnd = false;
-    }
 
     if (this.openSearch['selectedId'].length !== 0) {
       this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
@@ -89,41 +73,10 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
       return Object.keys(obj);
     }
   }
-  delete(item: string) {
-    // this.deleteOne.emit(item)
-    this.hidden = true
-  }
 
-  slideLeft() {
-    this.currentIndex = Math.max(this.currentIndex - 1, 0);
-    this.containerOffset = -this.currentIndex * this.cardWidth;
-    this.updateButtonStates();
-  }
-
-  slideRight() {
-    this.currentIndex = Math.min(this.currentIndex + 1, this.callBacks.length - 1);
-    this.containerOffset = -this.currentIndex * this.cardWidth;
-    this.updateButtonStates();
-  }
-
-  updateButtonStates() {
-    this.isAtStart = this.currentIndex === 0;
-    this.isAtEnd = this.currentIndex === this.callBacks.length - 1;
-  }
-
-
-  viewData() {
-    this.hidden = !this.hidden
-  }
   clickedRow(row: any) {
     if (this.callBacks.indexOf(row) != -1) {
-      const position = -this.cardWidth * this.callBacks.indexOf(row)
-      if (this.containerOffset != position) {
-        this.currentIndex = this.callBacks.indexOf(row)
-        this.containerOffset = position
-        this.hidden = false
-        this.updateButtonStates();
-      }
+      this.selected = this.callBacks.indexOf(row)
     }
   }
   isString(input: any): boolean {
@@ -135,6 +88,8 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
+
+  
 
   // /** Announce the change in sort state for assistive technology. */
   // announceSortChange(sortState: Sort) {
