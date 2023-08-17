@@ -56,7 +56,7 @@
             <label>· FILE / IDENTITY / {{currentType}} ID</label>
             <label>:</label>
             <textarea type="search" [(ngModel)]="currentFileName" rows="1" placeholder="Ex. test_1 2023"
-                (blur)="checkFileName()"></textarea><span *ngIf="currentType === 'DSC'">.ngb-sd7</span>
+                (blur)="checkFileName()"></textarea><span *ngIf="currentType === 'DSC'">(.ngb-sd7)</span>
             <u class="add-delete" style="cursor:unset;"></u>
         </li>
         <mat-error *ngIf="error['fileName'] == 'type2'">FILE / IDENTITY / {{currentType}} ID is required.</mat-error>
@@ -126,19 +126,16 @@
                         <input #input type="search" [(ngModel)]="newFileData[key][probe][cell]" class="exp-input"
                             [matAutocomplete]="auto" (click)="search(cell)">
                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option">
+                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option" selected>
                                 {{ id }}
                             </mat-option>
                         </mat-autocomplete>
                     </div>
                     <div class="table-cell-input"
                         *ngFor="let cell of getObjectKeys(newFileData[key][probe]) | excludeItem: ['CPA ID', 'Process ID', 'Sample ID']">
-                        <div *ngFor="let kk of newFileData[key][probe][cell]" (dblclick)="remove(kk, key, probe, cell)">
-                            {{ kk }}
-                        </div>
-                        <mat-select [ngModel]="transformerForExp(newFileData[key][probe][cell])" multiple (dblclick)="search(cell)" style="color: white; background-color: white;">
+                        <mat-select [(ngModel)]="newFileData[key][probe][cell]" multiple (click)="search(cell)" class="select-menu">
                             <mat-option *ngFor="let id of idList[cell]"
-                                style="padding: 0px;" (click)="add(id, key, probe, cell)">{{id}}</mat-option>
+                                style="padding: 0px;" [value]="id">{{id}}</mat-option>
                         </mat-select>
                     </div>
                 </div>
@@ -154,7 +151,7 @@
         </li>
     </ul>
 </div>
-
+<!-- <p>{{newFileData | json}}</p> -->
 <button class="label-create" (click)="newFile()">CREATE</button>
 <mat-divider></mat-divider>
 <h2>CREATED FILES:
