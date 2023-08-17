@@ -21,10 +21,11 @@
             </mat-card>
         </mat-tab>
     </mat-tab-group>
-    <div style="height: 10px;width: 100%;"></div>
-    <mat-divider></mat-divider>
-    <div style="height: 10px;"></div>
+
     <div class="analyse" *ngIf="showTable">
+        <div style="height: 10px;"></div>
+        <mat-divider></mat-divider>
+        <div style="height: 10px;"></div>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" matSort
             (matSortChange)="sortData($event)">
             <ng-container matColumnDef="{{item}}" *ngFor="let item of tableHeader">

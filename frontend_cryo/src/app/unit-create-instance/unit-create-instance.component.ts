@@ -376,4 +376,17 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
   remove(value:string, key: string, probe: string, cell: string){
     this.newFileData[key][probe][cell] = this.newFileData[key][probe][cell].filter((item:string) => item !== value)
   }
+
+  transformerForExp(input:string[]):string[]{
+    return [input.join('\n')]
+  }
+
+  add(value:string, key: string, probe: string, cell: string){
+    if (this.newFileData[key][probe][cell].indexOf(value) == -1){
+      this.newFileData[key][probe][cell].push(value)
+    }
+    else{
+      this.newFileData[key][probe][cell] = this.newFileData[key][probe][cell].filter((item:string) => item !== value)
+    }
+  }
 }
