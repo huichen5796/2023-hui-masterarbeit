@@ -56,7 +56,7 @@
             <label>· FILE / IDENTITY / {{currentType}} ID</label>
             <label>:</label>
             <textarea type="search" [(ngModel)]="currentFileName" rows="1" placeholder="Ex. test_1 2023"
-                (blur)="checkFileName()"></textarea><span *ngIf="currentType === 'DSC'">.ngb-sd7</span>
+                (blur)="checkFileName()"></textarea><span *ngIf="currentType === 'DSC'">(.ngb-sd7)</span>
             <u class="add-delete" style="cursor:unset;"></u>
         </li>
         <mat-error *ngIf="error['fileName'] == 'type2'">FILE / IDENTITY / {{currentType}} ID is required.</mat-error>
@@ -97,8 +97,8 @@
             <div class="table-probes">
                 <label class="table-line-head"></label>
                 <div class="table-head">
-                    <div class="table-cell" *ngFor="let index of getObjectKeys(newFileData['Versuche 1']['Probe 1'])">{{
-                        index }}</div>
+                    <div class="table-cell" *ngFor="let index of getObjectKeys(newFileData['Versuche 1']['Probe 1'])">
+                        {{ index }}</div>
                 </div>
                 <u class="add-delete" style="cursor:unset;"></u>
             </div>
@@ -120,26 +120,22 @@
                 <div class="red-line" *ngIf="deletedItemItems.indexOf(transformer(key,probe)) != -1"></div>
                 <div class="red-line-big" *ngIf="deletedItems.indexOf(key) != -1"></div>
                 <label class="table-line-head">{{ makeIndex(probe) }} |</label>
-                <div class="table-head">
+                <div class="probe-li">
                     <div class="table-cell-input"
                         *ngFor="let cell of getObjectKeys(newFileData[key][probe]) | excludeItem:['PreData ID', 'PostData ID']">
                         <input #input type="search" [(ngModel)]="newFileData[key][probe][cell]" class="exp-input"
-                            [matAutocomplete]="auto" (click)="search(cell)" style="height: 24px;">
+                            [matAutocomplete]="auto" (click)="search(cell)">
                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option">
+                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option" selected>
                                 {{ id }}
                             </mat-option>
                         </mat-autocomplete>
                     </div>
                     <div class="table-cell-input"
                         *ngFor="let cell of getObjectKeys(newFileData[key][probe]) | excludeItem: ['CPA ID', 'Process ID', 'Sample ID']">
-                        <div *ngFor="let kk of newFileData[key][probe][cell]" (dblclick)="remove(kk, key, probe, cell)"
-                            style="height: 24px;background-color: white;color: black; border-bottom:solid; border-width: 1px;border-color: black;">
-                            {{ kk }}</div>
-                        <mat-select [(value)]="newFileData[key][probe][cell]" multiple (click)="search(cell)"
-                            style="background-color: white; width: 100%;">
-                            <mat-option *ngFor="let id of idList[cell]" [value]="id"
-                                style="padding: 0px;">{{id}}</mat-option>
+                        <mat-select [(ngModel)]="newFileData[key][probe][cell]" multiple (click)="search(cell)" class="select-menu">
+                            <mat-option *ngFor="let id of idList[cell]"
+                                style="padding: 0px;" [value]="id">{{id}}</mat-option>
                         </mat-select>
                     </div>
                 </div>
@@ -155,7 +151,7 @@
         </li>
     </ul>
 </div>
-
+<!-- <p>{{newFileData | json}}</p> -->
 <button class="label-create" (click)="newFile()">CREATE</button>
 <mat-divider></mat-divider>
 <h2>CREATED FILES:
