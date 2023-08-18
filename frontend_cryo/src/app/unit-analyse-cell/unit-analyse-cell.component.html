@@ -2,6 +2,9 @@
     <mat-tab-group fitInkBarToContent [selectedIndex]="selected" class="group">
         <mat-tab label="{{ callBack['Sample_ID'] }}" *ngFor="let callBack of callBacks">
             <mat-card class="example-card">
+                <button class="edit-button" (click)="openDialogGraph(callBack)">
+                    <mat-icon>settings_brightness</mat-icon>
+                </button>
                 <mat-card-header>
                     <mat-card-title>{{ callBack['Sample_ID'] }}</mat-card-title>
                     <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
@@ -15,6 +18,18 @@
                         <p *ngFor="let item of itemShow[key]">
                             <span class="key">{{ item }}:</span>
                             {{ callBack[item]}}
+                        </p>
+                    </div>
+                    <div>
+                        <mat-card-subtitle>Others: </mat-card-subtitle>
+                        <p *ngFor="let item of seeMore; let i = index">
+                            <select [(ngModel)]="seeMore[i]" class="key">
+                                <option value="{{key}}" *ngFor="let key of getObjectKeys(callBack).sort()">{{key}}</option>
+                            </select>
+                            : {{ callBack[seeMore[i]]}}
+                        </p>
+                        <p>
+                            <u class="see-more" (click)="seeMoreAttr()">+ see more</u>
                         </p>
                     </div>
                 </mat-card-content>

@@ -33,3 +33,22 @@
 .onecell {
     margin: 0px
 }
+
+.edit-button {
+    position: absolute;
+    right: 10px;
+    top:10px;
+    background-color: white;
+    border: none;
+    opacity: 0.5;
+}
+
+.edit-button:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.see-more{
+    color:#1976d2;
+    cursor: pointer;
+}

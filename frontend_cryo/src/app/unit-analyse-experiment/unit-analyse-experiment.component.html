@@ -2,6 +2,10 @@
     <mat-tab-group fitInkBarToContent class="group">
         <mat-tab label="{{callBack['experiment']['Experiment_ID']}}" *ngFor="let callBack of callBacks">
             <mat-card class="example-card">
+                <button class="edit-button" (click)="openDialogGraph(callBack)">
+                    <mat-icon>settings_brightness</mat-icon>
+                </button>
+
                 <mat-card-header>
                     <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }}</mat-card-title>
                     <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
@@ -19,8 +23,9 @@
                                         {{probe['Sample_ID']}}
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
-                                <div
-                                    *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
+                                <mat-divider></mat-divider>
+                                <div style="height: 10px;"></div>
+                                <div *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
                                     <span class="key">{{key}}: </span>
                                     <div *ngIf="parseArray(probe[key])">
                                         <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
@@ -37,5 +42,5 @@
             <div style="height: 10px;"></div>
             <app-unit-highcharts-graph [experiment]="callBack"></app-unit-highcharts-graph>
         </mat-tab>
-      </mat-tab-group>
+    </mat-tab-group>
 </div>

@@ -2,6 +2,9 @@
     <mat-tab-group fitInkBarToContent class="group">
         <mat-tab label="{{ callBack['cpa']['CPA_ID'] }}" *ngFor="let callBack of callBacks">
             <mat-card class="example-card">
+                <button class="edit-button" (click)="openDialogGraph(callBack)">
+                    <mat-icon>settings_brightness</mat-icon>
+                </button>
                 <mat-card-header>
                     <mat-card-title>{{ callBack['cpa']['CPA_ID'] }}</mat-card-title>
                     <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
@@ -14,15 +17,16 @@
                                     <span class="key">{{ sub['class'] }} </span>
                                 </mat-panel-title>
                                 <mat-panel-description>
-
+                                    <span>{{ sub['unique_id'] }}</span>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
-                            <p>
-                                <span class="key">{{sub['class']}}_ID: </span>{{ sub['unique_id'] }}
-                            </p>
-                            <p *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
-                                <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
-                            </p>
+                            <div class="inhalt">
+                                <p
+                                    *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
+                                    <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
+                                </p>
+                            </div>
+
                         </mat-expansion-panel>
                     </mat-accordion>
                 </mat-card-content>
@@ -30,8 +34,8 @@
             <div style="height: 10px;"></div>
             <mat-divider></mat-divider>
             <div style="height: 10px;"></div>
-            <div class="row" *ngFor="let sub of callBack['child']"><app-unit-cpa-sub [cpa_id]="callBack['cpa']['CPA_ID']"
-                    [sub]="sub"></app-unit-cpa-sub></div>
+            <div class="row" *ngFor="let sub of callBack['child']"><app-unit-cpa-sub
+                    [cpa_id]="callBack['cpa']['CPA_ID']" [sub]="sub"></app-unit-cpa-sub></div>
         </mat-tab>
     </mat-tab-group>
 </div>
