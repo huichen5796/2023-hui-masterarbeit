@@ -47,3 +47,8 @@
     opacity: 1;
     cursor: pointer;
 }
+
+.see-more{
+    color:#1976d2;
+    cursor: pointer;
+}

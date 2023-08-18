@@ -28,7 +28,12 @@ export class UnitEditDatabaseComponent {
       return false;
     }
   }
+
   emm(input:string){
     return input+'_ID'
+  }
+
+  rename(type:("Experiment" | "Probe" | "Versuch"), orignalName:string, currentName:string){
+
   }
 }

@@ -1,24 +1,25 @@
-
 <mat-card class="example-card" *ngIf="type==='Experiment'">
     <mat-card-header>
-        <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }}</mat-card-title>
+        <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
         <mat-card-subtitle>{{ type }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="content-box">
         <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
-            <p><span class="key">versuch {{i+1}}: </span>{{ versuch['versuch']['Versuch_ID'] }}</p>
+            <p><span class="key">versuch {{i+1}}: </span>{{ versuch['versuch']['Versuch_ID'] }} <button mat-button class="rename">Rename</button></p>
             <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
                 <mat-expansion-panel>
+                <!-- <mat-expansion-panel [expanded]="true" disabled> -->
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <span class="key">probe {{i+1}}</span>
                         </mat-panel-title>
                         <mat-panel-description>
-                            {{probe['Sample_ID']}}
+                            {{probe['Sample_ID']}} <button mat-button class="rename">Rename</button>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
-                    <div
-                        *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
+                    <mat-divider></mat-divider>
+                    <div style="height: 10px;"></div>
+                    <div *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
                         <span class="key">{{key}}: </span>
                         <div *ngIf="parseArray(probe[key])">
                             <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
@@ -33,7 +34,7 @@
 
 <mat-card class="example-card" *ngIf="type==='Process'">
     <mat-card-header>
-        <mat-card-title>{{ callBack['Process_ID'] }}</mat-card-title>
+        <mat-card-title>{{ callBack['Process_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
         <mat-card-subtitle>{{ type }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="content-box">
@@ -45,7 +46,7 @@
 
 <mat-card class="example-card" *ngIf="type==='PreData' || type==='PostData'">
     <mat-card-header>
-        <mat-card-title>{{ callBack['Sample_ID'] }}</mat-card-title>
+        <mat-card-title>{{ callBack['Sample_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
         <mat-card-subtitle>{{ type }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="content-box">
@@ -57,7 +58,7 @@
 
 <mat-card class="example-card" *ngIf="type==='CPA'">
     <mat-card-header>
-        <mat-card-title>{{ callBack['cpa']['CPA_ID'] }}</mat-card-title>
+        <mat-card-title>{{ callBack['cpa']['CPA_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
         <mat-card-subtitle>{{ type }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="content-box">
@@ -68,12 +69,9 @@
                         <span class="key">{{ sub['class'] }} </span>
                     </mat-panel-title>
                     <mat-panel-description>
-
+                        <span>{{ sub['unique_id'] }} <button mat-button class="rename">Rename</button></span>
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <p>
-                    <span class="key">{{sub['class']}}_ID: </span>{{ sub['unique_id'] }}
-                </p>
                 <p *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
                     <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
                 </p>
@@ -81,3 +79,8 @@
         </mat-accordion>
     </mat-card-content>
 </mat-card>
+
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>No</button>
+    <button mat-button mat-dialog-close>Ok</button>
+</div>

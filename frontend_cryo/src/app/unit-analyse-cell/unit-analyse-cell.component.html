@@ -24,7 +24,7 @@
                         <mat-card-subtitle>Others: </mat-card-subtitle>
                         <p *ngFor="let item of seeMore; let i = index">
                             <select [(ngModel)]="seeMore[i]" class="key">
-                                <option value="{{key}}" *ngFor="let key of getObjectKeys(callBack)">{{key}}</option>
+                                <option value="{{key}}" *ngFor="let key of getObjectKeys(callBack).sort()">{{key}}</option>
                             </select>
                             : {{ callBack[seeMore[i]]}}
                         </p>

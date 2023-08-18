@@ -14,6 +14,19 @@ export class UnitAnalyseProcessComponent implements OnChanges {
 
   callBacks: any[] = []
 
+  topItems: string[] = [
+    "Freezing_device",
+    "Cooling_rate",
+    "Preservation_container",
+    "Storage_temperature",
+    "Storage_medium",
+    "Storage_duration",
+    "Thawing_temperature",
+    "Washing_steps",
+    "Dilution_medium",
+    "Dilution_factor"
+  ]
+  seeMore: string[] = [];
   constructor(
     private queryNeo4jService: QueryNeo4jService,
     public dialog: MatDialog,
@@ -103,5 +116,8 @@ export class UnitAnalyseProcessComponent implements OnChanges {
     let instance = dialogRef.componentInstance
     instance['callBack'] = callBack
     instance['type'] = this.openSearch['which']
+  }
+  seeMoreAttr(){
+    this.seeMore.push('')
   }
 }

@@ -18,3 +18,11 @@
 .onecell {
     margin: 0px
 }
+
+.mat-expansion-panel-header[aria-disabled=true] {
+    color:black;
+}
+
+.rename{
+    color: #1976d2;
+}
