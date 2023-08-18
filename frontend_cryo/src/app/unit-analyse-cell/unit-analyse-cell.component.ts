@@ -3,6 +3,8 @@ import { QueryNeo4jService, CalculatorService } from '../app-services';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatDialog } from '@angular/material/dialog';
+import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-database.component';
 
 @Component({
   selector: 'app-unit-analyse-cell',
@@ -22,10 +24,11 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
   topItems: string[] = ["Sample_ID", "RunDate", "Machine"]
   tableHeader = ['Sample_ID', ...this.itemShow['Viability'], ...this.itemShow['Morphology']]
   selected = 0
+  seeMore:string[] = []
   constructor(
     private queryNeo4jService: QueryNeo4jService,
     private calculatorService: CalculatorService,
-    private _liveAnnouncer: LiveAnnouncer
+    public dialog: MatDialog,
   ) { }
 
   result: any = { "Sample_ID": 'CONCLUSION' }
@@ -128,5 +131,18 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
     } else {
       return 0 * (isAsc ? 1 : -1);
     }
+  }
+  openDialogGraph(callBack:any): void {
+    let dialogRef = this.dialog.open(UnitEditDatabaseComponent, {
+      width: '70%',
+      height: '70%',
+    })
+    let instance = dialogRef.componentInstance
+    instance['callBack'] = callBack
+    instance['type'] = this.openSearch['which']
+  }
+
+  seeMoreAttr(){
+    this.seeMore.push('')
   }
 }

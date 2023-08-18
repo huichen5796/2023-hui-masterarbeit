@@ -1,13 +1,17 @@
 <div class="main">
     <mat-tab-group fitInkBarToContent class="group">
         <mat-tab label="{{ callBack['Process_ID'] }}" *ngFor="let callBack of callBacks">
-            <mat-card class="example-card" (dblclick)="doShow(callBack)">
+            <mat-card class="example-card">
+                <button class="edit-button" (click)="openDialogGraph(callBack)">
+                    <mat-icon>settings_brightness</mat-icon>
+                </button>
+
                 <mat-card-header>
                     <mat-card-title>{{ callBack['Process_ID'] }}</mat-card-title>
                     <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="content-box">
-                    <div *ngFor="let topItem of topItems">
+                    <div *ngFor="let topItem of getObjectKeys(callBack) | excludeItem : ['Process_ID']">
                         <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
                     </div>
                 </mat-card-content>

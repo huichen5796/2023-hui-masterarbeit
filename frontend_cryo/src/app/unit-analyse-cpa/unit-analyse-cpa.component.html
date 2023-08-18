@@ -2,6 +2,9 @@
     <mat-tab-group fitInkBarToContent class="group">
         <mat-tab label="{{ callBack['cpa']['CPA_ID'] }}" *ngFor="let callBack of callBacks">
             <mat-card class="example-card">
+                <button class="edit-button" (click)="openDialogGraph(callBack)">
+                    <mat-icon>settings_brightness</mat-icon>
+                </button>
                 <mat-card-header>
                     <mat-card-title>{{ callBack['cpa']['CPA_ID'] }}</mat-card-title>
                     <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>

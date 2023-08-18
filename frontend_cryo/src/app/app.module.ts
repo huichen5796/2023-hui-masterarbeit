@@ -68,6 +68,7 @@ import { UnitAnalyseSelectMenuComponent } from './unit-analyse-select-menu/unit-
 import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-table.component';
 import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
 import { SeiteStartComponent } from './seite-start/seite-start.component';
+import { UnitEditDatabaseComponent } from './unit-edit-database/unit-edit-database.component';
 
 
 @NgModule({
@@ -95,6 +96,7 @@ import { SeiteStartComponent } from './seite-start/seite-start.component';
     UnitShowInTableComponent,
     UnitCpaSubComponent,
     SeiteStartComponent,
+    UnitEditDatabaseComponent,
   ],
   imports: [
     BrowserModule,

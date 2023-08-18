@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
+import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-database.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-unit-analyse-cpa',
@@ -13,6 +15,7 @@ export class UnitAnalyseCpaComponent {
   callBacks: any[] = []
   constructor(
     private queryNeo4jService: QueryNeo4jService,
+    public dialog: MatDialog,
   ) { }
 
   searchOne(ID: readonly string[], data_type: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
@@ -40,5 +43,15 @@ export class UnitAnalyseCpaComponent {
   }
   emm(input:string){
     return input+'_ID'
+  }
+
+  openDialogGraph(callBack:any): void {
+    let dialogRef = this.dialog.open(UnitEditDatabaseComponent, {
+      width: '70%',
+      height: '70%',
+    })
+    let instance = dialogRef.componentInstance
+    instance['callBack'] = callBack
+    instance['type'] = this.openSearch['which']
   }
 }

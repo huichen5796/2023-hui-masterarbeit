@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
+import { MatDialog } from '@angular/material/dialog';
+import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-database.component';
 
 @Component({
   selector: 'app-unit-analyse-process',
@@ -12,20 +14,9 @@ export class UnitAnalyseProcessComponent implements OnChanges {
 
   callBacks: any[] = []
 
-  topItems: string[] = [
-    "Freezing_device",
-    "Cooling_rate",
-    "Preservation_container",
-    "Storage_temperature",
-    "Storage_medium",
-    "Storage_duration",
-    "Thawing_temperature",
-    "Washing_steps",
-    "Dilution_medium",
-    "Dilution_factor"
-  ]
   constructor(
     private queryNeo4jService: QueryNeo4jService,
+    public dialog: MatDialog,
   ) { }
 
   searchOne(ID: readonly string[], data_type: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
@@ -102,5 +93,15 @@ export class UnitAnalyseProcessComponent implements OnChanges {
   }
   viewData(){
     this.hidden=!this.hidden
+  }
+
+  openDialogGraph(callBack:any): void {
+    let dialogRef = this.dialog.open(UnitEditDatabaseComponent, {
+      width: '70%',
+      height: '70%',
+    })
+    let instance = dialogRef.componentInstance
+    instance['callBack'] = callBack
+    instance['type'] = this.openSearch['which']
   }
 }
