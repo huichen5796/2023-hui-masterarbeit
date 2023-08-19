@@ -1,86 +1,188 @@
-<mat-card class="example-card" *ngIf="type==='Experiment'">
-    <mat-card-header>
-        <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
-        <mat-card-subtitle>{{ type }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="content-box">
-        <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
-            <p><span class="key">versuch {{i+1}}: </span>{{ versuch['versuch']['Versuch_ID'] }} <button mat-button class="rename">Rename</button></p>
-            <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
-                <mat-expansion-panel>
-                <!-- <mat-expansion-panel [expanded]="true" disabled> -->
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <span class="key">probe {{i+1}}</span>
-                        </mat-panel-title>
-                        <mat-panel-description>
-                            {{probe['Sample_ID']}} <button mat-button class="rename">Rename</button>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <mat-divider></mat-divider>
-                    <div style="height: 10px;"></div>
-                    <div *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
-                        <span class="key">{{key}}: </span>
-                        <div *ngIf="parseArray(probe[key])">
-                            <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
-                        </div>
-                        <span *ngIf="!parseArray(probe[key])">{{ probe[key] }}</span>
+<mat-stepper orientation="vertical">
+    <mat-step>
+        <ng-template matStepLabel>Editer</ng-template>
+        <ng-template matStepContent>
+            <mat-card class="example-card" *ngIf="type==='Experiment'">
+                <mat-card-header>
+                    <mat-card-title>
+                        <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023"
+                            (blur)="checkFileName(type)" class="card-title">
+                        <button mat-button class="rename">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                        <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">
+                            '/', '\' shall not beused.</mat-error>
+                        <mat-error *ngIf="error['fileName'] == 'type2'">Experiment ID is required.</mat-error>
+                        <mat-error *ngIf="error['fileName'] == 'type3' && currentFileName != ''">
+                            Experiment ID is used.</mat-error>
+                    </mat-card-title>
+                    <mat-card-subtitle>{{ type }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content-box">
+                    <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
+                        <p class="versuch-line"><span class="key">versuch {{i+1}}: </span>
+                            <textarea type="search" [(ngModel)]="currentSubName[versuch['versuch']['Unique_ID']]"
+                                rows="1" placeholder="Ex. test_1 2023"
+                                (blur)="checkTheVersuch('Versuch', versuch['versuch']['Unique_ID'], currentSubName[versuch['versuch']['Unique_ID']])"></textarea>
+                            <button mat-button class="rename">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
+                            <mat-error *ngIf="statusSubName[versuch['versuch']['Unique_ID']] == 'type2'">Verscuh ID is
+                                required.</mat-error>
+                            <mat-error *ngIf="statusSubName[versuch['versuch']['Unique_ID']] == 'type3'">Versuch ID is
+                                used in this experiment.</mat-error>
+                        </p>
+                        <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
+                            <mat-expansion-panel #pandel>
+                                <!-- <mat-expansion-panel [expanded]="true" disabled> -->
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <span class="key">probe {{i+1}}</span>
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                        <textarea type="search"
+                                            [(ngModel)]="currentSubName[probe['Unique_ID']]" rows="1"
+                                            placeholder="Ex. test_1 2023"
+                                            (blur)="checkTheVersuch('Probe', probe['Unique_ID'], currentSubName[probe['Unique_ID']])" (click)="pandel.toggle()"></textarea>
+                                        <button mat-button class="rename">
+                                            <mat-icon>delete_outline</mat-icon>
+                                        </button>
+                                        <mat-error
+                                            *ngIf="statusSubName[probe['Unique_ID']] == 'type2'">Probe ID
+                                            is required.</mat-error>
+                                        <mat-error
+                                            *ngIf="statusSubName[probe['Unique_ID']] == 'type3'">Probe ID
+                                            is used in this Versuch.</mat-error>
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+                                <mat-divider></mat-divider>
+                                <div style="height: 10px;"></div>
+                                <div *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
+                                    <span class="key">{{key}}: </span>
+                                    <div *ngIf="parseArray(probe[key])">
+                                        <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
+                                    </div>
+                                    <span *ngIf="!parseArray(probe[key])">{{ probe[key] }}</span>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
                     </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </mat-card-content>
-</mat-card>
+                </mat-card-content>
+            </mat-card>
 
-<mat-card class="example-card" *ngIf="type==='Process'">
-    <mat-card-header>
-        <mat-card-title>{{ callBack['Process_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
-        <mat-card-subtitle>{{ type }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="content-box">
-        <div *ngFor="let topItem of getObjectKeys(callBack) | excludeItem : ['Process_ID']">
-            <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
-        </div>
-    </mat-card-content>
-</mat-card>
+            <mat-card class="example-card" *ngIf="type==='Process'">
+                <mat-card-header>
+                    <mat-card-title>
+                        <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023"
+                            (blur)="checkFileName(type)" class="card-title">
+                        <button mat-button class="rename">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                        <mat-error *ngIf="error['fileName'] == 'type1'">'/', '\' shall not be used.</mat-error>
+                        <mat-error *ngIf="error['fileName'] == 'type2'">{{ type }} ID is required.</mat-error>
+                        <mat-error *ngIf="error['fileName'] == 'type3'">{{ type }} ID is used.</mat-error>
+                    </mat-card-title>
+                    <mat-card-subtitle>{{ type }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content-box">
+                    <div *ngFor="let topItem of getObjectKeys(callBack) | excludeItem : ['Process_ID']">
+                        <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
 
-<mat-card class="example-card" *ngIf="type==='PreData' || type==='PostData'">
-    <mat-card-header>
-        <mat-card-title>{{ callBack['Sample_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
-        <mat-card-subtitle>{{ type }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="content-box">
-        <div *ngFor="let topItem of getObjectKeys(callBack) | excludeItem : ['Process_ID']">
-            <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
-        </div>
-    </mat-card-content>
-</mat-card>
+            <mat-card class="example-card" *ngIf="type==='PreData' || type==='PostData'">
+                <mat-card-header>
+                    <mat-card-title>
+                        <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023"
+                            (blur)="checkFileName(type)" class="card-title">
+                        <button mat-button class="rename">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                        <mat-error *ngIf="error['fileName'] == 'type1'">'/', '\' shall not be used.</mat-error>
+                        <mat-error *ngIf="error['fileName'] == 'type2'">{{ type }} ID is required.</mat-error>
+                        <mat-error *ngIf="error['fileName'] == 'type3'">{{ type }} ID is used.</mat-error>
+                    </mat-card-title>
+                    <mat-card-subtitle>{{ type }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content-box">
+                    <div *ngFor="let topItem of getObjectKeys(callBack) | excludeItem : ['Process_ID']">
+                        <p><span class="key">{{ topItem }}:</span> {{ callBack[topItem] }}</p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
 
-<mat-card class="example-card" *ngIf="type==='CPA'">
-    <mat-card-header>
-        <mat-card-title>{{ callBack['cpa']['CPA_ID'] }} <button mat-button class="rename">Rename</button></mat-card-title>
-        <mat-card-subtitle>{{ type }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="content-box">
-        <mat-accordion *ngFor="let sub of callBack['child']">
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <span class="key">{{ sub['class'] }} </span>
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        <span>{{ sub['unique_id'] }} <button mat-button class="rename">Rename</button></span>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                <p *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
-                    <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
-                </p>
-            </mat-expansion-panel>
-        </mat-accordion>
-    </mat-card-content>
-</mat-card>
+            <mat-card class="example-card" *ngIf="type==='CPA'">
+                <mat-card-header>
+                    <mat-card-title>
+                        <input #inputType type="search" [(ngModel)]="currentCpaIndex" placeholder="Ex. CPA1"
+                            (blur)="checkCpaIndex()" [matAutocomplete]="autoType" (click)="search('CPA ID')"
+                            class="card-title">
+                        <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete">
+                            <mat-option *ngFor="let id of idList['CPA ID']" [value]="id" class="option">
+                                {{ id }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <button mat-button class="rename">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                        <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">'/', '\' shall
+                            not be
+                            used.</mat-error>
+                        <mat-error *ngIf="error['cpaIndex'] == 'type2'">CPA ID is required.</mat-error>
+                        <mat-error *ngIf="error['cpaIndex'] == 'type3' && currentCpaIndex != ''">CPA ID is
+                            used.</mat-error>
+                    </mat-card-title>
+                    <mat-card-subtitle>{{ type }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content-box">
+                    <mat-accordion *ngFor="let sub of callBack['child']">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span class="key">{{ sub['class'] }} </span>
+                                </mat-panel-title>
+                                <mat-panel-description>
+
+                                    <textarea type="search"
+                                        [(ngModel)]="currentSubName[sub.class + '*-*' + sub.unique_id]" rows="1"
+                                        placeholder="Ex. test_1 2023"
+                                        (blur)="checkTheName(sub['class'], sub['unique_id'], currentSubName[sub.class + '*-*' + sub.unique_id])"></textarea>
+                                    <button mat-button class="rename">
+                                        <mat-icon>delete_outline</mat-icon>
+                                    </button>
+
+                                    <mat-error *ngIf="statusSubName[sub.class + '*-*' + sub.unique_id] == 'type2'">{{
+                                        sub['class']
+                                        }} ID is required.</mat-error>
+                                    <mat-error *ngIf="statusSubName[sub.class + '*-*' + sub.unique_id] == 'type3'">{{
+                                        sub['class']
+                                        }} ID is used.</mat-error>
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <p *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]">
+                                <span class="key">{{key}}: </span>{{ sub['properties'][key] }}
+                            </p>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-card-content>
+            </mat-card>
+        </ng-template>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Summary</ng-template>
+        <ng-template matStepContent>
+            <!-- <div>
+                <p *ngFor="let "></p>
+            </div> -->
+            <div mat-dialog-actions>
+                <button mat-button mat-dialog-close>Undo</button>
+                <button mat-button>Commit</button>
+            </div>
+        </ng-template>
+    </mat-step>
+</mat-stepper>
 
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>No</button>
-    <button mat-button mat-dialog-close>Ok</button>
+    <button mat-button mat-dialog-close>Close</button>
 </div>

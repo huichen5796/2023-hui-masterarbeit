@@ -26,3 +26,23 @@
 .rename{
     color: #1976d2;
 }
+
+textarea {
+    min-height: 20px;
+    padding: 0px;
+    flex-grow: 1;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    padding: 0px 4px;
+    max-width: 200px;
+    font-size: medium;
+}
+
+.card-title{
+    font-weight: bold;
+    font-size: larger;
+}
+
+.versuch-line{
+    display: flex;
+    align-items: center;
+}

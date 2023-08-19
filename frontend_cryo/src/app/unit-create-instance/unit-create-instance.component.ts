@@ -43,7 +43,7 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['data_type'].isFirstChange()){
+    if (!changes['data_type'].isFirstChange()) {
       this.ngOnInit()
     }
   }
@@ -182,18 +182,18 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
     delete this.newFileData['']
     if (this.data_type == 'CPA') {
       // this.newFileData[`${this.currentType} ID`] = this.currentFileName
-      if (this.currentType == 'DSC'){
+      if (this.currentType == 'DSC') {
         this.newFileData['IDENTITY'] = this.currentFileName
-        this.newFileData['FILE'] =`${this.currentFileName}.ngb-sd7`
+        this.newFileData['FILE'] = `${this.currentFileName}.ngb-sd7`
         this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
       }
-      else if (this.currentType == 'FTIR'){
+      else if (this.currentType == 'FTIR') {
         this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.asc`
       }
-      else{
+      else {
         this.currentFileName = `${this.currentCpaIndex}/${this.currentType}/${this.currentFileName}.txt`
       }
-      
+
     }
     else if (this.data_type == 'Experiment') {
       // this.newFileData['Experiment ID'] = this.currentFileName
@@ -287,6 +287,7 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
     this.currrentKey = ''
     this.showTableOrNot = true
     this.idList = {}
+    this.startInputVersuchId = false
   }
 
   editCreatedFiles(fileName: string) {
@@ -373,20 +374,50 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
     this.showTableOrNot = orNot
   }
 
-  remove(value:string, key: string, probe: string, cell: string){
-    this.newFileData[key][probe][cell] = this.newFileData[key][probe][cell].filter((item:string) => item !== value)
+  remove(value: string, key: string, probe: string, cell: string) {
+    this.newFileData[key][probe][cell] = this.newFileData[key][probe][cell].filter((item: string) => item !== value)
   }
 
-  transformerForExp(input:string[]):string[]{
+  transformerForExp(input: string[]): string[] {
     return [input.join('\n')]
   }
 
-  add(value:string, key: string, probe: string, cell: string){
-    if (this.newFileData[key][probe][cell].indexOf(value) == -1){
+  add(value: string, key: string, probe: string, cell: string) {
+    if (this.newFileData[key][probe][cell].indexOf(value) == -1) {
       this.newFileData[key][probe][cell].push(value)
     }
-    else{
-      this.newFileData[key][probe][cell] = this.newFileData[key][probe][cell].filter((item:string) => item !== value)
+    else {
+      this.newFileData[key][probe][cell] = this.newFileData[key][probe][cell].filter((item: string) => item !== value)
     }
+  }
+
+  checkTheVersuch(currentName: string) {
+    if (this.startInputVersuchId) {
+      if (currentName === '') {
+        return 'type2'
+      }
+      else {
+        let i = 0
+        this.getObjectKeys(this.newFileData).forEach((key: any) => {
+          if (this.newFileData[key]['Versuche ID'] === currentName) {
+            i += 1
+          }
+        })
+        if (i === 1 || i === 0) {
+          return 'none'
+        }
+        else {
+          return 'type3'
+        }
+      }
+    }
+    else {
+      return 'none'
+    }
+
+  }
+  startInputVersuchId: boolean = false
+  startInput() {
+    this.startInputVersuchId = true
   }
 }
