@@ -104,25 +104,25 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     }
   }
 
-  checkTheVersuch(versuchOrProbe:'Versuch' | 'Probe',unique_id: string, currentName: string) {
+  checkTheVersuch(versuchOrProbe: 'Versuch' | 'Probe', unique_id: string, currentName: string) {
     if (currentName === '') {
       this.statusSubName[unique_id] = 'type2'
     }
     else {
       let allId: string[] = []
-      if (versuchOrProbe === 'Versuch'){
+      if (versuchOrProbe === 'Versuch') {
         this.callBack['child'].forEach((versuch: any) => {
-        allId.push(versuch['versuch']['Versuch_ID'])
-      })
+          allId.push(versuch['versuch']['Versuch_ID'])
+        })
       }
-      else{
+      else {
         this.callBack['child'].forEach((versuch: any) => {
-          if (versuch['versuch']['Unique_ID']==`${unique_id.split('*-*')[0]}*-*${unique_id.split('*-*')[1]}`){
+          if (versuch['versuch']['Unique_ID'] == `${unique_id.split('*-*')[0]}*-*${unique_id.split('*-*')[1]}`) {
             versuch['probes'].forEach((sub: any) => {
-            allId.push(sub['Sample_ID'])
-          })
+              allId.push(sub['Sample_ID'])
+            })
           }
-          
+
         })
       }
 
@@ -141,15 +141,12 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
 
 
   search(data_type: string) {
-    if (data_type != 'Sample ID') {
-      this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
-        this.idList[data_type] = JSON.parse(res)
-        this.idList = { ...this.idList }
-      })
-    } else {
-      this.idList[data_type] = []
+    data_type = data_type.replace('_', ' ')
+    this.queryNeo4jService.queryOneType(this.translate[data_type]).then((res) => {
+      this.idList[data_type] = JSON.parse(res)
       this.idList = { ...this.idList }
-    }
+    })
+
   }
 
 
@@ -224,8 +221,10 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     }
   }
 
-  undo(){
+  undo() {
     this.error = { fileName: '', cpaIndex: '' }
+    this.idList = {}
     this.ngAfterViewInit()
   }
+
 }

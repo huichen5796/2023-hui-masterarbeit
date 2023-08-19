@@ -32,26 +32,24 @@
                             <mat-error *ngIf="statusSubName[versuch['versuch']['Unique_ID']] == 'type3'">Versuch ID is
                                 used in this experiment.</mat-error>
                         </p>
-                        <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
+                        <mat-accordion *ngFor="let probe of versuch['probes']; let ii = index">
                             <mat-expansion-panel #pandel>
                                 <!-- <mat-expansion-panel [expanded]="true" disabled> -->
                                 <mat-expansion-panel-header>
                                     <mat-panel-title>
-                                        <span class="key">probe {{i+1}}</span>
+                                        <span class="key">probe {{ii+1}}</span>
                                     </mat-panel-title>
                                     <mat-panel-description>
-                                        <textarea type="search"
-                                            [(ngModel)]="currentSubName[probe['Unique_ID']]" rows="1"
-                                            placeholder="Ex. test_1 2023"
-                                            (blur)="checkTheVersuch('Probe', probe['Unique_ID'], currentSubName[probe['Unique_ID']])" (click)="pandel.toggle()"></textarea>
+                                        <textarea type="search" [(ngModel)]="currentSubName[probe['Unique_ID']]"
+                                            rows="1" placeholder="Ex. test_1 2023"
+                                            (blur)="checkTheVersuch('Probe', probe['Unique_ID'], currentSubName[probe['Unique_ID']])"
+                                            (click)="pandel.toggle()"></textarea>
                                         <button mat-button class="rename">
                                             <mat-icon>delete_outline</mat-icon>
                                         </button>
-                                        <mat-error
-                                            *ngIf="statusSubName[probe['Unique_ID']] == 'type2'">Probe ID
+                                        <mat-error *ngIf="statusSubName[probe['Unique_ID']] == 'type2'">Probe ID
                                             is required.</mat-error>
-                                        <mat-error
-                                            *ngIf="statusSubName[probe['Unique_ID']] == 'type3'">Probe ID
+                                        <mat-error *ngIf="statusSubName[probe['Unique_ID']] == 'type3'">Probe ID
                                             is used in this Versuch.</mat-error>
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
@@ -59,10 +57,24 @@
                                 <div style="height: 10px;"></div>
                                 <div *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique_ID', 'Sample_ID']">
                                     <span class="key">{{key}}: </span>
-                                    <div *ngIf="parseArray(probe[key])">
-                                        <p *ngFor="let item of probe[key]" class="onecell">{{ item }}</p>
+                                    <div *ngIf="key == 'Process_ID' || key == 'CPA_ID'">
+                                        <input type="search" class="pc-input" [(ngModel)]="callBack['child'][i]['probes'][ii][key]" [matAutocomplete]="auto" (click)="search(key)">
+                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                            <mat-option *ngFor="let id of idList[key.replace('_', ' ')]" [value]="id">
+                                                {{ id }}
+                                            </mat-option>
+                                        </mat-autocomplete>
                                     </div>
-                                    <span *ngIf="!parseArray(probe[key])">{{ probe[key] }}</span>
+                                    <div *ngIf="key == 'PreData_ID' || key == 'PostData_ID'" style="position: relative;">
+                                        <div *ngFor="let item of probe[key]">
+                                            <p class="onecell">{{ item }}</p>
+                                        </div>
+                                        <p class="tips" (click)="search(key)" (click)="select.open()"><u>+ add new / delete</u></p>
+                                        <mat-select #select [(ngModel)]="callBack['child'][i]['probes'][ii][key]" multiple class="select-menu">
+                                            <mat-option *ngFor="let id of idList[key.replace('_', ' ')]"
+                                                style="padding: 0px;" [value]="id">{{id}}</mat-option>
+                                        </mat-select>
+                                    </div>
                                 </div>
                             </mat-expansion-panel>
                         </mat-accordion>
@@ -173,18 +185,32 @@
         <ng-template matStepLabel>Summary</ng-template>
         <ng-template matStepContent>
             <div *ngIf="type=='Experiment'">
-                <p *ngIf="currentFileName != callBack['experiment']['Experiment_ID']"><u>{{ callBack['experiment']['Experiment_ID'] }}</u> to <u>{{ currentFileName }}</u></p>
+                <p *ngIf="currentFileName != callBack['experiment']['Experiment_ID']"><u>{{
+                        callBack['experiment']['Experiment_ID'] }}</u> to <u>{{ currentFileName }}</u></p>
                 <div *ngFor="let key of getObjectKeys(currentSubName)">
                     <p *ngIf="key.split('*-*')[key.split('*-*').length - 1] != currentSubName[key]">
-                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> (of {{ key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u></p>
+                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> (of {{
+                        key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u>
+                    </p>
                 </div>
             </div>
             <div *ngIf="type=='CPA'">
-                <p *ngIf="currentCpaIndex != callBack['cpa']['CPA_ID']"><u>{{ callBack['cpa']['CPA_ID'] }}</u> to <u>{{ currentCpaIndex }}</u></p>
+                <p *ngIf="currentCpaIndex != callBack['cpa']['CPA_ID']"><u>{{ callBack['cpa']['CPA_ID'] }}</u> to <u>{{
+                        currentCpaIndex }}</u></p>
                 <div *ngFor="let key of getObjectKeys(currentSubName)">
                     <p *ngIf="key.split('*-*')[key.split('*-*').length - 1] != currentSubName[key]">
-                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> ({{ key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u></p>
+                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> ({{
+                        key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u>
+                    </p>
                 </div>
+            </div>
+            <div *ngIf="type == 'Process'">
+                <p *ngIf="currentFileName != callBack['Process_ID']"><u>{{ callBack['Process_ID'] }}</u> to <u>{{
+                        currentFileName }}</u></p>
+            </div>
+            <div *ngIf="type == 'PreData' || type == 'PostData'">
+                <p *ngIf="currentFileName != callBack['Sample_ID']"><u>{{ callBack['Sample_ID'] }}</u> to <u>{{
+                        currentFileName }}</u></p>
             </div>
             <div mat-dialog-actions>
                 <button mat-button (click)="undo()">Undo</button>

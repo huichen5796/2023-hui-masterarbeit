@@ -129,7 +129,7 @@
                         <input #input type="search" [(ngModel)]="newFileData[key][probe][cell]" class="exp-input"
                             [matAutocomplete]="auto" (click)="search(cell)">
                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option" selected>
+                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option">
                                 {{ id }}
                             </mat-option>
                         </mat-autocomplete>

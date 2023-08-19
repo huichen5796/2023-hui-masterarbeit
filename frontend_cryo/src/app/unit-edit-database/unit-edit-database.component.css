@@ -46,3 +46,31 @@ textarea {
     display: flex;
     align-items: center;
 }
+
+.select-menu {
+    background-color: white;
+    width: auto;
+    color:white;
+    max-width: 200px;
+}
+
+::ng-deep .mat-mdc-select-min-line {
+    display: block;
+    margin-bottom: 0px;
+    color:white;
+    background-color: white;
+}
+
+.pc-input {
+    font-size: medium;
+}
+
+.tips{
+    position:absolute;
+    color:#1976d2;
+    height: 24px;
+    bottom:0px;
+    margin:0px;
+    z-index: 99;
+    cursor: pointer;
+}
