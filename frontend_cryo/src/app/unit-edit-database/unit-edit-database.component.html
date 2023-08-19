@@ -172,17 +172,24 @@
     <mat-step>
         <ng-template matStepLabel>Summary</ng-template>
         <ng-template matStepContent>
-            <!-- <div>
-                <p *ngFor="let "></p>
-            </div> -->
+            <div *ngIf="type=='Experiment'">
+                <p *ngIf="currentFileName != callBack['experiment']['Experiment_ID']"><u>{{ callBack['experiment']['Experiment_ID'] }}</u> to <u>{{ currentFileName }}</u></p>
+                <div *ngFor="let key of getObjectKeys(currentSubName)">
+                    <p *ngIf="key.split('*-*')[key.split('*-*').length - 1] != currentSubName[key]">
+                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> (of {{ key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u></p>
+                </div>
+            </div>
+            <div *ngIf="type=='CPA'">
+                <p *ngIf="currentCpaIndex != callBack['cpa']['CPA_ID']"><u>{{ callBack['cpa']['CPA_ID'] }}</u> to <u>{{ currentCpaIndex }}</u></p>
+                <div *ngFor="let key of getObjectKeys(currentSubName)">
+                    <p *ngIf="key.split('*-*')[key.split('*-*').length - 1] != currentSubName[key]">
+                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> ({{ key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u></p>
+                </div>
+            </div>
             <div mat-dialog-actions>
-                <button mat-button mat-dialog-close>Undo</button>
+                <button mat-button (click)="undo()">Undo</button>
                 <button mat-button>Commit</button>
             </div>
         </ng-template>
     </mat-step>
 </mat-stepper>
-
-<div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Close</button>
-</div>

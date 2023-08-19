@@ -12,8 +12,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   error: { [key: string]: string } = { fileName: '', cpaIndex: '' }
 
   currentFileName: string = ''
+
   //only for cpa
-  currentType: 'DSC' | 'FTIR' | 'Cryomicroscopy' | 'Osmolality' | 'Viscosity' | string = 'DSC'
   currentCpaIndex: string = ''
   oldSubName: { [key: string]: string } = {}
   currentSubName: { [key: string]: string } = {}
@@ -222,5 +222,10 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
         this.error['cpaIndex'] = 'none'
       }
     }
+  }
+
+  undo(){
+    this.error = { fileName: '', cpaIndex: '' }
+    this.ngAfterViewInit()
   }
 }
