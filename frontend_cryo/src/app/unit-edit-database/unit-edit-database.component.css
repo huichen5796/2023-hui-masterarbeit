@@ -74,3 +74,8 @@ textarea {
     z-index: 99;
     cursor: pointer;
 }
+
+.card-line {
+ display: flex;
+ align-items: baseline;
+}
