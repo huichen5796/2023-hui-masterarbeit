@@ -110,8 +110,11 @@
                 <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
                 <label>{{ key }} ID</label>
                 <label>:</label>
-                <input type="search" [(ngModel)]="newFileData[key]['Versuche ID']" placeholder="Ex. test_1 2023">
-                <p class="position-holder"></p>
+                <input type="search" [(ngModel)]="newFileData[key]['Versuche ID']" placeholder="Ex. test_1 2023" style="height:24px;" (blur)="startInput()">
+                <p class="position-holder">
+                    <mat-error *ngIf="checkTheVersuch(newFileData[key]['Versuche ID']) == 'type2'">Verscuh ID is required.</mat-error>
+                    <mat-error *ngIf="checkTheVersuch(newFileData[key]['Versuche ID']) == 'type3'">Versuch ID is used.</mat-error>
+                </p>
                 <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
                 <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
             </div>
@@ -126,7 +129,7 @@
                         <input #input type="search" [(ngModel)]="newFileData[key][probe][cell]" class="exp-input"
                             [matAutocomplete]="auto" (click)="search(cell)">
                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option" selected>
+                            <mat-option *ngFor="let id of idList[cell]" [value]="id" class="option">
                                 {{ id }}
                             </mat-option>
                         </mat-autocomplete>

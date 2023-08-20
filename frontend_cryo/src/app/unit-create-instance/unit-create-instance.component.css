@@ -162,6 +162,7 @@ li u {
 
 .position-holder {
     flex-grow: 1;
+    margin:0px
 }
 
 
@@ -169,7 +170,7 @@ li u {
 .red-line-big {
     position: absolute;
     width: calc(100% - 50px);
-    height: 100%;
+    height: calc(100% + 2px);
     background-color: #e2e2e2;
     z-index: 999;
 }
