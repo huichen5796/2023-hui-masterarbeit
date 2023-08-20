@@ -1,5 +1,7 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
+import { MatSelect } from '@angular/material/select';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-unit-edit-database',
@@ -18,6 +20,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   oldSubName: { [key: string]: string } = {}
   currentSubName: { [key: string]: string } = {}
   statusSubName: { [key: string]: string } = {}
+  pppcDataControler: { [key: string]: { [key: string]: any } } = {}
+  pppcDataMemory: { [key: string]: { [key: string]: any } } = {}
 
   translate: { [k: string]: ("PreData" | "PostData" | "CPA" | "Process") } = {
     "PreData ID": 'PreData',
@@ -45,8 +49,10 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
             this.oldSubName[sub['Unique_ID']] = sub['Sample_ID']
             this.currentSubName[sub['Unique_ID']] = sub['Sample_ID']
             this.statusSubName[sub['Unique_ID']] = 'none'
+            this.pppcDataControler[sub['Unique_ID']] = { PreData_ID: sub['PreData_ID'], PostData_ID: sub['PostData_ID'], Process_ID: sub['Process_ID'], CPA_ID: sub['CPA_ID'] }
           })
         })
+        this.pppcDataMemory = cloneDeep(this.pppcDataControler)
       }
       else if (this.type === 'CPA') {
         this.currentCpaIndex = this.callBack['cpa']['CPA_ID']
@@ -54,13 +60,17 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
           this.oldSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
           this.currentSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
           this.statusSubName[`${item['class']}*-*${item['unique_id']}`] = 'none'
+          this.pppcDataControler[`${item['class']}*-*${item['unique_id']}`] = item['properties']
         })
+        this.pppcDataMemory = cloneDeep(this.pppcDataControler)
       }
       else if (this.type === 'Process') {
         this.currentFileName = this.callBack['Process_ID']
+        this.pppcDataControler = cloneDeep(this.callBack)
       }
       else if (this.type === 'PreData' || this.type === 'PostData') {
         this.currentFileName = this.callBack['Sample_ID']
+        this.pppcDataControler = cloneDeep(this.callBack)
       }
       else {
 
@@ -226,5 +236,22 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     this.idList = {}
     this.ngAfterViewInit()
   }
+  @ViewChild('select') select!: MatSelect;
+  openSelectPandel() {
+    this.select.open()
+  }
 
+  arraysAreEqual(arr1: any, arr2: any): boolean {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
