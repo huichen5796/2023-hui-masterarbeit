@@ -208,12 +208,19 @@
                     <mat-card-subtitle>{{ type }}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="content-box">
-                    <div *ngFor="let topItem of getObjectKeys(callBack) | excludeItem : ['Process_ID']">
+                    <div *ngFor="let topItem of getObjectKeys(pppcDataControler) | excludeItem : ['Process_ID']">
                         <p class="card-line">
                             <span class="key">{{ topItem }}:</span>
                             <textarea matInput type="search" rows="1" [(ngModel)]="pppcDataControler[topItem]"></textarea>
                         </p>
                     </div>
+                    <div>
+                        <u>+ new key and value: </u>
+                        <input type="search" [(ngModel)]="key" class="key"> : <input type="search" [(ngModel)]="value">
+                        <button (click)="addAttributes(pppcDataControler, key, value)">create</button>
+                    </div>
+                    <mat-error *ngIf="createAttrError == 'type2'">key / value required.</mat-error>
+                    <mat-error *ngIf="createAttrError == 'type3'">key is used.</mat-error>
                 </mat-card-content>
             </mat-card>
 
@@ -232,12 +239,19 @@
                     <mat-card-subtitle>{{ type }}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="content-box">
-                    <div *ngFor="let topItem of getObjectKeys(callBack) | excludeItem : ['Sample_ID']">
+                    <div *ngFor="let topItem of getObjectKeys(pppcDataControler) | excludeItem : ['Sample_ID']">
                         <p class="card-line">
                             <span class="key">{{ topItem }}:</span>
                             <textarea matInput type="search" rows="1" [(ngModel)]="pppcDataControler[topItem]"></textarea>
                         </p>
                     </div>
+                    <div>
+                        <u>+ new key and value: </u>
+                        <input type="search" [(ngModel)]="key" class="key"> : <input type="search" [(ngModel)]="value">
+                        <button (click)="addAttributes(pppcDataControler, key, value)">create</button>
+                    </div>
+                    <mat-error *ngIf="createAttrError == 'type2'">key / value required.</mat-error>
+                    <mat-error *ngIf="createAttrError == 'type3'">key is used.</mat-error>
                 </mat-card-content>
             </mat-card>
 
@@ -289,10 +303,20 @@
                                         }} ID is used.</mat-error>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
-                            <p *ngFor="let key of getObjectKeys(sub['properties']) | excludeItem: [emm(sub['class'])]" class="card-line">
+                            <div *ngIf="pppcDataControler[sub['class']+'*-*'+sub['unique_id']]">
+                                <p *ngFor="let key of getObjectKeys(pppcDataControler[sub['class']+'*-*'+sub['unique_id']]) | excludeItem: [emm(sub['class'])]" class="card-line">
                                 <span class="key">{{key}}: </span>
-                                <textarea *ngIf="pppcDataControler[sub['class']+'*-*'+sub['unique_id']]" matInput type="search" rows="1" [(ngModel)]="pppcDataControler[sub['class']+'*-*'+sub['unique_id']][key]"></textarea>
+                                <textarea matInput type="search" rows="1" [(ngModel)]="pppcDataControler[sub['class']+'*-*'+sub['unique_id']][key]"></textarea>
                             </p>
+                            </div>
+                            
+                            <div>
+                                <u>+ new key and value: </u>
+                                <input type="search" [(ngModel)]="key" class="key"> : <input type="search" [(ngModel)]="value">
+                                <button (click)="addAttributes(pppcDataControler[sub['class']+'*-*'+sub['unique_id']], key, value)">create</button>
+                            </div>
+                            <mat-error *ngIf="createAttrError == 'type2'">key / value required.</mat-error>
+                            <mat-error *ngIf="createAttrError == 'type3'">key is used.</mat-error>
                         </mat-expansion-panel>
                     </mat-accordion>
 
@@ -324,9 +348,16 @@
                                 <span class="key">{{key}}: </span>
                                 <textarea matInput type="search" rows="1" [(ngModel)]="addControler[item][key]"></textarea>
                             </p>
+                            <div>
+                                <u>+ new key and value: </u>
+                                <input type="search" [(ngModel)]="key" class="key"> : <input type="search" [(ngModel)]="value">
+                                <button (click)="addAttributes(addControler[item], key, value)">create</button>
+                            </div>
+                            <mat-error *ngIf="createAttrError == 'type2'">key / value required.</mat-error>
+                            <mat-error *ngIf="createAttrError == 'type3'">key is used.</mat-error>
                         </mat-expansion-panel>
                     </mat-accordion>
-                    <u>+ add new cpa test item:</u>
+                    <u>+ add new cpa test item</u> : 
                     <input type="search" class="pc-input" [(ngModel)]="currentCpaItemType" [matAutocomplete]="auto">
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                         <mat-option *ngFor="let id of getObjectKeys(defaultCpaData) | excludeItem:['Center Node']" [value]="id" [disabled]="getItemCpaList().indexOf(id) != -1">
@@ -372,8 +403,8 @@
                         key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u>
                     </p>
                 </div>
-                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
-                    <div *ngFor="let item of getObjectKeys(pppcDataControler[key])">
+                <div *ngFor="let key of getObjectKeys(pppcDataMemory)">
+                    <div *ngFor="let item of getObjectKeys(pppcDataMemory[key])">
                         <p *ngIf="!arraysAreEqual(pppcDataControler[key][item], pppcDataMemory[key][item])">
                             <u>{{ pppcDataMemory[key][item] }}</u> ({{ item }} of {{ key }}) to <u>{{ pppcDataControler[key][item] }}</u>
                         </p>
@@ -384,22 +415,39 @@
                         <u>add new {{ key }}</u> {{ addControler[key] | json }}
                     </p>
                 </div>
+                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
+                    <div *ngFor="let item of getObjectKeys(pppcDataControler[key])">
+                        <p *ngIf="getObjectKeys(pppcDataMemory[key]).indexOf(item) == -1">
+                            add in {{ key }} <u>{{ item }} : {{ pppcDataControler[key][item] }}</u>
+                        </p>
+                    </div>
+                </div>
             </div>
             <div *ngIf="type == 'Process'">
                 <p *ngIf="currentFileName != callBack['Process_ID']"><u>{{ callBack['Process_ID'] }}</u> to <u>{{
                         currentFileName }}</u></p>
-                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
+                <div *ngFor="let key of getObjectKeys(callBack)">
                     <p *ngIf="!arraysAreEqual(pppcDataControler[key], callBack[key])">
                         <u>{{ callBack[key] }}</u> ({{ key }} of {{ callBack['Process_ID'] }}) to <u>{{ pppcDataControler[key] }}</u>
+                    </p>
+                </div>
+                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
+                    <p *ngIf="getObjectKeys(callBack).indexOf(key) == -1">
+                        add <u>{{ key }} : {{ pppcDataControler[key] }}</u>
                     </p>
                 </div>
             </div>
             <div *ngIf="type == 'PreData' || type == 'PostData'">
                 <p *ngIf="currentFileName != callBack['Sample_ID']"><u>{{ callBack['Sample_ID'] }}</u> to <u>{{
                         currentFileName }}</u></p>
-                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
+                <div *ngFor="let key of getObjectKeys(callBack)">
                     <p *ngIf="!arraysAreEqual(pppcDataControler[key], callBack[key])">
                         <u>{{ callBack[key] }}</u> ({{ key }} of {{ callBack['Sample_ID'] }}) to <u>{{ pppcDataControler[key] }}</u>
+                    </p>
+                </div>
+                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
+                    <p *ngIf="getObjectKeys(callBack).indexOf(key) == -1">
+                        add <u>{{ key }} : {{ pppcDataControler[key] }}</u>
                     </p>
                 </div>
             </div>

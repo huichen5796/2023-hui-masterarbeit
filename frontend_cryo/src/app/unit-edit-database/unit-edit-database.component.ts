@@ -44,6 +44,9 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   }
   ngAfterViewInit() {
     setTimeout(() => {
+      this.key = ''
+      this.value = ''
+      this.createAttrError = ''
       this.addControler = {}
       this.addControlerProbe = {}
       this.currentCpaItemType = ''
@@ -84,6 +87,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       else {
 
       }
+      console.log(this.pppcDataControler)
+
     }, 0);
   }
 
@@ -292,12 +297,15 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.addControler[location][`Probe ${this.getObjectKeys(this.addControler[location]).length}`] = cloneDeep(defaultProbe)
     }
     else {
-      if (defaultCpaData[info]) {
+      if (info){
+        if (defaultCpaData[info]) {
         this.addControler[info] = cloneDeep(defaultCpaData[info])
       }
       else {
         this.addControler[info] = {}
       }
+      }
+      
     }
     this.currentCpaItemType = ''
   }
@@ -308,5 +316,24 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       list.push(item['class'])
     })
     return this.getObjectKeys(this.addControler).concat(list)
+  }
+  key:string = ''
+  value:string = ''
+  createAttrError:string = ''
+  addAttributes(body: any, key:string, value:string){
+    if (key == '' || value == ''){
+      this.createAttrError = 'type2'
+    }
+    else{
+      if (this.getObjectKeys(body).indexOf(key) != -1){
+        this.createAttrError = 'type3'
+      }
+      else{
+        this.createAttrError = ''
+        body[key] = value
+        this.key = ''
+        this.value = ''
+      }
+    }
   }
 }
