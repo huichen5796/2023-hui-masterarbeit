@@ -25,6 +25,10 @@
 
 .rename{
     color: #1976d2;
+    height: 100%;
+    margin:auto;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 textarea {

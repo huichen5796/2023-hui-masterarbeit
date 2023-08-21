@@ -50,6 +50,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.addControler = {}
       this.addControlerProbe = {}
       this.currentCpaItemType = ''
+      this.deletedItems = {fatherNodes:[], childrenNodes:[], nodeAttributes:[]}
       this.defaultCpaData = cloneDeep(defaultCpaData)
       if (this.type === 'Experiment') {
         this.currentFileName = this.callBack['experiment']['Experiment_ID']
@@ -72,7 +73,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
           this.oldSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
           this.currentSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
           this.statusSubName[`${item['class']}*-*${item['unique_id']}`] = 'none'
-          this.pppcDataControler[`${item['class']}*-*${item['unique_id']}`] = item['properties']
+          this.pppcDataControler[`${item['class']}*-*${item['unique_id']}`] = cloneDeep(item['properties'])
         })
         this.pppcDataMemory = cloneDeep(this.pppcDataControler)
       }
@@ -87,8 +88,6 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       else {
 
       }
-      console.log(this.pppcDataControler)
-
     }, 0);
   }
 
@@ -335,5 +334,20 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
         this.value = ''
       }
     }
+  }
+  deletedItems:{fatherNodes:any[], childrenNodes:any[], nodeAttributes:any[]} = {fatherNodes:[], childrenNodes:[], nodeAttributes:[]}
+  delete(type: 'fatherNodes'| 'childrenNodes'| 'nodeAttributes', key:any){
+    this.deletedItems[type].push(key)
+  }
+
+  deleteGenerierted(body:any, key:string|number){
+    console.log(body)
+    console.log(key)
+    if (typeof key === 'string') {
+      delete body[key]
+  } else if (typeof key === 'number') {
+      body.splice(key, 1)
+  } 
+    console.log(body)
   }
 }

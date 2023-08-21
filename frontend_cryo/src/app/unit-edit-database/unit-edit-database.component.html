@@ -7,7 +7,7 @@
                     <mat-card-title>
                         <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023"
                             (blur)="checkFileName(type)" class="card-title">
-                        <button mat-button class="rename">
+                        <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: type, Unique_ID: callBack['experiment']['Experiment_ID']})">
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                         <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">
@@ -24,7 +24,7 @@
                             <textarea type="search" [(ngModel)]="currentSubName[versuch['versuch']['Unique_ID']]"
                                 rows="1" placeholder="Ex. test_1 2023"
                                 (blur)="checkTheVersuch('Versuch', versuch['versuch']['Unique_ID'], currentSubName[versuch['versuch']['Unique_ID']])"></textarea>
-                            <button mat-button class="rename">
+                            <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: 'Versuch', Unique_ID: versuch['versuch']['Unique_ID']})">
                                 <mat-icon>delete_outline</mat-icon>
                             </button>
                             <mat-error *ngIf="statusSubName[versuch['versuch']['Unique_ID']] == 'type2'">Versuch ID is
@@ -44,7 +44,7 @@
                                             rows="1" placeholder="Ex. test_1 2023"
                                             (blur)="checkTheVersuch('Probe', probe['Unique_ID'], currentSubName[probe['Unique_ID']])"
                                             (click)="pandel.toggle()"></textarea>
-                                        <button mat-button class="rename">
+                                        <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: 'Probe', Unique_ID: probe['Unique_ID']})">
                                             <mat-icon>delete_outline</mat-icon>
                                         </button>
                                         <mat-error *ngIf="statusSubName[probe['Unique_ID']] == 'type2'">Probe ID
@@ -93,7 +93,7 @@
                                             rows="1" placeholder="Ex. test_1 2023"
                                             (blur)="checkTheVersuch('Probe', versuch['versuch']['Unique_ID'] + '*-*' + (ii), probe['Sample ID'])"
                                             (click)="pandel.toggle()"></textarea>
-                                        <button mat-button class="rename">
+                                        <button mat-button class="rename" (click)="deleteGenerierted(addControlerProbe[versuch['versuch']['Unique_ID']], ii)">
                                             <mat-icon>delete_outline</mat-icon>
                                         </button>
                                         <mat-error *ngIf="statusSubName[versuch['versuch']['Unique_ID'] + '*-*' + (ii)] == 'type2'">Probe ID
@@ -134,7 +134,7 @@
                             <textarea type="search" [(ngModel)]="addControler[newVersuchIndex]['Versuche ID']"
                                 rows="1" placeholder="Ex. test_1 2023"
                                 (blur)="checkTheVersuch('Versuch', newVersuchIndex, addControler[newVersuchIndex]['Versuche ID'])"></textarea>
-                            <button mat-button class="rename">
+                            <button mat-button class="rename" (click)="deleteGenerierted(addControler, newVersuchIndex)">
                                 <mat-icon>delete_outline</mat-icon>
                             </button>
                             <mat-error *ngIf="statusSubName[newVersuchIndex] == 'type2'">Verscuh ID is
@@ -153,7 +153,7 @@
                                             rows="1" placeholder="Ex. test_1 2023"
                                             (blur)="checkTheVersuch('Probe', newVersuchIndex + '*-*' + probeKey, addControler[newVersuchIndex][probeKey]['Sample ID'])"
                                             (click)="pandel.toggle()"></textarea>
-                                        <button mat-button class="rename">
+                                        <button mat-button class="rename" (click)="deleteGenerierted(addControler[newVersuchIndex], probeKey)">
                                             <mat-icon>delete_outline</mat-icon>
                                         </button>
                                         <mat-error *ngIf="statusSubName[newVersuchIndex + '*-*' + probeKey] == 'type2'">Probe ID
@@ -198,7 +198,7 @@
                     <mat-card-title>
                         <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023"
                             (blur)="checkFileName(type)" class="card-title">
-                        <button mat-button class="rename">
+                        <button mat-button class="rename" (click)="delete('childrenNodes', {nodeClass: type, Unique_ID: callBack['Process_ID']})">
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                         <mat-error *ngIf="error['fileName'] == 'type1'">'/', '\' shall not be used.</mat-error>
@@ -212,6 +212,12 @@
                         <p class="card-line">
                             <span class="key">{{ topItem }}:</span>
                             <textarea matInput type="search" rows="1" [(ngModel)]="pppcDataControler[topItem]"></textarea>
+                            <button mat-button class="rename" *ngIf="getObjectKeys(callBack).indexOf(topItem) != -1" (click)="delete('nodeAttributes', {nodeClass: type, Unique_ID: callBack['Process_ID'], attributeKey: topItem})">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
+                            <button mat-button class="rename" *ngIf="getObjectKeys(callBack).indexOf(topItem) == -1" (click)="deleteGenerierted(pppcDataControler, topItem)">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
                         </p>
                     </div>
                     <div>
@@ -229,7 +235,7 @@
                     <mat-card-title>
                         <input type="search" [(ngModel)]="currentFileName" placeholder="Ex. test_1 2023"
                             (blur)="checkFileName(type)" class="card-title">
-                        <button mat-button class="rename">
+                        <button mat-button class="rename" (click)="delete('childrenNodes', {nodeClass: type, Unique_ID: callBack['Sample_ID']})">
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                         <mat-error *ngIf="error['fileName'] == 'type1'">'/', '\' shall not be used.</mat-error>
@@ -243,6 +249,12 @@
                         <p class="card-line">
                             <span class="key">{{ topItem }}:</span>
                             <textarea matInput type="search" rows="1" [(ngModel)]="pppcDataControler[topItem]"></textarea>
+                            <button mat-button class="rename" *ngIf="getObjectKeys(callBack).indexOf(topItem) != -1" (click)="delete('nodeAttributes', {nodeClass: type, Unique_ID: callBack['Sample_ID'], attributeKey: topItem})">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
+                            <button mat-button class="rename" *ngIf="getObjectKeys(callBack).indexOf(topItem) == -1" (click)="deleteGenerierted(pppcDataControler, topItem)">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
                         </p>
                     </div>
                     <div>
@@ -266,7 +278,7 @@
                                 {{ id }}
                             </mat-option>
                         </mat-autocomplete>
-                        <button mat-button class="rename">
+                        <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: type, Unique_ID: callBack['cpa']['CPA_ID']})">
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                         <mat-error *ngIf="error['cpaIndex'] == 'type1' || error['fileName'] == 'type1'">'/', '\' shall
@@ -291,7 +303,7 @@
                                         [(ngModel)]="currentSubName[sub.class + '*-*' + sub.unique_id]" rows="1"
                                         placeholder="Ex. test_1 2023"
                                         (blur)="checkTheName(sub['class'], sub['unique_id'], currentSubName[sub.class + '*-*' + sub.unique_id])" (click)="pandelCPA.toggle()"></textarea>
-                                    <button mat-button class="rename">
+                                    <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: sub['class'], Unique_ID: sub.unique_id})">
                                         <mat-icon>delete_outline</mat-icon>
                                     </button>
 
@@ -307,9 +319,15 @@
                                 <p *ngFor="let key of getObjectKeys(pppcDataControler[sub['class']+'*-*'+sub['unique_id']]) | excludeItem: [emm(sub['class'])]" class="card-line">
                                 <span class="key">{{key}}: </span>
                                 <textarea matInput type="search" rows="1" [(ngModel)]="pppcDataControler[sub['class']+'*-*'+sub['unique_id']][key]"></textarea>
+
+                                <button mat-button class="rename" *ngIf="getObjectKeys(sub['properties']).indexOf(key) != -1" (click)="delete('nodeAttributes', {nodeClass: sub['class'], Unique_ID: sub['unique_id'], attributeKey: key})">
+                                    <mat-icon>delete_outline</mat-icon>
+                                </button>
+                                <button mat-button class="rename" *ngIf="getObjectKeys(sub['properties']).indexOf(key) == -1" (click)="deleteGenerierted(pppcDataControler[sub['class']+'*-*'+sub['unique_id']], key)">
+                                    <mat-icon>delete_outline</mat-icon>
+                                </button>
                             </p>
                             </div>
-                            
                             <div>
                                 <u>+ new key and value: </u>
                                 <input type="search" [(ngModel)]="key" class="key"> : <input type="search" [(ngModel)]="value">
@@ -332,7 +350,7 @@
                                         [(ngModel)]="addControler[item]['unique_id']" rows="1"
                                         placeholder="Ex. test_1 2023"
                                         (blur)="checkTheName(item, 'newItemCPA', addControler[item]['unique_id'])" (click)="pandelCPA.toggle()"></textarea>
-                                    <button mat-button class="rename">
+                                    <button mat-button class="rename" (click)="deleteGenerierted(addControler, item)">
                                         <mat-icon>delete_outline</mat-icon>
                                     </button>
 
@@ -347,6 +365,9 @@
                             <p *ngFor="let key of getObjectKeys(addControler[item]) | excludeItem:['unique_id']" class="card-line">
                                 <span class="key">{{key}}: </span>
                                 <textarea matInput type="search" rows="1" [(ngModel)]="addControler[item][key]"></textarea>
+                                <button mat-button class="rename" (click)="deleteGenerierted(addControler[item], key)">
+                                    <mat-icon>delete_outline</mat-icon>
+                                </button>
                             </p>
                             <div>
                                 <u>+ new key and value: </u>
@@ -450,6 +471,11 @@
                         add <u>{{ key }} : {{ pppcDataControler[key] }}</u>
                     </p>
                 </div>
+            </div>
+            <div>
+                <p *ngFor="let fn of deletedItems['fatherNodes']">delete <u>{{ fn | json }}</u></p>
+                <p *ngFor="let cn of deletedItems['childrenNodes']">delete <u>{{ cn | json }}</u></p>
+                <p *ngFor="let na of deletedItems['nodeAttributes']">delete <u>{{ na | json }}</u></p>
             </div>
             <div mat-dialog-actions>
                 <button mat-button (click)="undo()">Undo</button>
