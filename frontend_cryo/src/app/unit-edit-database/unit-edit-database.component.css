@@ -25,6 +25,10 @@
 
 .rename{
     color: #1976d2;
+    height: 100%;
+    margin:auto;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 textarea {
@@ -33,7 +37,7 @@ textarea {
     flex-grow: 1;
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     padding: 0px 4px;
-    max-width: 200px;
+    max-width: 340px;
     font-size: medium;
 }
 
@@ -78,4 +82,12 @@ textarea {
 .card-line {
  display: flex;
  align-items: baseline;
+}
+
+button{
+    cursor: pointer;
+}
+
+u{
+    color: #1976d2;
 }
