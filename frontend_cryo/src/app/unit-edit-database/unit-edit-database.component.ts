@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { MatSelect } from '@angular/material/select';
 import { cloneDeep } from 'lodash';
+import { defaultVersuche, defaultProbe, defaultCpaData } from '../app-config';
 
 @Component({
   selector: 'app-unit-edit-database',
@@ -14,6 +15,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   error: { [key: string]: string } = { fileName: '', cpaIndex: '' }
 
   currentFileName: string = ''
+  defaultCpaData = cloneDeep(defaultCpaData)
+  currentCpaItemType: string = ''
 
   //only for cpa
   currentCpaIndex: string = ''
@@ -22,6 +25,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   statusSubName: { [key: string]: string } = {}
   pppcDataControler: { [key: string]: { [key: string]: any } } = {}
   pppcDataMemory: { [key: string]: { [key: string]: any } } = {}
+  addControler: { [key: string]: any } = {}
+  addControlerProbe: { [key: string]: any } = {}
 
   translate: { [k: string]: ("PreData" | "PostData" | "CPA" | "Process") } = {
     "PreData ID": 'PreData',
@@ -39,6 +44,10 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   }
   ngAfterViewInit() {
     setTimeout(() => {
+      this.addControler = {}
+      this.addControlerProbe = {}
+      this.currentCpaItemType = ''
+      this.defaultCpaData = cloneDeep(defaultCpaData)
       if (this.type === 'Experiment') {
         this.currentFileName = this.callBack['experiment']['Experiment_ID']
         this.callBack['child'].forEach((item: any) => {
@@ -98,12 +107,12 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.statusSubName[`${type}*-*${oldName}`] = 'type2'
     }
     else {
-      if (this.oldSubName[`${type}*-*${oldName}`] === this.currentSubName[`${type}*-*${oldName}`]) {
+      if (this.oldSubName[`${type}*-*${oldName}`] === this.currentSubName[`${type}*-*${oldName}`] && this.oldSubName[`${type}*-*${oldName}`]) {
         this.statusSubName[`${type}*-*${oldName}`] = 'none'
       }
       else {
         this.queryNeo4jService.duplicateCheck(type, currentName).then((res) => {
-          //if already has, be true
+          //if already has, be true\
           if (res) {
             this.statusSubName[`${type}*-*${oldName}`] = 'type3'
           } else {
@@ -122,30 +131,44 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       let allId: string[] = []
       if (versuchOrProbe === 'Versuch') {
         this.callBack['child'].forEach((versuch: any) => {
-          allId.push(versuch['versuch']['Versuch_ID'])
+          allId.push(this.currentSubName[versuch['versuch']['Unique_ID']])
+        })
+        this.getObjectKeys(this.addControler).forEach((nk) => {
+          allId.push(this.addControler[nk]['Versuche ID'])
         })
       }
       else {
         this.callBack['child'].forEach((versuch: any) => {
           if (versuch['versuch']['Unique_ID'] == `${unique_id.split('*-*')[0]}*-*${unique_id.split('*-*')[1]}`) {
             versuch['probes'].forEach((sub: any) => {
-              allId.push(sub['Sample_ID'])
+              allId.push(this.currentSubName[sub['Unique_ID']])
             })
           }
-
+        })
+        this.getObjectKeys(this.addControler).forEach((newVersuch: string) => {
+          if (newVersuch == unique_id.split('*-*')[0]) {
+            this.getObjectKeys(this.addControler[newVersuch]).forEach((probeKey: string) => {
+              if (probeKey != 'Versuche ID') {
+                allId.push(this.addControler[newVersuch][probeKey]['Sample ID'])
+              }
+            })
+          }
+        })
+        this.getObjectKeys(this.addControlerProbe).forEach((toVersuch: string) => {
+          if (`${unique_id.split('*-*')[0]}*-*${unique_id.split('*-*')[1]}` == toVersuch) {
+            (this.addControlerProbe[toVersuch]).forEach((probe: any) => {
+              allId.push(probe['Sample ID'])
+            })
+          }
         })
       }
-
-      if (allId.indexOf(currentName) != -1) {
+      if (allId.filter(item => item === currentName).length != 1) {
         this.statusSubName[unique_id] = 'type3'
       }
       else {
         this.statusSubName[unique_id] = 'none'
       }
-    }
-
-    if (unique_id.split('*-*').indexOf(currentName) != -1) {
-      this.statusSubName[unique_id] = 'none'
+      console.log(allId)
     }
   }
 
@@ -236,10 +259,6 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     this.idList = {}
     this.ngAfterViewInit()
   }
-  @ViewChild('select') select!: MatSelect;
-  openSelectPandel() {
-    this.select.open()
-  }
 
   arraysAreEqual(arr1: any, arr2: any): boolean {
     if (arr1.length !== arr2.length) {
@@ -253,5 +272,41 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     }
 
     return true;
+  }
+
+  add(location: string, info: 'Versuche' | 'Attr' | 'Probe' | 'ProbeAtNew' | string) {
+    if (info === 'Versuche') {
+      this.addControler[`versuch ${this.callBack['child'].length + this.getObjectKeys(this.addControler).length + 1}`] = cloneDeep(defaultVersuche)
+      this.statusSubName[`versuch ${this.callBack['child'].length + this.getObjectKeys(this.addControler).length}`] = 'none'
+    }
+    else if (info === 'Attr') {
+
+    }
+    else if (info === 'Probe') {
+      if (!this.addControlerProbe[`${location}`]){
+        this.addControlerProbe[`${location}`] = []
+      }
+      this.addControlerProbe[`${location}`].push(cloneDeep(defaultProbe))
+    }
+    else if (info === 'ProbeAtNew'){
+      this.addControler[location][`Probe ${this.getObjectKeys(this.addControler[location]).length}`] = cloneDeep(defaultProbe)
+    }
+    else {
+      if (defaultCpaData[info]) {
+        this.addControler[info] = cloneDeep(defaultCpaData[info])
+      }
+      else {
+        this.addControler[info] = {}
+      }
+    }
+    this.currentCpaItemType = ''
+  }
+
+  getItemCpaList() {
+    let list: string[] = []
+    this.callBack['child'].forEach((item: any) => {
+      list.push(item['class'])
+    })
+    return this.getObjectKeys(this.addControler).concat(list)
   }
 }
