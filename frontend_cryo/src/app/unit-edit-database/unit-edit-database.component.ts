@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { MatSelect } from '@angular/material/select';
-import { cloneDeep } from 'lodash';
+import { String, cloneDeep } from 'lodash';
 import { defaultVersuche, defaultProbe, defaultCpaData } from '../app-config';
 
 @Component({
@@ -47,10 +47,11 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.key = ''
       this.value = ''
       this.createAttrError = ''
+      this.todoSQL = { addition: [], deletion: [], change: [] }
       this.addControler = {}
       this.addControlerProbe = {}
       this.currentCpaItemType = ''
-      this.deletedItems = {fatherNodes:[], childrenNodes:[], nodeAttributes:[]}
+      this.deletedItems = { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }
       this.defaultCpaData = cloneDeep(defaultCpaData)
       if (this.type === 'Experiment') {
         this.currentFileName = this.callBack['experiment']['Experiment_ID']
@@ -172,7 +173,6 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       else {
         this.statusSubName[unique_id] = 'none'
       }
-      console.log(allId)
     }
   }
 
@@ -287,24 +287,24 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
 
     }
     else if (info === 'Probe') {
-      if (!this.addControlerProbe[`${location}`]){
+      if (!this.addControlerProbe[`${location}`]) {
         this.addControlerProbe[`${location}`] = []
       }
       this.addControlerProbe[`${location}`].push(cloneDeep(defaultProbe))
     }
-    else if (info === 'ProbeAtNew'){
+    else if (info === 'ProbeAtNew') {
       this.addControler[location][`Probe ${this.getObjectKeys(this.addControler[location]).length}`] = cloneDeep(defaultProbe)
     }
     else {
-      if (info){
+      if (info) {
         if (defaultCpaData[info]) {
-        this.addControler[info] = cloneDeep(defaultCpaData[info])
+          this.addControler[info] = cloneDeep(defaultCpaData[info])
+        }
+        else {
+          this.addControler[info] = {}
+        }
       }
-      else {
-        this.addControler[info] = {}
-      }
-      }
-      
+
     }
     this.currentCpaItemType = ''
   }
@@ -316,18 +316,18 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     })
     return this.getObjectKeys(this.addControler).concat(list)
   }
-  key:string = ''
-  value:string = ''
-  createAttrError:string = ''
-  addAttributes(body: any, key:string, value:string){
-    if (key == '' || value == ''){
+  key: string = ''
+  value: string = ''
+  createAttrError: string = ''
+  addAttributes(body: any, key: string, value: string) {
+    if (key == '' || value == '') {
       this.createAttrError = 'type2'
     }
-    else{
-      if (this.getObjectKeys(body).indexOf(key) != -1){
+    else {
+      if (this.getObjectKeys(body).indexOf(key) != -1) {
         this.createAttrError = 'type3'
       }
-      else{
+      else {
         this.createAttrError = ''
         body[key] = value
         this.key = ''
@@ -335,19 +335,120 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       }
     }
   }
-  deletedItems:{fatherNodes:any[], childrenNodes:any[], nodeAttributes:any[]} = {fatherNodes:[], childrenNodes:[], nodeAttributes:[]}
-  delete(type: 'fatherNodes'| 'childrenNodes'| 'nodeAttributes', key:any){
+  deletedItems: { fatherNodes: any[], childrenNodes: any[], nodeAttributes: any[] } = { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }
+  delete(type: 'fatherNodes' | 'childrenNodes' | 'nodeAttributes', key: any) {
     this.deletedItems[type].push(key)
   }
 
-  deleteGenerierted(body:any, key:string|number){
-    console.log(body)
-    console.log(key)
+  deleteGenerierted(body: any, key: string | number) {
     if (typeof key === 'string') {
       delete body[key]
-  } else if (typeof key === 'number') {
+    } else if (typeof key === 'number') {
       body.splice(key, 1)
-  } 
-    console.log(body)
+    }
+  }
+
+  todoSQL: { addition: any, deletion: any, change: any } = { addition: [], deletion: [], change: [] }
+  commit() {
+    if (this.type == 'Experiment') {
+      this.getObjectKeys(this.addControler).forEach((key: string) => {
+        this.todoSQL.addition.push({ class: 'Versuch', father: { class: 'Experiment', Unique_ID: this.callBack['experiment']['Experiment_ID'] }, info: this.addControler[key] })
+      })
+      this.getObjectKeys(this.addControlerProbe).forEach((key: string) => {
+        this.addControlerProbe[key].forEach((probe: any) => {
+          this.todoSQL.addition.push({ class: 'Probe', father: { class: 'Versuch', Unique_ID: key }, info: probe })
+        })
+      })
+      this.getObjectKeys(this.pppcDataControler).forEach((key: string) => {
+        this.getObjectKeys(this.pppcDataControler[key]).forEach((item: string) => {
+          if (!this.arraysAreEqual(this.pppcDataControler[key][item], this.pppcDataMemory[key][item])) {
+            this.todoSQL.change.push({ class: 'Probe', attrKey: item, unique_id: key, currentValue: this.pppcDataControler[key][item] })
+          }
+        })
+      })
+      this.getObjectKeys(this.currentSubName).forEach((key: string) => {
+        const idficationArray: string[] = key.split('*-*')
+        let className: string = ''
+        if (idficationArray.length === 2) {
+          className = 'Probe'
+          if (this.currentSubName[key] != idficationArray[idficationArray.length - 1]) {
+            this.todoSQL.change.unshift({ class: className, unique_id: key, currentValue: this.currentSubName[key] })
+          }
+        }
+        else {
+          className = 'Versuch'
+          if (this.currentSubName[key] != idficationArray[idficationArray.length - 1]) {
+            this.todoSQL.change.push({ class: className, unique_id: key, currentValue: this.currentSubName[key] })
+          }
+        }
+      })
+      if (this.currentFileName != this.callBack['experiment']['Experiment_ID']) {
+        this.todoSQL.change.push({ class: 'Experiment', unique_id: this.callBack['experiment']['Experiment_ID'], currentValue: this.currentFileName })
+      }
+      this.todoSQL.deletion = this.deletedItems
+    }
+    else if (this.type == 'CPA') {
+      this.getObjectKeys(this.pppcDataControler).forEach((key: string) => {
+        this.getObjectKeys(this.pppcDataControler[key]).forEach((item: string) => {
+          if (this.getObjectKeys(this.pppcDataMemory[key]).indexOf(item) == -1) {
+            this.todoSQL.addition.push({ class: key.split('*-*')[0], unique_id: key.split('*-*')[1], attrKey: item, attrValue: this.pppcDataControler[key][item] })
+          }
+        })
+      })
+      this.getObjectKeys(this.addControler).forEach((key: string) => {
+        this.todoSQL.addition.push({ class: key, attributes: this.addControler[key], father: { class: 'CPA', unique_id: this.callBack['cpa']['CPA_ID'] } })
+      })
+      this.getObjectKeys(this.pppcDataMemory).forEach((key: string) => {
+        this.getObjectKeys(this.pppcDataMemory[key]).forEach((item: string) => {
+          if (!this.arraysAreEqual(this.pppcDataControler[key][item], this.pppcDataMemory[key][item])) {
+            this.todoSQL.change.push({ class: key.split('*-*')[0], unique_id: key.split('*-*')[1], attrKey: item, currentValue: this.pppcDataControler[key][item] })
+          }
+        })
+      })
+      this.getObjectKeys(this.currentSubName).forEach((key: string) => {
+        const idficationArray: string[] = key.split('*-*')
+        if (this.currentSubName[key] != idficationArray[idficationArray.length - 1]) {
+          this.todoSQL.change.push({ class: idficationArray[idficationArray.length - 2], unique_id: idficationArray[idficationArray.length - 1], currentValue: this.currentSubName[key] })
+        }
+      })
+      if (this.currentCpaIndex != this.callBack['cpa']['CPA_ID']) {
+        this.todoSQL.change.push({ class: 'CPA', unique_id: this.callBack['cpa']['CPA_ID'], currentValue: this.currentCpaIndex })
+      }
+      this.todoSQL.deletion = this.deletedItems
+    }
+    else if (this.type == 'Process') {
+      this.getObjectKeys(this.pppcDataControler).forEach((key:string)=>{
+        if (this.getObjectKeys(this.callBack).indexOf(key) == -1){
+          this.todoSQL.addition.push({class:'Process', unique_id:this.callBack['Process_ID'], attrKey:key, attrValue:this.pppcDataControler[key]})
+        }
+      })
+      this.getObjectKeys(this.callBack).forEach((key:string)=>{
+        if (!this.arraysAreEqual(this.pppcDataControler[key], this.callBack[key])){
+          this.todoSQL.change.push({class:'Process', unique_id:this.callBack['Process_ID'], attrKey:key, currentValue:this.pppcDataControler[key]})
+        }
+      })
+      if (this.currentFileName != this.callBack['Process_ID']) {
+        this.todoSQL.change.push({ class: 'Process', unique_id: this.callBack['Process_ID'], currentValue: this.currentFileName })
+      }
+      this.todoSQL.deletion = this.deletedItems
+    }
+    else if (this.type == 'PreData' || this.type == 'PostData') {
+      this.getObjectKeys(this.pppcDataControler).forEach((key:string)=>{
+        if (this.getObjectKeys(this.callBack).indexOf(key) == -1){
+          this.todoSQL.addition.push({class:this.type, unique_id:this.callBack['Sample_ID'], attrKey:key, attrValue:this.pppcDataControler[key]})
+        }
+      })
+      this.getObjectKeys(this.callBack).forEach((key:string)=>{
+        if (!this.arraysAreEqual(this.pppcDataControler[key], this.callBack[key])){
+          this.todoSQL.change.push({class:this.type, unique_id:this.callBack['Sample_ID'], attrKey:key, currentValue:this.pppcDataControler[key]})
+        }
+      })
+      if (this.currentFileName != this.callBack['Sample_ID']) {
+        this.todoSQL.change.push({ class: this.type, unique_id: this.callBack['Sample_ID'], currentValue: this.currentFileName })
+      }
+      this.todoSQL.deletion = this.deletedItems
+    }
+
+    console.log(this.todoSQL)
   }
 }

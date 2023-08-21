@@ -44,7 +44,7 @@
                                             rows="1" placeholder="Ex. test_1 2023"
                                             (blur)="checkTheVersuch('Probe', probe['Unique_ID'], currentSubName[probe['Unique_ID']])"
                                             (click)="pandel.toggle()"></textarea>
-                                        <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: 'Probe', Unique_ID: probe['Unique_ID']})">
+                                        <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: 'Probe', Unique_ID: probe['Unique_ID']})" (click)="pandel.toggle()">
                                             <mat-icon>delete_outline</mat-icon>
                                         </button>
                                         <mat-error *ngIf="statusSubName[probe['Unique_ID']] == 'type2'">Probe ID
@@ -93,7 +93,7 @@
                                             rows="1" placeholder="Ex. test_1 2023"
                                             (blur)="checkTheVersuch('Probe', versuch['versuch']['Unique_ID'] + '*-*' + (ii), probe['Sample ID'])"
                                             (click)="pandel.toggle()"></textarea>
-                                        <button mat-button class="rename" (click)="deleteGenerierted(addControlerProbe[versuch['versuch']['Unique_ID']], ii)">
+                                        <button mat-button class="rename" (click)="deleteGenerierted(addControlerProbe[versuch['versuch']['Unique_ID']], ii)" (click)="pandel.toggle()">
                                             <mat-icon>delete_outline</mat-icon>
                                         </button>
                                         <mat-error *ngIf="statusSubName[versuch['versuch']['Unique_ID'] + '*-*' + (ii)] == 'type2'">Probe ID
@@ -153,7 +153,7 @@
                                             rows="1" placeholder="Ex. test_1 2023"
                                             (blur)="checkTheVersuch('Probe', newVersuchIndex + '*-*' + probeKey, addControler[newVersuchIndex][probeKey]['Sample ID'])"
                                             (click)="pandel.toggle()"></textarea>
-                                        <button mat-button class="rename" (click)="deleteGenerierted(addControler[newVersuchIndex], probeKey)">
+                                        <button mat-button class="rename" (click)="deleteGenerierted(addControler[newVersuchIndex], probeKey)" (click)="pandel.toggle()">
                                             <mat-icon>delete_outline</mat-icon>
                                         </button>
                                         <mat-error *ngIf="statusSubName[newVersuchIndex + '*-*' + probeKey] == 'type2'">Probe ID
@@ -411,8 +411,15 @@
                 </div>
                 <div *ngFor="let key of getObjectKeys(addControler)">
                     <p>
-                        <u>add new versuch {{ addControler[key]['Sample ID'] }}</u> {{ addControler[key] | json }}
+                        add new versuch {{ addControler[key]['Versuche ID'] }} at {{ callBack['experiment']['Experiment_ID'] }}: <u>{{ addControler[key] | json }}</u>
                     </p>
+                </div>
+                <div *ngFor="let key of getObjectKeys(addControlerProbe)">
+                    <div *ngFor="let probe of addControlerProbe[key]">
+                        <p>
+                            add new probe {{ probe['Sample ID'] }} at {{ key }}: <u>{{ probe | json }}</u> 
+                        </p>
+                    </div>
                 </div>
             </div>
             <div *ngIf="type=='CPA'">
@@ -479,7 +486,7 @@
             </div>
             <div mat-dialog-actions>
                 <button mat-button (click)="undo()">Undo</button>
-                <button mat-button>Commit</button>
+                <button mat-button (click)="commit()">Commit</button>
             </div>
         </ng-template>
     </mat-step>
