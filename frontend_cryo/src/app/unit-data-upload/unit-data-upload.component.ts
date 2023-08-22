@@ -75,7 +75,6 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
   onFileSelected(event: any) {
     const files: FileList = event.target.files;
     if (files.length > 0) {
-      console.log(this.fileInput1)
       this.fileTransferService.fileUpload(files, this.data_type).then((res) => {
         this.uploadedFiles = [...this.uploadedFiles, ...(JSON.parse(res.replace(/'/g, '"')))]
         this.uploadedFiles.forEach(file => {
@@ -118,6 +117,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
   feedToDB() {
     for (var file_name in this.selectedFiles) {
       if (this.selectedFiles[file_name] == 'waiting') {
+        this.selectedFiles[file_name] = 'doing'
         var self = this;
         (function (fileName: string) {
           self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {

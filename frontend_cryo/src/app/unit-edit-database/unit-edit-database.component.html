@@ -19,6 +19,7 @@
                     <mat-card-subtitle>{{ type }}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="content-box">
+                    <div *ngIf="callBack['child'][0]['probes'].length">
                     <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
                         <p class="versuch-line"><span class="key">versuch {{i+1}}: </span>
                             <textarea type="search" [(ngModel)]="currentSubName[versuch['versuch']['Unique_ID']]"
@@ -128,6 +129,7 @@
                             </mat-expansion-panel>
                         </mat-accordion>
                         <button (click)="add(versuch['versuch']['Unique_ID'], 'Probe')">+ add new probe</button>
+                    </div>
                     </div>
                     <div *ngFor="let newVersuchIndex of getObjectKeys(addControler)" style="margin-bottom: 10px;">
                         <p class="versuch-line"><span class="key">{{ newVersuchIndex }}: </span>
@@ -291,6 +293,7 @@
                     <mat-card-subtitle>{{ type }}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="content-box">
+                    <div *ngIf="callBack['child'][0]['unique_id']">
                     <mat-accordion *ngFor="let sub of callBack['child']; let i = index;">
                         <mat-expansion-panel #pandelCPA>
                             <mat-expansion-panel-header>
@@ -303,7 +306,7 @@
                                         [(ngModel)]="currentSubName[sub.class + '*-*' + sub.unique_id]" rows="1"
                                         placeholder="Ex. test_1 2023"
                                         (blur)="checkTheName(sub['class'], sub['unique_id'], currentSubName[sub.class + '*-*' + sub.unique_id])" (click)="pandelCPA.toggle()"></textarea>
-                                    <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: sub['class'], Unique_ID: sub.unique_id})" (click)="pandelCPA.toggle()">
+                                    <button mat-button class="rename" (click)="delete('childrenNodes', {nodeClass: sub['class'], Unique_ID: sub.unique_id})" (click)="pandelCPA.toggle()">
                                         <mat-icon>delete_outline</mat-icon>
                                     </button>
 
@@ -337,7 +340,7 @@
                             <mat-error *ngIf="createAttrError == 'type3'">key is used.</mat-error>
                         </mat-expansion-panel>
                     </mat-accordion>
-
+                    </div>
                     <mat-accordion *ngFor="let item of getObjectKeys(addControler)">
                         <mat-expansion-panel #pandelCPA>
                             <mat-expansion-panel-header>
@@ -347,9 +350,9 @@
                                 <mat-panel-description>
 
                                     <textarea type="search"
-                                        [(ngModel)]="addControler[item]['unique_id']" rows="1"
+                                        [(ngModel)]="addControler[item][item + '_ID']" rows="1"
                                         placeholder="Ex. test_1 2023"
-                                        (blur)="checkTheName(item, 'newItemCPA', addControler[item]['unique_id'])" (click)="pandelCPA.toggle()"></textarea>
+                                        (blur)="checkTheName(item, 'newItemCPA', addControler[item][item + '_ID'])" (click)="pandelCPA.toggle()"></textarea>
                                     <button mat-button class="rename" (click)="deleteGenerierted(addControler, item)">
                                         <mat-icon>delete_outline</mat-icon>
                                     </button>
@@ -362,7 +365,7 @@
                                         }} ID is used.</mat-error>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
-                            <p *ngFor="let key of getObjectKeys(addControler[item]) | excludeItem:['unique_id']" class="card-line">
+                            <p *ngFor="let key of getObjectKeys(addControler[item]) | excludeItem:[item + '_ID']" class="card-line">
                                 <span class="key">{{key}}: </span>
                                 <textarea matInput type="search" rows="1" [(ngModel)]="addControler[item][key]"></textarea>
                                 <button mat-button (click)="pandelCPA.toggle()" class="rename" (click)="deleteGenerierted(addControler[item], key)">
@@ -484,6 +487,7 @@
                 <p *ngFor="let cn of deletedItems['childrenNodes']">delete <u>{{ cn | json }}</u></p>
                 <p *ngFor="let na of deletedItems['nodeAttributes']">delete <u>{{ na | json }}</u></p>
             </div>
+            <div *ngIf="resultStatus">DONE</div>
             <div mat-dialog-actions>
                 <button mat-button (click)="undo()">Undo</button>
                 <button mat-button (click)="commit()">Commit</button>

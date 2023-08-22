@@ -283,3 +283,9 @@ li {
 ::ng-deep .mat-mdc-select-trigger {
     height: 100%;
 }
+
+.doingfile{
+    margin-right: 30px;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    color: #1976d2;
+}

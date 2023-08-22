@@ -10,7 +10,7 @@
                     <mat-card-title>{{ callBack['experiment']['Experiment_ID'] }}</mat-card-title>
                     <mat-card-subtitle>{{ openSearch['which'] }}</mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content class="content-box">
+                <mat-card-content class="content-box" *ngIf="callBack['child'][0]['probes'].length">
                     <div *ngFor="let versuch of callBack['child']; let i = index" style="margin-bottom: 10px;">
                         <p><span class="key">versuch {{i+1}}: </span>{{ versuch['versuch']['Versuch_ID'] }}</p>
                         <mat-accordion *ngFor="let probe of versuch['probes']; let i = index">
@@ -40,7 +40,7 @@
             <div style="height: 10px;"></div>
             <mat-divider></mat-divider>
             <div style="height: 10px;"></div>
-            <app-unit-highcharts-graph [experiment]="callBack"></app-unit-highcharts-graph>
+            <!-- <app-unit-highcharts-graph [experiment]="callBack"></app-unit-highcharts-graph> -->
         </mat-tab>
     </mat-tab-group>
 </div>

@@ -86,6 +86,7 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
   feedToDB() {
     for (var file_name in this.selectedFiles) {
       if (this.selectedFiles[file_name] == 'waiting') {
+        this.selectedFiles[file_name] = 'doing'
         var self = this;
         (function (fileName: string) {
           self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {

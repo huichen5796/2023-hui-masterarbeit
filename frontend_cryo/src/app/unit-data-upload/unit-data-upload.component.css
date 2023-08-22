@@ -107,6 +107,12 @@
     color: #1976d2;
 }
 
+.doingfile{
+    margin-right: 30px;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    color: #1976d2;
+}
+
 pre {
     font-weight: bold;
 }

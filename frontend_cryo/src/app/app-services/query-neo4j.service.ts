@@ -121,4 +121,16 @@ export class QueryNeo4jService {
     })
     return promise
   }
+
+  addDelModi(todoSQL: { addition: any, deletion: any, changeAttr: any, changeName: any }): Promise<string> {
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify(todoSQL);
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.post(`${backendUrl}/addDelModi/`, body, {'headers': headers})
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
 }

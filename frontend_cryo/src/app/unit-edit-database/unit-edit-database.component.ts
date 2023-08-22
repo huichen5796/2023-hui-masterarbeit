@@ -42,41 +42,59 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   ) {
     // this.currentFileName = this.callBack['experiment']['Experiment_ID']
   }
+
+  init(){
+    this.error = { fileName: '', cpaIndex: '' }
+    this.currentFileName = ''
+    this.defaultCpaData = cloneDeep(defaultCpaData)
+    this.currentCpaItemType = ''
+    this.currentCpaIndex = ''
+    this.oldSubName = {}
+    this.currentSubName = {}
+    this.statusSubName = {}
+    this.pppcDataControler = {}
+    this.pppcDataMemory = {}
+    this.addControler = {}
+    this.addControlerProbe = {}
+    this.key = ''
+    this.value = ''
+    this.createAttrError = ''
+    this.resultStatus = false
+    this.todoSQL = { addition: [], deletion: [], changeAttr: [], changeName:[] }
+    this.deletedItems = { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }
+    this.defaultCpaData = cloneDeep(defaultCpaData)
+  }
   ngAfterViewInit() {
     setTimeout(() => {
-      this.key = ''
-      this.value = ''
-      this.createAttrError = ''
-      this.todoSQL = { addition: [], deletion: [], change: [] }
-      this.addControler = {}
-      this.addControlerProbe = {}
-      this.currentCpaItemType = ''
-      this.deletedItems = { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }
-      this.defaultCpaData = cloneDeep(defaultCpaData)
+      this.init()
       if (this.type === 'Experiment') {
         this.currentFileName = this.callBack['experiment']['Experiment_ID']
-        this.callBack['child'].forEach((item: any) => {
-          this.oldSubName[item['versuch']['Unique_ID']] = item['versuch']['Versuch_ID']
-          this.currentSubName[item['versuch']['Unique_ID']] = item['versuch']['Versuch_ID']
-          this.statusSubName[item['versuch']['Unique_ID']] = 'none'
-          item['probes'].forEach((sub: any) => {
-            this.oldSubName[sub['Unique_ID']] = sub['Sample_ID']
-            this.currentSubName[sub['Unique_ID']] = sub['Sample_ID']
-            this.statusSubName[sub['Unique_ID']] = 'none'
-            this.pppcDataControler[sub['Unique_ID']] = { PreData_ID: sub['PreData_ID'], PostData_ID: sub['PostData_ID'], Process_ID: sub['Process_ID'], CPA_ID: sub['CPA_ID'] }
+        if (this.callBack['child'][0]['probes'].length){
+            this.callBack['child'].forEach((item: any) => {
+            this.oldSubName[item['versuch']['Unique_ID']] = item['versuch']['Versuch_ID']
+            this.currentSubName[item['versuch']['Unique_ID']] = item['versuch']['Versuch_ID']
+            this.statusSubName[item['versuch']['Unique_ID']] = 'none'
+            item['probes'].forEach((sub: any) => {
+              this.oldSubName[sub['Unique_ID']] = sub['Sample_ID']
+              this.currentSubName[sub['Unique_ID']] = sub['Sample_ID']
+              this.statusSubName[sub['Unique_ID']] = 'none'
+              this.pppcDataControler[sub['Unique_ID']] = { PreData_ID: sub['PreData_ID'], PostData_ID: sub['PostData_ID'], Process_ID: sub['Process_ID'], CPA_ID: sub['CPA_ID'] }
+            })
           })
-        })
-        this.pppcDataMemory = cloneDeep(this.pppcDataControler)
+          this.pppcDataMemory = cloneDeep(this.pppcDataControler)
+        }
       }
       else if (this.type === 'CPA') {
         this.currentCpaIndex = this.callBack['cpa']['CPA_ID']
-        this.callBack['child'].forEach((item: any) => {
-          this.oldSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
-          this.currentSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
-          this.statusSubName[`${item['class']}*-*${item['unique_id']}`] = 'none'
-          this.pppcDataControler[`${item['class']}*-*${item['unique_id']}`] = cloneDeep(item['properties'])
-        })
-        this.pppcDataMemory = cloneDeep(this.pppcDataControler)
+        if (this.callBack['child'][0]['unique_id']){
+            this.callBack['child'].forEach((item: any) => {
+            this.oldSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
+            this.currentSubName[`${item['class']}*-*${item['unique_id']}`] = item['unique_id']
+            this.statusSubName[`${item['class']}*-*${item['unique_id']}`] = 'none'
+            this.pppcDataControler[`${item['class']}*-*${item['unique_id']}`] = cloneDeep(item['properties'])
+          })
+          this.pppcDataMemory = cloneDeep(this.pppcDataControler)
+        }
       }
       else if (this.type === 'Process') {
         this.currentFileName = this.callBack['Process_ID']
@@ -108,7 +126,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   }
 
   checkTheName(type: string, oldName: string, currentName: string) {
-    if (this.currentSubName[`${type}*-*${oldName}`] === '') {
+    if (currentName === '') {
       this.statusSubName[`${type}*-*${oldName}`] = 'type2'
     }
     else {
@@ -348,7 +366,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     }
   }
 
-  todoSQL: { addition: any, deletion: any, change: any } = { addition: [], deletion: [], change: [] }
+  todoSQL: { addition: any, deletion: any, changeAttr: any, changeName: any } = { addition: [], deletion: [], changeAttr: [], changeName:[] }
+  resultStatus:boolean = false
   commit() {
     if (this.type == 'Experiment') {
       this.getObjectKeys(this.addControler).forEach((key: string) => {
@@ -362,7 +381,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.getObjectKeys(this.pppcDataControler).forEach((key: string) => {
         this.getObjectKeys(this.pppcDataControler[key]).forEach((item: string) => {
           if (!this.arraysAreEqual(this.pppcDataControler[key][item], this.pppcDataMemory[key][item])) {
-            this.todoSQL.change.push({ class: 'Probe', attrKey: item, unique_id: key, currentValue: this.pppcDataControler[key][item] })
+            this.todoSQL.changeAttr.push({ class: 'Probe', attrKey: item, unique_id: key, currentValue: this.pppcDataControler[key][item] })
           }
         })
       })
@@ -370,20 +389,20 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
         const idficationArray: string[] = key.split('*-*')
         let className: string = ''
         if (idficationArray.length === 2) {
-          className = 'Probe'
+          className = 'Versuch'
           if (this.currentSubName[key] != idficationArray[idficationArray.length - 1]) {
-            this.todoSQL.change.unshift({ class: className, unique_id: key, currentValue: this.currentSubName[key] })
+            this.todoSQL.changeName.unshift({ class: className, unique_id: key, currentName: this.currentSubName[key] })
           }
         }
         else {
-          className = 'Versuch'
+          className = 'Probe'
           if (this.currentSubName[key] != idficationArray[idficationArray.length - 1]) {
-            this.todoSQL.change.push({ class: className, unique_id: key, currentValue: this.currentSubName[key] })
+            this.todoSQL.changeName.push({ class: className, unique_id: key, currentName: this.currentSubName[key] })
           }
         }
       })
       if (this.currentFileName != this.callBack['experiment']['Experiment_ID']) {
-        this.todoSQL.change.push({ class: 'Experiment', unique_id: this.callBack['experiment']['Experiment_ID'], currentValue: this.currentFileName })
+        this.todoSQL.changeName.push({ class: 'Experiment', unique_id: this.callBack['experiment']['Experiment_ID'], currentName: this.currentFileName })
       }
       this.todoSQL.deletion = this.deletedItems
     }
@@ -396,59 +415,61 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
         })
       })
       this.getObjectKeys(this.addControler).forEach((key: string) => {
-        this.todoSQL.addition.push({ class: key, attributes: this.addControler[key], father: { class: 'CPA', unique_id: this.callBack['cpa']['CPA_ID'] } })
+        this.todoSQL.addition.push({ class: key, info: this.addControler[key], father: { class: 'CPA', Unique_ID: this.callBack['cpa']['CPA_ID'] } })
       })
       this.getObjectKeys(this.pppcDataMemory).forEach((key: string) => {
         this.getObjectKeys(this.pppcDataMemory[key]).forEach((item: string) => {
           if (!this.arraysAreEqual(this.pppcDataControler[key][item], this.pppcDataMemory[key][item])) {
-            this.todoSQL.change.push({ class: key.split('*-*')[0], unique_id: key.split('*-*')[1], attrKey: item, currentValue: this.pppcDataControler[key][item] })
+            this.todoSQL.changeAttr.push({ class: key.split('*-*')[0], unique_id: key.split('*-*')[1], attrKey: item, currentValue: this.pppcDataControler[key][item] })
           }
         })
       })
       this.getObjectKeys(this.currentSubName).forEach((key: string) => {
         const idficationArray: string[] = key.split('*-*')
         if (this.currentSubName[key] != idficationArray[idficationArray.length - 1]) {
-          this.todoSQL.change.push({ class: idficationArray[idficationArray.length - 2], unique_id: idficationArray[idficationArray.length - 1], currentValue: this.currentSubName[key] })
+          this.todoSQL.changeName.push({ class: idficationArray[idficationArray.length - 2], unique_id: idficationArray[idficationArray.length - 1], currentName: this.currentSubName[key] })
         }
       })
       if (this.currentCpaIndex != this.callBack['cpa']['CPA_ID']) {
-        this.todoSQL.change.push({ class: 'CPA', unique_id: this.callBack['cpa']['CPA_ID'], currentValue: this.currentCpaIndex })
+        this.todoSQL.changeName.push({ class: 'CPA', unique_id: this.callBack['cpa']['CPA_ID'], currentName: this.currentCpaIndex })
       }
       this.todoSQL.deletion = this.deletedItems
     }
     else if (this.type == 'Process') {
-      this.getObjectKeys(this.pppcDataControler).forEach((key:string)=>{
-        if (this.getObjectKeys(this.callBack).indexOf(key) == -1){
-          this.todoSQL.addition.push({class:'Process', unique_id:this.callBack['Process_ID'], attrKey:key, attrValue:this.pppcDataControler[key]})
+      this.getObjectKeys(this.pppcDataControler).forEach((key: string) => {
+        if (this.getObjectKeys(this.callBack).indexOf(key) == -1) {
+          this.todoSQL.addition.push({ class: 'Process', unique_id: this.callBack['Process_ID'], attrKey: key, attrValue: this.pppcDataControler[key] })
         }
       })
-      this.getObjectKeys(this.callBack).forEach((key:string)=>{
-        if (!this.arraysAreEqual(this.pppcDataControler[key], this.callBack[key])){
-          this.todoSQL.change.push({class:'Process', unique_id:this.callBack['Process_ID'], attrKey:key, currentValue:this.pppcDataControler[key]})
+      this.getObjectKeys(this.callBack).forEach((key: string) => {
+        if (!this.arraysAreEqual(this.pppcDataControler[key], this.callBack[key])) {
+          this.todoSQL.changeAttr.push({ class: 'Process', unique_id: this.callBack['Process_ID'], attrKey: key, currentValue: this.pppcDataControler[key] })
         }
       })
       if (this.currentFileName != this.callBack['Process_ID']) {
-        this.todoSQL.change.push({ class: 'Process', unique_id: this.callBack['Process_ID'], currentValue: this.currentFileName })
+        this.todoSQL.changeName.push({ class: 'Process', unique_id: this.callBack['Process_ID'], currentName: this.currentFileName })
       }
       this.todoSQL.deletion = this.deletedItems
     }
     else if (this.type == 'PreData' || this.type == 'PostData') {
-      this.getObjectKeys(this.pppcDataControler).forEach((key:string)=>{
-        if (this.getObjectKeys(this.callBack).indexOf(key) == -1){
-          this.todoSQL.addition.push({class:this.type, unique_id:this.callBack['Sample_ID'], attrKey:key, attrValue:this.pppcDataControler[key]})
+      this.getObjectKeys(this.pppcDataControler).forEach((key: string) => {
+        if (this.getObjectKeys(this.callBack).indexOf(key) == -1) {
+          this.todoSQL.addition.push({ class: this.type, unique_id: this.callBack['Sample_ID'], attrKey: key, attrValue: this.pppcDataControler[key] })
         }
       })
-      this.getObjectKeys(this.callBack).forEach((key:string)=>{
-        if (!this.arraysAreEqual(this.pppcDataControler[key], this.callBack[key])){
-          this.todoSQL.change.push({class:this.type, unique_id:this.callBack['Sample_ID'], attrKey:key, currentValue:this.pppcDataControler[key]})
+      this.getObjectKeys(this.callBack).forEach((key: string) => {
+        if (!this.arraysAreEqual(this.pppcDataControler[key], this.callBack[key])) {
+          this.todoSQL.changeAttr.push({ class: this.type, unique_id: this.callBack['Sample_ID'], attrKey: key, currentValue: this.pppcDataControler[key] })
         }
       })
       if (this.currentFileName != this.callBack['Sample_ID']) {
-        this.todoSQL.change.push({ class: this.type, unique_id: this.callBack['Sample_ID'], currentValue: this.currentFileName })
+        this.todoSQL.changeName.push({ class: this.type, unique_id: this.callBack['Sample_ID'], currentName: this.currentFileName })
       }
       this.todoSQL.deletion = this.deletedItems
     }
 
-    console.log(this.todoSQL)
+    this.queryNeo4jService.addDelModi(this.todoSQL).then((res:any)=>{
+      this.resultStatus = res
+    })
   }
 }
