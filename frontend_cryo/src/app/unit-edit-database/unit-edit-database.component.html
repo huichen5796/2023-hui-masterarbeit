@@ -394,7 +394,7 @@
         </ng-template>
     </mat-step>
     <mat-step>
-        <ng-template matStepLabel>Summary</ng-template>
+        <ng-template matStepLabel>Summary: please confirm again.</ng-template>
         <ng-template matStepContent>
             <div *ngIf="type=='Experiment'">
                 <p *ngIf="currentFileName != callBack['experiment']['Experiment_ID']"><u>{{
@@ -489,8 +489,9 @@
             </div>
             <div *ngIf="resultStatus">DONE</div>
             <div mat-dialog-actions>
-                <button mat-button (click)="undo()">Undo</button>
-                <button mat-button (click)="commit()">Commit</button>
+                <button mat-button (click)="undo()" disabled = {{undoDisabled}} color="warn">Undo</button>
+                <button mat-button (click)="commit()" color="primary">Commit</button>
+                <button mat-button mat-dialog-close color="warn">Close</button>
             </div>
         </ng-template>
     </mat-step>

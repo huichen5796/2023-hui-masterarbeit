@@ -17,6 +17,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   currentFileName: string = ''
   defaultCpaData = cloneDeep(defaultCpaData)
   currentCpaItemType: string = ''
+  undoDisabled: boolean = false
 
   //only for cpa
   currentCpaIndex: string = ''
@@ -49,6 +50,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     this.defaultCpaData = cloneDeep(defaultCpaData)
     this.currentCpaItemType = ''
     this.currentCpaIndex = ''
+    this.undoDisabled = false
     this.oldSubName = {}
     this.currentSubName = {}
     this.statusSubName = {}
@@ -369,6 +371,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   todoSQL: { addition: any, deletion: any, changeAttr: any, changeName: any } = { addition: [], deletion: [], changeAttr: [], changeName:[] }
   resultStatus:boolean = false
   commit() {
+    this.undoDisabled = true
     if (this.type == 'Experiment') {
       this.getObjectKeys(this.addControler).forEach((key: string) => {
         this.todoSQL.addition.push({ class: 'Versuch', father: { class: 'Experiment', Unique_ID: this.callBack['experiment']['Experiment_ID'] }, info: this.addControler[key] })
