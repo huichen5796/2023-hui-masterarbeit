@@ -1,4 +1,4 @@
-<mat-stepper orientation="vertical">
+<mat-stepper orientation="vertical" (selectionChange)="generateCommit()">
     <mat-step>
         <ng-template matStepLabel>Editer</ng-template>
         <ng-template matStepContent>
@@ -393,10 +393,70 @@
             </mat-card>
         </ng-template>
     </mat-step>
-    <mat-step>
+    <mat-step >
         <ng-template matStepLabel>Summary: please confirm again.</ng-template>
         <ng-template matStepContent>
-            <div *ngIf="type=='Experiment'">
+            <div>{{ todoSQL | json }}</div>
+            <mat-list *ngIf="type=='Experiment'">
+                <div *ngIf="todoSQL['addition']">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                        <mat-icon matListItemIcon>add</mat-icon>
+                        <div matListItemTitle *ngIf="additionTask['class'] == 'Versuch'">{{ additionTask['class']}}: {{ additionTask['info']['Versuche ID'] }}</div>
+                        <div matListItemTitle *ngIf="additionTask['class'] == 'Probe'">{{ additionTask['class']}}: {{ additionTask['info']['Sample ID'] }}</div>
+                        <div matListItemLine>on {{ additionTask['father']['Experiment'] }}: {{ additionTask['father']['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['addition'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+
+                <div *ngIf="todoSQL['deletion']['fatherNodes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['fatherNodes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
+                        <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['fatherNodes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+
+                <div *ngIf="todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
+                        <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
+                        
+                        <div [ngSwitch]="response['changeName'][cnTask['unique_id']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+
+                <div *ngIf="todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
+                        <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
+                        
+                        <div [ngSwitch]="response['changeAttr'][caTask['unique_id']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+                
+              </mat-list>
+            <!-- <div *ngIf="type=='Experiment'">
                 <p *ngIf="currentFileName != callBack['experiment']['Experiment_ID']"><u>{{
                         callBack['experiment']['Experiment_ID'] }}</u> to <u>{{ currentFileName }}</u></p>
                 <div *ngFor="let key of getObjectKeys(currentSubName)">
@@ -486,8 +546,8 @@
                 <p *ngFor="let fn of deletedItems['fatherNodes']">delete <u>{{ fn | json }}</u></p>
                 <p *ngFor="let cn of deletedItems['childrenNodes']">delete <u>{{ cn | json }}</u></p>
                 <p *ngFor="let na of deletedItems['nodeAttributes']">delete <u>{{ na | json }}</u></p>
-            </div>
-            <div *ngIf="resultStatus">DONE</div>
+            </div> -->
+            <div *ngIf="resultStatus">{{ response | json }}</div>
             <div mat-dialog-actions>
                 <button mat-button (click)="undo()" disabled = {{undoDisabled}} color="warn">Undo</button>
                 <button mat-button (click)="commit()" color="primary">Commit</button>

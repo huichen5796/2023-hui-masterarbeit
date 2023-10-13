@@ -64,7 +64,7 @@ export class QueryNeo4jService {
 
   queryOneExperiment(ID: string): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
-      this.http.get(`${backendUrl}/queryOneExperiment/${ID}`)
+      this.http.get(`${backendUrl}/queryOneExperiment/?ID=${ID}`)
         .subscribe((rep: any) => {
           resolve(rep)
         })
@@ -114,10 +114,10 @@ export class QueryNeo4jService {
       'key':key
     });
     var promise = new Promise<string>((resolve, reject) => {
-      this.http.post(`${backendUrl}/buildAnovaTable/`, body, {'headers': headers})
-        .subscribe((rep: any) => {
-          resolve(rep)
-        })
+      // this.http.post(`${backendUrl}/buildAnovaTable/`, body, {'headers': headers})
+      //   .subscribe((rep: any) => {
+      //     resolve(rep)
+      //   })
     })
     return promise
   }

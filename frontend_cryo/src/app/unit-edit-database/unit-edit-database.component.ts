@@ -44,6 +44,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     // this.currentFileName = this.callBack['experiment']['Experiment_ID']
   }
 
+  response: { addition: any, deletion: any, changeAttr: any, changeName: any } = { addition: [], deletion: { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }, changeAttr: [], changeName:[] }
+
   init(){
     this.error = { fileName: '', cpaIndex: '' }
     this.currentFileName = ''
@@ -62,9 +64,10 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     this.value = ''
     this.createAttrError = ''
     this.resultStatus = false
-    this.todoSQL = { addition: [], deletion: [], changeAttr: [], changeName:[] }
+    this.todoSQL = { addition: [], deletion: {}, changeAttr: [], changeName:[] }
     this.deletedItems = { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }
     this.defaultCpaData = cloneDeep(defaultCpaData)
+    this.response = { addition: [], deletion: { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }, changeAttr: [], changeName:[] }
   }
   ngAfterViewInit() {
     setTimeout(() => {
@@ -357,7 +360,9 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   }
   deletedItems: { fatherNodes: any[], childrenNodes: any[], nodeAttributes: any[] } = { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }
   delete(type: 'fatherNodes' | 'childrenNodes' | 'nodeAttributes', key: any) {
-    this.deletedItems[type].push(key)
+    if (this.deletedItems[type].findIndex(item => item.Unique_ID === key.Unique_ID)== -1){
+      this.deletedItems[type].push(key)
+    }
   }
 
   deleteGenerierted(body: any, key: string | number) {
@@ -368,10 +373,10 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     }
   }
 
-  todoSQL: { addition: any, deletion: any, changeAttr: any, changeName: any } = { addition: [], deletion: [], changeAttr: [], changeName:[] }
+  todoSQL: { addition: any, deletion: any, changeAttr: any, changeName: any } = { addition: [], deletion: {}, changeAttr: [], changeName:[] }
   resultStatus:boolean = false
-  commit() {
-    this.undoDisabled = true
+  generateCommit() {
+    this.todoSQL = { addition: [], deletion: {}, changeAttr: [], changeName:[] }
     if (this.type == 'Experiment') {
       this.getObjectKeys(this.addControler).forEach((key: string) => {
         this.todoSQL.addition.push({ class: 'Versuch', father: { class: 'Experiment', Unique_ID: this.callBack['experiment']['Experiment_ID'] }, info: this.addControler[key] })
@@ -471,8 +476,13 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.todoSQL.deletion = this.deletedItems
     }
 
+  }
+
+  commit (){
+    this.undoDisabled = true
     this.queryNeo4jService.addDelModi(this.todoSQL).then((res:any)=>{
-      this.resultStatus = res
+      this.resultStatus = true
+      this.response = res
     })
   }
 }

@@ -29,8 +29,9 @@ export class SeiteDataAnalyseComponent {
 
   setWhich(value: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
     this.history = this.which
-    if (this.history != value) {
-      this.which = [value]
-    }
+    // if (this.history != value) {
+    //   this.which = [value]
+    // }
+    this.which = [value]
   }
 }
