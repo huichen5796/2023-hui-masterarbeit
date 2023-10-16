@@ -13,6 +13,8 @@ export class UnitAnalyseCpaComponent {
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
   callBacks: any[] = []
+
+  showGraphController: string[] = []
   constructor(
     private queryNeo4jService: QueryNeo4jService,
     public dialog: MatDialog,
@@ -28,6 +30,7 @@ export class UnitAnalyseCpaComponent {
   }
   ngOnChanges() {
     this.callBacks = []
+    this.showGraphController = []
     if (this.openSearch['selectedId'].length !== 0) {
       this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
     }
@@ -53,5 +56,15 @@ export class UnitAnalyseCpaComponent {
     let instance = dialogRef.componentInstance
     instance['callBack'] = callBack
     instance['type'] = this.openSearch['which']
+  }
+
+  showGraph(cpa_id:string, sub:string){
+    if (this.showGraphController.indexOf(cpa_id+sub)===-1){
+      this.showGraphController.push(cpa_id+sub)
+    }
+    else{
+      this.showGraphController = this.showGraphController.filter(item => item != cpa_id+sub)
+    }
+    
   }
 }

@@ -28,7 +28,7 @@ export class UnitCpaSubComponent implements OnChanges, OnInit {
     HC_accessibility(Highcharts);
   }
 
-  async ngOnChanges(): Promise<void> {
+  ngOnChanges() {
     this.curve = {}
     this.showOrNot = false
     this.showSub = false
