@@ -396,14 +396,13 @@
     <mat-step >
         <ng-template matStepLabel>Summary: please confirm again.</ng-template>
         <ng-template matStepContent>
-            <div>{{ todoSQL | json }}</div>
             <mat-list *ngIf="type=='Experiment'">
                 <div *ngIf="todoSQL['addition']">
                     <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
                         <mat-icon matListItemIcon>add</mat-icon>
-                        <div matListItemTitle *ngIf="additionTask['class'] == 'Versuch'">{{ additionTask['class']}}: {{ additionTask['info']['Versuche ID'] }}</div>
-                        <div matListItemTitle *ngIf="additionTask['class'] == 'Probe'">{{ additionTask['class']}}: {{ additionTask['info']['Sample ID'] }}</div>
-                        <div matListItemLine>on {{ additionTask['father']['Experiment'] }}: {{ additionTask['father']['Unique_ID'] }}</div>
+                        <div matListItemTitle *ngIf="additionTask['class'] == 'Versuch'">{{ additionTask['class'] }}: {{ additionTask['info']['Versuche ID'] }}</div>
+                        <div matListItemTitle *ngIf="additionTask['class'] == 'Probe'">{{ additionTask['class'] }}: {{ additionTask['info']['Sample ID'] }}</div>
+                        <div matListItemLine>on {{ additionTask['father']['class'] }}: {{ additionTask['father']['Unique_ID'] }}</div>
                         
                         <div [ngSwitch]="response['addition'][i]" matListItemIcon>
                             <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
@@ -445,109 +444,252 @@
                     <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
-                        <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
-                        
-                        <div [ngSwitch]="response['changeAttr'][caTask['unique_id']]" matListItemIcon>
+                        <div matListItemLine *ngIf="caTask['attrKey'] != 'PreData_ID' && caTask['attrKey'] != 'PostData_ID'">new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
+                        <div matListItemLine *ngIf="caTask['attrKey'] == 'PreData_ID' || caTask['attrKey'] == 'PostData_ID'">new {{ caTask['attrKey'] }}: 
+                            <button class="menu-button" [matMenuTriggerFor]="menu">click to see {{  caTask['currentValue'].length }} items</button>
+                            <mat-menu #menu="matMenu">
+                            <mat-list-item *ngFor="let item of caTask['currentValue']">{{ item }}</mat-list-item>
+                            </mat-menu>
+                        </div>
+
+                        <div [ngSwitch]="response['changeAttr'][caTask['unique_id']+caTask['attrKey']]" matListItemIcon>
                             <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
                             <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
                             <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
                         </div>
                     </mat-list-item>
                 </div>
-                
-              </mat-list>
-            <!-- <div *ngIf="type=='Experiment'">
-                <p *ngIf="currentFileName != callBack['experiment']['Experiment_ID']"><u>{{
-                        callBack['experiment']['Experiment_ID'] }}</u> to <u>{{ currentFileName }}</u></p>
-                <div *ngFor="let key of getObjectKeys(currentSubName)">
-                    <p *ngIf="key.split('*-*')[key.split('*-*').length - 1] != currentSubName[key]">
-                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> (of {{
-                        key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u>
-                    </p>
+            </mat-list>
+            <mat-list *ngIf="type=='CPA'">
+                <div *ngIf="todoSQL['addition']">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                        <mat-icon matListItemIcon>add</mat-icon>
+                        <div matListItemTitle *ngIf="additionTask['father']">{{ additionTask['class'] }}: {{ additionTask['info'][additionTask['class'] + '_ID'] }}</div>
+                        <div matListItemTitle *ngIf="!additionTask['father']">{{ additionTask['attrKey'] }}: {{ additionTask['attrValue'] }}</div>
+                        <div matListItemLine *ngIf="additionTask['father']">on {{ additionTask['father']['class'] }}: {{ additionTask['father']['Unique_ID'] }}</div>
+                        <div matListItemLine *ngIf="!additionTask['father']">on {{ additionTask['class'] }}: {{ additionTask['unique_id'] }}</div>
+
+                        <div [ngSwitch]="response['addition'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
-                    <div *ngFor="let item of getObjectKeys(pppcDataControler[key])">
-                        <p *ngIf="!arraysAreEqual(pppcDataControler[key][item], pppcDataMemory[key][item])">
-                            <u>{{ pppcDataMemory[key][item] }}</u> ({{ item }} of {{ key }}) to <u>{{ pppcDataControler[key][item] }}</u>
-                        </p>
-                    </div>
+
+                <div *ngIf="todoSQL['deletion']['nodeAttributes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['attributeKey']}}</div>
+                        <div matListItemLine>on {{ deletionTask['nodeClass'] }}: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['nodeAttributes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(addControler)">
-                    <p>
-                        add new versuch {{ addControler[key]['Versuche ID'] }} at {{ callBack['experiment']['Experiment_ID'] }}: <u>{{ addControler[key] | json }}</u>
-                    </p>
+
+                <div *ngIf="todoSQL['deletion']['childrenNodes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
+                        <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['childrenNodes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(addControlerProbe)">
-                    <div *ngFor="let probe of addControlerProbe[key]">
-                        <p>
-                            add new probe {{ probe['Sample ID'] }} at {{ key }}: <u>{{ probe | json }}</u> 
-                        </p>
-                    </div>
+
+                <div *ngIf="todoSQL['deletion']['fatherNodes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['fatherNodes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
+                        <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['fatherNodes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-            </div>
-            <div *ngIf="type=='CPA'">
-                <p *ngIf="currentCpaIndex != callBack['cpa']['CPA_ID']"><u>{{ callBack['cpa']['CPA_ID'] }}</u> to <u>{{
-                        currentCpaIndex }}</u></p>
-                <div *ngFor="let key of getObjectKeys(currentSubName)">
-                    <p *ngIf="key.split('*-*')[key.split('*-*').length - 1] != currentSubName[key]">
-                        <u>{{ key.split('*-*')[key.split('*-*').length - 1] }}</u> ({{
-                        key.split('*-*')[key.split('*-*').length - 2] }}) to <u>{{ currentSubName[key] }}</u>
-                    </p>
+
+                <div *ngIf="todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
+                        <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
+                        
+                        <div [ngSwitch]="response['changeName'][cnTask['unique_id']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(pppcDataMemory)">
-                    <div *ngFor="let item of getObjectKeys(pppcDataMemory[key])">
-                        <p *ngIf="!arraysAreEqual(pppcDataControler[key][item], pppcDataMemory[key][item])">
-                            <u>{{ pppcDataMemory[key][item] }}</u> ({{ item }} of {{ key }}) to <u>{{ pppcDataControler[key][item] }}</u>
-                        </p>
-                    </div>
+
+                <div *ngIf="todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
+                        <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
+
+                        <div [ngSwitch]="response['changeAttr'][caTask['unique_id']+caTask['attrKey']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(addControler)">
-                    <p>
-                        <u>add new {{ key }}</u> {{ addControler[key] | json }}
-                    </p>
+            </mat-list>
+            <mat-list *ngIf="type=='Process'">
+                <div *ngIf="todoSQL['addition']">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                        <mat-icon matListItemIcon>add</mat-icon>
+                        <div matListItemTitle>{{ additionTask['attrKey'] }}: {{ additionTask['attrValue'] }}</div>
+                        <div matListItemLine>on {{ additionTask['class'] }}: {{ additionTask['unique_id'] }}</div>
+
+                        <div [ngSwitch]="response['addition'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
-                    <div *ngFor="let item of getObjectKeys(pppcDataControler[key])">
-                        <p *ngIf="getObjectKeys(pppcDataMemory[key]).indexOf(item) == -1">
-                            add in {{ key }} <u>{{ item }} : {{ pppcDataControler[key][item] }}</u>
-                        </p>
-                    </div>
+
+                <div *ngIf="todoSQL['deletion']['nodeAttributes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['attributeKey']}}</div>
+                        <div matListItemLine>on {{ deletionTask['nodeClass'] }}: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['nodeAttributes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-            </div>
-            <div *ngIf="type == 'Process'">
-                <p *ngIf="currentFileName != callBack['Process_ID']"><u>{{ callBack['Process_ID'] }}</u> to <u>{{
-                        currentFileName }}</u></p>
-                <div *ngFor="let key of getObjectKeys(callBack)">
-                    <p *ngIf="!arraysAreEqual(pppcDataControler[key], callBack[key])">
-                        <u>{{ callBack[key] }}</u> ({{ key }} of {{ callBack['Process_ID'] }}) to <u>{{ pppcDataControler[key] }}</u>
-                    </p>
+
+                <div *ngIf="todoSQL['deletion']['childrenNodes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
+                        <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['childrenNodes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
-                    <p *ngIf="getObjectKeys(callBack).indexOf(key) == -1">
-                        add <u>{{ key }} : {{ pppcDataControler[key] }}</u>
-                    </p>
+
+                <div *ngIf="todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
+                        <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
+                        
+                        <div [ngSwitch]="response['changeName'][cnTask['unique_id']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-            </div>
-            <div *ngIf="type == 'PreData' || type == 'PostData'">
-                <p *ngIf="currentFileName != callBack['Sample_ID']"><u>{{ callBack['Sample_ID'] }}</u> to <u>{{
-                        currentFileName }}</u></p>
-                <div *ngFor="let key of getObjectKeys(callBack)">
-                    <p *ngIf="!arraysAreEqual(pppcDataControler[key], callBack[key])">
-                        <u>{{ callBack[key] }}</u> ({{ key }} of {{ callBack['Sample_ID'] }}) to <u>{{ pppcDataControler[key] }}</u>
-                    </p>
+
+                <div *ngIf="todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
+                        <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
+
+                        <div [ngSwitch]="response['changeAttr'][caTask['unique_id']+caTask['attrKey']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-                <div *ngFor="let key of getObjectKeys(pppcDataControler)">
-                    <p *ngIf="getObjectKeys(callBack).indexOf(key) == -1">
-                        add <u>{{ key }} : {{ pppcDataControler[key] }}</u>
-                    </p>
+            </mat-list>
+            <mat-list *ngIf="type == 'PreData' || type == 'PostData'">
+                <div *ngIf="todoSQL['addition']">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                        <mat-icon matListItemIcon>add</mat-icon>
+                        <div matListItemTitle>{{ additionTask['attrKey'] }}: {{ additionTask['attrValue'] }}</div>
+                        <div matListItemLine>on {{ additionTask['class'] }}: {{ additionTask['unique_id'] }}</div>
+
+                        <div [ngSwitch]="response['addition'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
                 </div>
-            </div>
-            <div>
-                <p *ngFor="let fn of deletedItems['fatherNodes']">delete <u>{{ fn | json }}</u></p>
-                <p *ngFor="let cn of deletedItems['childrenNodes']">delete <u>{{ cn | json }}</u></p>
-                <p *ngFor="let na of deletedItems['nodeAttributes']">delete <u>{{ na | json }}</u></p>
-            </div> -->
-            <div *ngIf="resultStatus">{{ response | json }}</div>
+
+                <div *ngIf="todoSQL['deletion']['nodeAttributes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['attributeKey']}}</div>
+                        <div matListItemLine>on {{ deletionTask['nodeClass'] }}: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['nodeAttributes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+
+                <div *ngIf="todoSQL['deletion']['childrenNodes']">
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;">
+                        <mat-icon matListItemIcon>clear</mat-icon>
+                        <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
+                        <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
+                        
+                        <div [ngSwitch]="response['deletion']['childrenNodes'][i]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+
+                <div *ngIf="todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
+                        <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
+                        
+                        <div [ngSwitch]="response['changeName'][cnTask['unique_id']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+
+                <div *ngIf="todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                        <mat-icon matListItemIcon>brightness_low</mat-icon>
+                        <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
+                        <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
+
+                        <div [ngSwitch]="response['changeAttr'][caTask['unique_id']+caTask['attrKey']]" matListItemIcon>
+                            <pre *ngSwitchDefault style="margin:0px; color: #1976d2"><mat-icon>history</mat-icon></pre>
+                            <pre *ngSwitchCase="'success'" style="margin:0px; color: green"><mat-icon>check_circle_outline</mat-icon></pre>
+                            <pre *ngSwitchCase="'error'" style="margin:0px; color: red"><mat-icon>highlight_off</mat-icon></pre>
+                        </div>
+                    </mat-list-item>
+                </div>
+            </mat-list>
+
             <div mat-dialog-actions>
                 <button mat-button (click)="undo()" disabled = {{undoDisabled}} color="warn">Undo</button>
                 <button mat-button (click)="commit()" color="primary">Commit</button>

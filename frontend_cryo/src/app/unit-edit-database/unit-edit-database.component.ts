@@ -360,9 +360,17 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   }
   deletedItems: { fatherNodes: any[], childrenNodes: any[], nodeAttributes: any[] } = { fatherNodes: [], childrenNodes: [], nodeAttributes: [] }
   delete(type: 'fatherNodes' | 'childrenNodes' | 'nodeAttributes', key: any) {
-    if (this.deletedItems[type].findIndex(item => item.Unique_ID === key.Unique_ID)== -1){
-      this.deletedItems[type].push(key)
+    if (key.attributeKey) {
+      if (this.deletedItems[type].findIndex(item => item.attributeKey === key.attributeKey)== -1){
+        this.deletedItems[type].push(key)
+      }
     }
+    else {
+        if (this.deletedItems[type].findIndex(item => item.Unique_ID === key.Unique_ID)== -1){
+        this.deletedItems[type].push(key)
+      }
+    }
+    
   }
 
   deleteGenerierted(body: any, key: string | number) {
@@ -485,4 +493,9 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.response = res
     })
   }
+
+  getLastItemAfterSplit(inputString: string, delimiter: string): string {
+    const parts = inputString.split(delimiter);
+    return parts[parts.length - 1];
+}
 }
