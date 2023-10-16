@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { MatSelect } from '@angular/material/select';
-import { String, cloneDeep } from 'lodash';
+import { String, cloneDeep, indexOf } from 'lodash';
 import { defaultVersuche, defaultProbe, defaultCpaData } from '../app-config';
 
 @Component({
@@ -484,6 +484,78 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.todoSQL.deletion = this.deletedItems
     }
 
+  }
+
+  returnTask(task:any){
+    if (task.nodeClass){
+      if (task.attributeKey) {
+        this.deletedItems['nodeAttributes'] = this.deletedItems['nodeAttributes'].filter(item => item.attributeKey != task.attributeKey)
+      }
+      else {
+        if (['Experiment', 'Versuch', 'Probe', 'CPA'].indexOf(task['nodeClass']) != -1){
+          this.deletedItems['fatherNodes'] = this.deletedItems['fatherNodes'].filter(item => item.Unique_ID != task.Unique_ID)
+        }
+        else {
+          this.deletedItems['childrenNodes'] = this.deletedItems['childrenNodes'].filter(item => item.Unique_ID != task.Unique_ID)
+        }
+      }
+    }
+    if (task.attrKey && task.attrValue){
+      if (['Process', 'PostData', 'PreData'].indexOf(task.class) != -1){
+        delete this.pppcDataControler[task.attrKey]
+      }
+      else{
+        delete this.pppcDataControler[task.class+'*-*'+task.unique_id][task.attrKey]
+      }
+    }
+    if (task.info && task.father){
+      if (task.class==='Versuch'){
+        this.getObjectKeys(this.addControler).forEach(itemKey=>{
+          if (this.addControler[itemKey]['Versuche ID'] == task.info['Versuche ID']){
+            delete this.addControler[itemKey]
+          }
+        })
+      }
+      else if (task.class === 'Probe'){
+        this.addControlerProbe[task.father.Unique_ID] = this.addControlerProbe[task.father.Unique_ID].filter((item:any) => item['Sample ID'] != task.info['Sample ID'])
+      }
+      else {
+        delete this.addControler[task.class]
+      }
+    }
+    if (task.currentName) {
+      if (task.class === 'Probe' || task.class === 'Versuch'){
+        this.currentSubName[task.unique_id] = this.getLastItemAfterSplit(task.unique_id, '*-*')
+      }
+      else if (task.class === 'PreData' || task.class === 'PostData') {
+        this.currentFileName = this.callBack['Sample_ID']
+      }
+      else if (task.class === 'Process') {
+        this.currentFileName = this.callBack['Process_ID']
+      }
+      else if (task.class === 'CPA') {
+        this.currentCpaIndex = this.callBack['cpa']['CPA_ID']
+      }
+      else if (task.class === 'Experiment') {
+        this.currentFileName = this.callBack['experiment']['Experiment_ID']
+      }
+      else {
+        this.currentSubName[task.class+'*-*'+task.unique_id] = this.getLastItemAfterSplit(task.unique_id, '*-*')
+      }
+    }
+    if (task.currentValue) {
+      if (task.class === 'Process' || task.class === 'PreData' || task.class === 'PostData') {
+        this.pppcDataControler[task.attrKey] = cloneDeep(this.callBack[task.attrKey])
+      }
+      else if (task.class === 'Probe'){
+        this.pppcDataControler[task.unique_id][task.attrKey] = cloneDeep(this.pppcDataMemory[task.unique_id][task.attrKey])
+      }
+      else {
+        this.pppcDataControler[task.class+'*-*'+task.unique_id][task.attrKey] = cloneDeep(this.pppcDataMemory[task.class+'*-*'+task.unique_id][task.attrKey])
+      }
+      
+    }
+    this.generateCommit()
   }
 
   commit (){

@@ -11,7 +11,7 @@
     position: relative;
     text-align: left;
     overflow: hidden;
-    width:100%;
+    width: 100%;
     margin: auto;
 }
 
@@ -20,13 +20,13 @@
 }
 
 .mat-expansion-panel-header[aria-disabled=true] {
-    color:black;
+    color: black;
 }
 
-.rename{
+.rename {
     color: #1976d2;
     height: 100%;
-    margin:auto;
+    margin: auto;
     margin-left: 0px;
     margin-right: 0px;
 }
@@ -41,12 +41,12 @@ textarea {
     font-size: medium;
 }
 
-.card-title{
+.card-title {
     font-weight: bold;
     font-size: larger;
 }
 
-.versuch-line{
+.versuch-line {
     display: flex;
     align-items: center;
 }
@@ -54,14 +54,14 @@ textarea {
 .select-menu {
     background-color: white;
     width: auto;
-    color:white;
+    color: white;
     max-width: 200px;
 }
 
 ::ng-deep .mat-mdc-select-min-line {
     display: block;
     margin-bottom: 0px;
-    color:white;
+    color: white;
     background-color: white;
 }
 
@@ -69,30 +69,30 @@ textarea {
     font-size: medium;
 }
 
-.tips{
-    position:absolute;
-    color:#1976d2;
+.tips {
+    position: absolute;
+    color: #1976d2;
     height: 24px;
-    bottom:0px;
-    margin:0px;
+    bottom: 0px;
+    margin: 0px;
     z-index: 99;
     cursor: pointer;
 }
 
 .card-line {
- display: flex;
- align-items: baseline;
+    display: flex;
+    align-items: baseline;
 }
 
-button{
+button {
     cursor: pointer;
 }
 
-u{
+u {
     color: #1976d2;
 }
 
-.menu-button{
-    border:none;
+.menu-button {
+    border: none;
     background-color: aliceblue;
 }

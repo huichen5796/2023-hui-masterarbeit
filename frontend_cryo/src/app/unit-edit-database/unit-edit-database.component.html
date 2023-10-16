@@ -400,7 +400,7 @@
         <ng-template matStepContent>
             <mat-list *ngIf="type=='Experiment'">
                 <div *ngIf="todoSQL['addition']">
-                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;" (dblclick)="returnTask(additionTask)">
                         <mat-icon matListItemIcon>add</mat-icon>
                         <div matListItemTitle *ngIf="additionTask['class'] == 'Versuch'">{{ additionTask['class'] }}: {{ additionTask['info']['Versuche ID'] }}</div>
                         <div matListItemTitle *ngIf="additionTask['class'] == 'Probe'">{{ additionTask['class'] }}: {{ additionTask['info']['Sample ID'] }}</div>
@@ -415,8 +415,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['fatherNodes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['fatherNodes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['fatherNodes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
                         <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -429,7 +429,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeName']">
-                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']" (dblclick)="returnTask(cnTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
                         <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
@@ -443,7 +443,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeAttr']">
-                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']" (dblclick)="returnTask(caTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
                         <div matListItemLine *ngIf="caTask['attrKey'] != 'PreData_ID' && caTask['attrKey'] != 'PostData_ID'">new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
@@ -464,7 +464,7 @@
             </mat-list>
             <mat-list *ngIf="type=='CPA'">
                 <div *ngIf="todoSQL['addition']">
-                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;" (dblclick)="returnTask(additionTask)">
                         <mat-icon matListItemIcon>add</mat-icon>
                         <div matListItemTitle *ngIf="additionTask['father']">{{ additionTask['class'] }}: {{ additionTask['info'][additionTask['class'] + '_ID'] }}</div>
                         <div matListItemTitle *ngIf="!additionTask['father']">{{ additionTask['attrKey'] }}: {{ additionTask['attrValue'] }}</div>
@@ -480,8 +480,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['nodeAttributes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['attributeKey']}}</div>
                         <div matListItemLine>on {{ deletionTask['nodeClass'] }}: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -494,8 +494,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['childrenNodes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
                         <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -508,8 +508,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['fatherNodes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['fatherNodes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['fatherNodes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
                         <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -522,7 +522,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeName']">
-                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']" (dblclick)="returnTask(cnTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
                         <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
@@ -536,7 +536,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeAttr']">
-                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']" (dblclick)="returnTask(caTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
                         <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
@@ -551,7 +551,7 @@
             </mat-list>
             <mat-list *ngIf="type=='Process'">
                 <div *ngIf="todoSQL['addition']">
-                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;" (dblclick)="returnTask(additionTask)">
                         <mat-icon matListItemIcon>add</mat-icon>
                         <div matListItemTitle>{{ additionTask['attrKey'] }}: {{ additionTask['attrValue'] }}</div>
                         <div matListItemLine>on {{ additionTask['class'] }}: {{ additionTask['unique_id'] }}</div>
@@ -565,8 +565,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['nodeAttributes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['attributeKey']}}</div>
                         <div matListItemLine>on {{ deletionTask['nodeClass'] }}: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -579,8 +579,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['childrenNodes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
                         <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -593,7 +593,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeName']">
-                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']" (dblclick)="returnTask(cnTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
                         <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
@@ -607,7 +607,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeAttr']">
-                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']" (dblclick)="returnTask(caTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
                         <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
@@ -622,7 +622,7 @@
             </mat-list>
             <mat-list *ngIf="type == 'PreData' || type == 'PostData'">
                 <div *ngIf="todoSQL['addition']">
-                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;">
+                    <mat-list-item *ngFor="let additionTask of todoSQL['addition']; let i = index;" (dblclick)="returnTask(additionTask)">
                         <mat-icon matListItemIcon>add</mat-icon>
                         <div matListItemTitle>{{ additionTask['attrKey'] }}: {{ additionTask['attrValue'] }}</div>
                         <div matListItemLine>on {{ additionTask['class'] }}: {{ additionTask['unique_id'] }}</div>
@@ -636,8 +636,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['nodeAttributes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['nodeAttributes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['attributeKey']}}</div>
                         <div matListItemLine>on {{ deletionTask['nodeClass'] }}: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -650,8 +650,8 @@
                 </div>
 
                 <div *ngIf="todoSQL['deletion']['childrenNodes']">
-                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;">
-                        <mat-icon matListItemIcon>clear</mat-icon>
+                    <mat-list-item *ngFor="let deletionTask of todoSQL['deletion']['childrenNodes']; let i = index;" (dblclick)="returnTask(deletionTask)">
+                        <mat-icon matListItemIcon>delete_outline</mat-icon>
                         <div matListItemTitle>{{ deletionTask['nodeClass']}}</div>
                         <div matListItemLine>with unique id: {{ deletionTask['Unique_ID'] }}</div>
                         
@@ -664,7 +664,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeName']">
-                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']">
+                    <mat-list-item *ngFor="let cnTask of todoSQL['changeName']" (dblclick)="returnTask(cnTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ cnTask['class']}}: {{ cnTask['unique_id'] }}</div>
                         <div matListItemLine>as new name: {{ cnTask['currentName'] }}</div>
@@ -678,7 +678,7 @@
                 </div>
 
                 <div *ngIf="todoSQL['changeAttr']">
-                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']">
+                    <mat-list-item *ngFor="let caTask of todoSQL['changeAttr']" (dblclick)="returnTask(caTask)">
                         <mat-icon matListItemIcon>brightness_low</mat-icon>
                         <div matListItemTitle>{{ caTask['class']}}: {{ caTask['unique_id'] }}</div>
                         <div matListItemLine>new {{ caTask['attrKey'] }}: {{ caTask['currentValue'] }}</div>
