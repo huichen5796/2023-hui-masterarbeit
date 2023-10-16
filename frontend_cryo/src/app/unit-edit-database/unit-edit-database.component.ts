@@ -497,5 +497,6 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   getLastItemAfterSplit(inputString: string, delimiter: string): string {
     const parts = inputString.split(delimiter);
     return parts[parts.length - 1];
-}
+  }
+
 }

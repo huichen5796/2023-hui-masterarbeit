@@ -44,6 +44,7 @@
                                         <textarea type="search" [(ngModel)]="currentSubName[probe['Unique_ID']]"
                                             rows="1" placeholder="Ex. test_1 2023"
                                             (blur)="checkTheVersuch('Probe', probe['Unique_ID'], currentSubName[probe['Unique_ID']])"
+                                            (keydown.space)="pandel.toggle()"
                                             (click)="pandel.toggle()"></textarea>
                                         <button mat-button class="rename" (click)="delete('fatherNodes', {nodeClass: 'Probe', Unique_ID: probe['Unique_ID']})" (click)="pandel.toggle()">
                                             <mat-icon>delete_outline</mat-icon>
@@ -305,6 +306,7 @@
                                     <textarea type="search"
                                         [(ngModel)]="currentSubName[sub.class + '*-*' + sub.unique_id]" rows="1"
                                         placeholder="Ex. test_1 2023"
+                                        (keydown.space)="pandelCPA.toggle()"
                                         (blur)="checkTheName(sub['class'], sub['unique_id'], currentSubName[sub.class + '*-*' + sub.unique_id])" (click)="pandelCPA.toggle()"></textarea>
                                     <button mat-button class="rename" (click)="delete('childrenNodes', {nodeClass: sub['class'], Unique_ID: sub.unique_id})" (click)="pandelCPA.toggle()">
                                         <mat-icon>delete_outline</mat-icon>
