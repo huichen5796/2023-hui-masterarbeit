@@ -75,12 +75,22 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
   onFileSelected(event: any) {
     const files: FileList = event.target.files;
     if (files.length > 0) {
-      this.fileTransferService.fileUpload(files, this.data_type).then((res) => {
-        this.uploadedFiles = [...this.uploadedFiles, ...(JSON.parse(res.replace(/'/g, '"')))]
-        this.uploadedFiles.forEach(file => {
-          this.selectedFiles[file.file_name] = file.neo4j
-        });
-      })
+      if (this.data_type == 'Experiment') {
+        this.fileTransferService.fileUpload(files, this.data_type + 'Upload').then((res) => {
+          this.uploadedFiles = [...this.uploadedFiles, ...(JSON.parse(res.replace(/'/g, '"')))]
+          this.uploadedFiles.forEach(file => {
+            this.selectedFiles[file.file_name] = file.neo4j
+          });
+        })
+      }
+      else {
+        this.fileTransferService.fileUpload(files, this.data_type).then((res) => {
+          this.uploadedFiles = [...this.uploadedFiles, ...(JSON.parse(res.replace(/'/g, '"')))]
+          this.uploadedFiles.forEach(file => {
+            this.selectedFiles[file.file_name] = file.neo4j
+          });
+        })
+      }
     }
   }
 
@@ -115,17 +125,65 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
   }
 
   feedToDB() {
-    for (var file_name in this.selectedFiles) {
-      if (this.selectedFiles[file_name] == 'waiting') {
-        this.selectedFiles[file_name] = 'doing'
-        var self = this;
-        (function (fileName: string) {
-          self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {
-            self.selectedFiles[fileName] = res;
-          }).finally(() => {
-            self.selectedFiles = { ...self.selectedFiles };
-          });
-        }).call(this, file_name);
+    if (this.data_type == 'Experiment') {
+      let error_store: Promise<string>[] = []
+      for (let i = 0; i < (Object.keys(this.selectedFiles).length - 1); i++) {
+        error_store.push(new Promise<string>(async (resolve, reject) => {
+          var file_name = Object.keys(this.selectedFiles)[i]
+          if (this.selectedFiles[file_name] == 'waiting') {
+            this.selectedFiles[file_name] = 'doing'
+            var self = this;
+            (function (fileName: string) {
+              self.queryNeo4jService.feedNeo4j(self.data_type + 'Upload', fileName).then((res: any) => {
+                resolve(res)
+                self.selectedFiles[fileName] = res;
+              }).finally(() => {
+                self.selectedFiles = { ...self.selectedFiles };
+              });
+            }).call(this, file_name);
+          }
+        }))
+
+      }
+
+      Promise.all(error_store)
+        .then((results) => {
+          const allResolved = results.every((result) => result !== 'error');
+
+          if (allResolved) {
+            var file_name = Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length-1]
+            if (this.selectedFiles[file_name] == 'waiting') {
+              this.selectedFiles[file_name] = 'doing'
+              var self = this;
+              (function (fileName: string) {
+                self.queryNeo4jService.feedNeo4j(self.data_type + 'Upload', fileName).then((res: any) => {
+                  self.selectedFiles[fileName] = res;
+                }).finally(() => {
+                  self.selectedFiles = { ...self.selectedFiles };
+                });
+              }).call(this, file_name);
+            }
+          } else {
+            this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length]] = 'error'
+          }
+        }).catch((error) => {
+          this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length]] = 'error'
+        });
+
+    }
+    else {
+      for (var file_name in this.selectedFiles) {
+        if (this.selectedFiles[file_name] == 'waiting') {
+          this.selectedFiles[file_name] = 'doing'
+          var self = this;
+          (function (fileName: string) {
+            self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {
+              self.selectedFiles[fileName] = res;
+            }).finally(() => {
+              self.selectedFiles = { ...self.selectedFiles };
+            });
+          }).call(this, file_name);
+        }
       }
     }
   }

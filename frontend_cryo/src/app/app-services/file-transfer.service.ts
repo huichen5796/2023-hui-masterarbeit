@@ -12,11 +12,11 @@ export class FileTransferService {
     private http: HttpClient,
   ) { }
 
-  fileUpload(selectedFile: FileList, data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process'): Promise<any> {
+  fileUpload(selectedFile: FileList, data_type: string): Promise<any> {
     var promise = new Promise<any>((resolve, reject) => {
       const formData = new FormData();
       for (let i = 0; i < selectedFile.length; i++) {
-        if (data_type == 'CPA') {
+        if (data_type == 'CPA' || data_type == 'ExperimentUpload') {
           formData.append('files', selectedFile[i], selectedFile[i].webkitRelativePath);
         } else {
           formData.append('files', selectedFile[i], selectedFile[i].name);

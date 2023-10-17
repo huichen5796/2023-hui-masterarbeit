@@ -22,7 +22,7 @@ export class QueryNeo4jService {
     return promise
   }
 
-  feedNeo4j(data_type: 'PreData' | 'PostData' | 'CPA' | 'Experiment' | 'Process', file_name: string): Promise<string> {
+  feedNeo4j(data_type: string, file_name: string): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
       this.http.get(`${backendUrl}/feedInNeo/?data_type=${data_type}&file_name=${file_name}&data_store=${dataStoreName}`)
         .subscribe((rep: any) => {

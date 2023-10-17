@@ -89,11 +89,21 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
         this.selectedFiles[file_name] = 'doing'
         var self = this;
         (function (fileName: string) {
-          self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {
-            self.selectedFiles[fileName] = res;
-          }).finally(() => {
-            self.selectedFiles = { ...self.selectedFiles };
-          });
+          if (self.data_type === 'Experiment'){
+            self.queryNeo4jService.feedNeo4j(self.data_type+'Create', fileName).then((res: any) => {
+              self.selectedFiles[fileName] = res;
+            }).finally(() => {
+              self.selectedFiles = { ...self.selectedFiles };
+            });
+          }
+          else {
+            self.queryNeo4jService.feedNeo4j(self.data_type, fileName).then((res: any) => {
+              self.selectedFiles[fileName] = res;
+            }).finally(() => {
+              self.selectedFiles = { ...self.selectedFiles };
+            });
+          }
+          
         }).call(this, file_name);
       }
     }
