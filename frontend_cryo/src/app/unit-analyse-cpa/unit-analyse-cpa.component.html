@@ -26,7 +26,8 @@
                                     <span class="key">{{key}}: </span>
                                     <button (click)="showGraph(callBack['cpa']['CPA_ID'], sub['class'])" *ngIf="key === 'Curve' && showGraphController.indexOf(callBack['cpa']['CPA_ID']+sub['class']) === -1">show in graph</button>
                                     <button (click)="showGraph(callBack['cpa']['CPA_ID'], sub['class'])" *ngIf="key === 'Curve' && showGraphController.indexOf(callBack['cpa']['CPA_ID']+sub['class']) != -1">close graph</button>
-                                    <span *ngIf="key != 'Curve' || showGraphController.indexOf(callBack['cpa']['CPA_ID']+sub['class']) === -1">{{ sub['properties'][key] }}</span>
+                                    <span *ngIf="key != 'Curve'"> {{ sub['properties'][key] }}</span>
+                                    <span *ngIf="key === 'Curve' && showGraphController.indexOf(callBack['cpa']['CPA_ID']+sub['class']) === -1"> {{ compressObjectValues(sub['properties'][key]) | json }}</span>
                                     <app-unit-cpa-sub [cpa_id]="callBack['cpa']['CPA_ID']" [sub]="sub" *ngIf="key === 'Curve' && showGraphController.indexOf(callBack['cpa']['CPA_ID']+sub['class']) != -1"></app-unit-cpa-sub>
                                     
                                 </p>

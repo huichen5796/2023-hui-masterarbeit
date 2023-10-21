@@ -67,4 +67,13 @@ export class UnitAnalyseCpaComponent {
     }
     
   }
+
+  compressObjectValues(curveData:string):Record<string, string | Array<string>>{
+    const obj:Record<string, string | Array<string>> = JSON.parse(curveData.replace(/'/g, '"'))
+    let output:{[k:string]:string} = {}
+    this.getObjectKeys(obj).forEach((key:string)=>{
+      output[key] = `${obj[key].length} items`
+    })
+    return output
+  }
 }
