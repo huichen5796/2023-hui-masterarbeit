@@ -58,8 +58,8 @@ export class UnitHighchartsGraphComponent implements OnChanges, OnInit {
 
   ngOnChanges(): void {
     this.ngOnInit()
-    this.loadChartOptions()
-    this.loadAverageNachVersuch()
+    // this.loadChartOptions()
+    // this.loadAverageNachVersuch()
     this.loadAverageNachProbe()
   }
 
