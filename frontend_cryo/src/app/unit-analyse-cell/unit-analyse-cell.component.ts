@@ -18,7 +18,7 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
   dataSource = new MatTableDataSource([])
   showTable: boolean = false
   itemShow: { [key: string]: string[] } = {
-    Viability: ["Viability_(%)", "Total_cells_/_ml_(x_10^6)", "Total_viable_cells_/_ml_(x_10^6)"],
+    Viability: ["Viability_(%)", "Total_cells_/_ml_(x_10^6)", "Total_viable_cells_/_ml_(x_10^6)", "Viable_cells"],
     Morphology: ["Average_diameter_(microns)", "Average_circularity", "Cell_type"],
   }
   topItems: string[] = ["Sample_ID", "RunDate", "Machine"]

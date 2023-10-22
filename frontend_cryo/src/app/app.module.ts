@@ -69,6 +69,7 @@ import { UnitShowInTableComponent } from './unit-show-in-table/unit-show-in-tabl
 import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
 import { SeiteStartComponent } from './seite-start/seite-start.component';
 import { UnitEditDatabaseComponent } from './unit-edit-database/unit-edit-database.component';
+import { UnitEditExcelComponent } from './unit-edit-excel/unit-edit-excel.component';
 
 
 @NgModule({
@@ -97,6 +98,7 @@ import { UnitEditDatabaseComponent } from './unit-edit-database/unit-edit-databa
     UnitCpaSubComponent,
     SeiteStartComponent,
     UnitEditDatabaseComponent,
+    UnitEditExcelComponent,
   ],
   imports: [
     BrowserModule,

@@ -114,10 +114,10 @@ export class QueryNeo4jService {
       'key':key
     });
     var promise = new Promise<string>((resolve, reject) => {
-      // this.http.post(`${backendUrl}/buildAnovaTable/`, body, {'headers': headers})
-      //   .subscribe((rep: any) => {
-      //     resolve(rep)
-      //   })
+      this.http.post(`${backendUrl}/buildAnovaTable/`, body, {'headers': headers})
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
     })
     return promise
   }
@@ -127,6 +127,21 @@ export class QueryNeo4jService {
     const body=JSON.stringify(todoSQL);
     var promise = new Promise<string>((resolve, reject) => {
       this.http.post(`${backendUrl}/addDelModi/`, body, {'headers': headers})
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
+
+  queryTheFourElements(pre_data_list: string[], post_data_list: string[]): Promise<string> {
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify({
+      'predata': pre_data_list,
+      'postdata': post_data_list
+    });
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.post(`${backendUrl}/queryTheFourElements/`, body, {'headers':headers})
         .subscribe((rep: any) => {
           resolve(rep)
         })
