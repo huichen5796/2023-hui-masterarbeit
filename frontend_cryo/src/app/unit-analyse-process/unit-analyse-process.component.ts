@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { MatDialog } from '@angular/material/dialog';
 import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-database.component';
@@ -9,6 +9,7 @@ import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-datab
   styleUrls: ['./unit-analyse-process.component.css']
 })
 export class UnitAnalyseProcessComponent implements OnChanges {
+  @Input() staticOrNot!: boolean
   @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
@@ -40,24 +41,26 @@ export class UnitAnalyseProcessComponent implements OnChanges {
     })
 
   }
-  hidden:boolean = false
-  ngOnChanges() {
-    this.callBacks = []
-    this.containerOffset = 0;
-    this.showAnalyse = false
-    this.toShow = {}
-    this.isAtStart = true;
-    this.hidden = false
-    if (this.openSearch['selectedId'].length == 1) {
-      this.isAtEnd = true;
-    } else if (this.openSearch['selectedId'].length == 0) {
-      this.isAtEnd = true;
-    } else {
-      this.isAtEnd = false;
-    }
+  hidden: boolean = false
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['openSearch']) {
+      this.callBacks = []
+      this.containerOffset = 0;
+      this.showAnalyse = false
+      this.toShow = {}
+      this.isAtStart = true;
+      this.hidden = false
+      if (this.openSearch['selectedId'].length == 1) {
+        this.isAtEnd = true;
+      } else if (this.openSearch['selectedId'].length == 0) {
+        this.isAtEnd = true;
+      } else {
+        this.isAtEnd = false;
+      }
 
-    if (this.openSearch['selectedId'].length !== 0) {
-      this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+      if (this.openSearch['selectedId'].length !== 0) {
+        this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+      }
     }
   }
 
@@ -97,18 +100,18 @@ export class UnitAnalyseProcessComponent implements OnChanges {
     this.isAtEnd = this.currentIndex === this.callBacks.length - 1;
   }
 
-  showAnalyse:boolean = false
-  toShow:any = {}
+  showAnalyse: boolean = false
+  toShow: any = {}
 
-  doShow(callBack:any){
+  doShow(callBack: any) {
     this.showAnalyse = true
     this.toShow = callBack
   }
-  viewData(){
-    this.hidden=!this.hidden
+  viewData() {
+    this.hidden = !this.hidden
   }
 
-  openDialogGraph(callBack:any): void {
+  openDialogGraph(callBack: any): void {
     let dialogRef = this.dialog.open(UnitEditDatabaseComponent, {
       width: '70%',
       height: '70%',
@@ -117,7 +120,7 @@ export class UnitAnalyseProcessComponent implements OnChanges {
     instance['callBack'] = callBack
     instance['type'] = this.openSearch['which']
   }
-  seeMoreAttr(){
+  seeMoreAttr() {
     this.seeMore.push('')
   }
 }

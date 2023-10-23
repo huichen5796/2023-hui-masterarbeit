@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { MatDialog } from '@angular/material/dialog';
 import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-database.component';
@@ -10,6 +10,7 @@ import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-datab
   styleUrls: ['./unit-analyse-experiment.component.css']
 })
 export class UnitAnalyseExperimentComponent {
+  @Input() staticOrNot!: boolean
   @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
@@ -28,10 +29,12 @@ export class UnitAnalyseExperimentComponent {
     })
 
   }
-  ngOnChanges() {
-    this.callBacks = []
-    if (this.openSearch['selectedId'].length !== 0) {
-      this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['openSearch']) {
+      this.callBacks = []
+      if (this.openSearch['selectedId'].length !== 0) {
+        this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+      }
     }
   }
 
@@ -55,7 +58,7 @@ export class UnitAnalyseExperimentComponent {
     }
   }
 
-  openDialogGraph(callBack:any): void {
+  openDialogGraph(callBack: any): void {
     let dialogRef = this.dialog.open(UnitEditDatabaseComponent, {
       width: '70%',
       height: '70%',

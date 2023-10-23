@@ -50,7 +50,12 @@ export class UnitAnalyseSelectMenuComponent implements OnChanges, AfterViewInit 
 
   setSelect(value: string) {
     if (this.selectedId.indexOf(value) == -1) {
-      this.selectedId.push(value)
+      if (this.which[0] === 'PreData' || this.which[0] === 'PostData'){
+        this.selectedId.push(value)
+      } else {
+        this.selectedId = [value]
+      }
+      
     } else{
       this.selectedId = this.selectedId.filter((item: string) => item !== value);
     }

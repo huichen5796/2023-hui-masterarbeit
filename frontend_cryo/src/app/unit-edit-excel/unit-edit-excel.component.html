@@ -1,7 +1,8 @@
-<!-- <table>
-    <tr *ngFor="let row of excelData">
-        <td *ngFor="let cell of row">{{ cell }}</td>
-    </tr>
-</table> -->
-
-<button (click)="exportToExcel()">Export to Excel</button>
+<div class="main">
+    <table>
+        <tr *ngFor="let row of sortedExcelData">
+            <td *ngFor="let key of getObjectKeys(row)">{{ row[key] }}</td>
+        </tr>
+    </table>
+    <button (click)="exportToExcel()">Export to Excel</button>
+</div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { QueryNeo4jService } from '../app-services';
 import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-database.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./unit-analyse-cpa.component.css']
 })
 export class UnitAnalyseCpaComponent {
+  @Input() staticOrNot!: boolean
   @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
 
@@ -28,11 +29,13 @@ export class UnitAnalyseCpaComponent {
     })
 
   }
-  ngOnChanges() {
-    this.callBacks = []
-    this.showGraphController = []
-    if (this.openSearch['selectedId'].length !== 0) {
-      this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['openSearch']) {
+      this.callBacks = []
+      this.showGraphController = []
+      if (this.openSearch['selectedId'].length !== 0) {
+        this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+      }
     }
   }
 
@@ -44,11 +47,11 @@ export class UnitAnalyseCpaComponent {
       return Object.keys(obj);
     }
   }
-  emm(input:string){
-    return input+'_ID'
+  emm(input: string) {
+    return input + '_ID'
   }
 
-  openDialogGraph(callBack:any): void {
+  openDialogGraph(callBack: any): void {
     let dialogRef = this.dialog.open(UnitEditDatabaseComponent, {
       width: '70%',
       height: '70%',
@@ -58,20 +61,20 @@ export class UnitAnalyseCpaComponent {
     instance['type'] = this.openSearch['which']
   }
 
-  showGraph(cpa_id:string, sub:string){
-    if (this.showGraphController.indexOf(cpa_id+sub)===-1){
-      this.showGraphController.push(cpa_id+sub)
+  showGraph(cpa_id: string, sub: string) {
+    if (this.showGraphController.indexOf(cpa_id + sub) === -1) {
+      this.showGraphController.push(cpa_id + sub)
     }
-    else{
-      this.showGraphController = this.showGraphController.filter(item => item != cpa_id+sub)
+    else {
+      this.showGraphController = this.showGraphController.filter(item => item != cpa_id + sub)
     }
-    
+
   }
 
-  compressObjectValues(curveData:string):Record<string, string | Array<string>>{
-    const obj:Record<string, string | Array<string>> = JSON.parse(curveData.replace(/'/g, '"'))
-    let output:{[k:string]:string} = {}
-    this.getObjectKeys(obj).forEach((key:string)=>{
+  compressObjectValues(curveData: string): Record<string, string | Array<string>> {
+    const obj: Record<string, string | Array<string>> = JSON.parse(curveData.replace(/'/g, '"'))
+    let output: { [k: string]: string } = {}
+    this.getObjectKeys(obj).forEach((key: string) => {
       output[key] = `${obj[key].length} items`
     })
     return output

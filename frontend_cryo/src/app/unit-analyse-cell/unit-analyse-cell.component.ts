@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { QueryNeo4jService, CalculatorService } from '../app-services';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,9 +12,11 @@ import { UnitEditDatabaseComponent } from '../unit-edit-database/unit-edit-datab
   styleUrls: ['./unit-analyse-cell.component.css']
 })
 export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
+  @Input() staticOrNot!: boolean
   @Input() openSearch!: { which: "Experiment" | "PreData" | "PostData" | "CPA" | "Process", selectedId: string[] }
   @Output() deleteOne: EventEmitter<string> = new EventEmitter<string>()
   callBacks: any[] = []
+  shortTimeMemory: any[] = []
   dataSource = new MatTableDataSource([])
   showTable: boolean = false
   itemShow: { [key: string]: string[] } = {
@@ -24,7 +26,7 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
   topItems: string[] = ["Sample_ID", "RunDate", "Machine"]
   tableHeader = ['Sample_ID', ...this.itemShow['Viability'], ...this.itemShow['Morphology']]
   selected = 0
-  seeMore:string[] = []
+  seeMore: string[] = []
   constructor(
     private queryNeo4jService: QueryNeo4jService,
     private calculatorService: CalculatorService,
@@ -36,9 +38,14 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
   searchOne(ID: readonly string[], data_type: "Experiment" | "PreData" | "PostData" | "CPA" | "Process") {
     ID.forEach((element) => {
       this.queryNeo4jService.queryOneNode(data_type, element).then((res) => {
-        this.callBacks.push(res)
-        this.callBacks = [...this.callBacks]
-        if (ID.length === this.callBacks.length && this.callBacks.length !== 0) {
+        this.shortTimeMemory.push(res)
+        this.shortTimeMemory = [...this.shortTimeMemory]
+
+        if (ID.length === this.shortTimeMemory.length && this.shortTimeMemory.length !== 0) {
+          this.shortTimeMemory.sort((a, b) => {
+            return a.Sample_ID.localeCompare(b.Sample_ID);
+          });
+          this.callBacks = this.shortTimeMemory
           this.tableHeader.forEach(item => {
             if (['Sample_ID', 'Cell_type'].indexOf(item) === -1) {
               this.calculatorService.getMeanAndVariance(this.callBacks.map(obj => obj[item])).then((res) => {
@@ -58,13 +65,16 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
     this.showTable = true
     return this.callBacks.concat(this.result)
   }
-  ngOnChanges() {
-    this.callBacks = []
-    this.showTable = false
-    this.dataSource = new MatTableDataSource([])
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['openSearch']) {
+      this.callBacks = []
+      this.shortTimeMemory = []
+      this.showTable = false
+      this.dataSource = new MatTableDataSource([])
 
-    if (this.openSearch['selectedId'].length !== 0) {
-      this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+      if (this.openSearch['selectedId'].length !== 0) {
+        this.searchOne(this.openSearch['selectedId'], this.openSearch['which'])
+      }
     }
   }
 
@@ -92,7 +102,7 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  
+
 
   // /** Announce the change in sort state for assistive technology. */
   // announceSortChange(sortState: Sort) {
@@ -132,7 +142,7 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
       return 0 * (isAsc ? 1 : -1);
     }
   }
-  openDialogGraph(callBack:any): void {
+  openDialogGraph(callBack: any): void {
     let dialogRef = this.dialog.open(UnitEditDatabaseComponent, {
       width: '70%',
       height: '70%',
@@ -142,7 +152,7 @@ export class UnitAnalyseCellComponent implements OnChanges, AfterViewInit {
     instance['type'] = this.openSearch['which']
   }
 
-  seeMoreAttr(){
+  seeMoreAttr() {
     this.seeMore.push('')
   }
 }

@@ -60,7 +60,17 @@ h2 {
     min-width: 0px;
     padding: 0px;
     min-height: none;
-    padding-left: 10px;
+    z-index: 99;
+}
+
+.toggle-right {
+    position: absolute;
+    left: 48px;
+    top: 0px;
+    min-width: 0px;
+    padding: 0px;
+    min-height: none;
+    z-index: 99;
 }
 
 .mirror-icon {

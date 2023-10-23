@@ -7,6 +7,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: left;
+    position: relative;
 }
 
 .group{
@@ -27,7 +28,7 @@
     text-align: left;
     overflow: hidden;
     width:100%;
-    margin: auto;
+    margin-top: 68px;
 }
 
 .onecell {
@@ -37,6 +38,7 @@
 .analyse {
     width: 100%;
     overflow-x: auto;
+    margin-top: 68px;
 }
 
 .mat-mdc-row .mat-mdc-cell {
@@ -77,4 +79,15 @@
 .see-more{
     color:#1976d2;
     cursor: pointer;
+}
+
+::ng-deep .mat-mdc-tab-label-container, [mat-align-tabs=end]>.mat-mdc-tab-header .mat-mdc-tab-labels {
+    max-width: 500px !important;
+}
+
+::ng-deep .mat-mdc-tab-header {
+    max-width: 500px !important;
+    position: absolute !important;
+    right: 0px;
+    z-index: 99;
 }

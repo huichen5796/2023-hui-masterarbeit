@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import * as ExcelJS from 'exceljs';
 import { QueryNeo4jService } from '../app-services';
 
@@ -8,7 +8,7 @@ import { QueryNeo4jService } from '../app-services';
   styleUrls: ['./unit-edit-excel.component.css']
 })
 
-export class UnitEditExcelComponent implements OnInit {
+export class UnitEditExcelComponent implements OnChanges {
   @Input() experiment!: any
   excelData: any[] = [
     { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn:'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
@@ -18,13 +18,28 @@ export class UnitEditExcelComponent implements OnInit {
   ]
   faktor_group: {[key:string]:{[key:string]:[number,number]}} = {}
   vertikal_merge: [number,number][] = []
+  showTable:boolean = false
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) {
     
   }
+  ngOnChanges(changes: SimpleChanges): void {
+   if (changes['experiment']['currentValue']){
+    this.init()
+   }
+  }
 
-  ngOnInit(){
+  init(){
+    this.showTable = false
+    this.excelData = [
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn:'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+    ];
+    this.sortedExcelData = [
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn:'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+    ]
+    this.faktor_group = {}
+    this.vertikal_merge = []
     let position: number = 1
     this.experiment['child'].forEach((versuch:any)=>{
       versuch['probes'].forEach((probe:any)=>{
@@ -60,9 +75,25 @@ export class UnitEditExcelComponent implements OnInit {
           this.excelData = this.excelData.concat(arrayOfObjects)
           this.faktor_group[versuch['versuch']['Versuch_ID']][probe['Sample_ID']] = [position, position+length]
           position = position + length + 1
+          if (this.checkDone()){
+            this.sortedExcel()
+          }
         })
       })
     })
+  }
+
+  checkDone():boolean{
+    let length = 0
+    this.experiment['child'].forEach((versuch:any)=>{
+      length += versuch['probes'].length
+    })
+    let length_faktor = 0
+    this.getObjectKeys(this.faktor_group).forEach((versuch_id:string)=>{
+      length_faktor += this.getObjectKeys(this.faktor_group[versuch_id]).length
+    })
+    
+    return length_faktor === length
   }
 
   sortedExcel(){
@@ -78,11 +109,11 @@ export class UnitEditExcelComponent implements OnInit {
         this.vertikal_merge.push([this.vertikal_merge[v_index-1][1]+1, this.vertikal_merge[v_index-1][1]+1+long])
       }
     })
+    this.showTable = true
   }
 
 
   exportToExcel() {
-    this.sortedExcel()
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Sheet1');
 
