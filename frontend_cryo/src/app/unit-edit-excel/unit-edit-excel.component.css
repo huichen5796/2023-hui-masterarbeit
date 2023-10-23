@@ -3,3 +3,19 @@
     width: 100%;
     text-align: left;
 }
+
+table{
+    border-collapse: collapse;
+}
+
+td {
+    text-align: center;
+    border: solid;
+    border-color: black;
+    border-width: 1px;
+    padding: 4px
+}
+
+td:hover {
+    color: #1976d2;
+}

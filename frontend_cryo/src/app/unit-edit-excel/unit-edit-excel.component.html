@@ -1,7 +1,18 @@
-<div class="main">
+<div class="main" *ngIf="showTable">
     <table>
-        <tr *ngFor="let row of sortedExcelData">
-            <td *ngFor="let key of getObjectKeys(row)">{{ row[key] }}</td>
+        <tr>
+            <td></td>
+            <td></td>
+            <td colspan="4">pre data</td>
+            <td></td>
+            <td colspan="4">post data</td>
+            <td colspan="4">post / pre</td>
+            <td colspan="4">norm. post / pre</td>
+        </tr>
+        <tr *ngFor="let row of sortedExcelData; let i = index">
+            <td *ngIf="i === 0"></td>
+            <td *ngIf="getFirstCol().indexOf(i+2)!=-1" [attr.rowspan]="this.vertikal_merge[this.getFirstCol().indexOf(i+2)][1] - this.vertikal_merge[this.getFirstCol().indexOf(i+2)][0] + 1">{{ row['vid'] }}</td>
+            <td *ngFor="let key of getObjectKeys(row) | excludeItem:['vid']">{{ row[key] }}</td>
         </tr>
     </table>
     <button (click)="exportToExcel()">Export to Excel</button>

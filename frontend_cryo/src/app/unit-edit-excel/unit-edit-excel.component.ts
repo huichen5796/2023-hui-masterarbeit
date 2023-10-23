@@ -11,105 +11,161 @@ import { QueryNeo4jService } from '../app-services';
 export class UnitEditExcelComponent implements OnChanges {
   @Input() experiment!: any
   excelData: any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn:'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
   ];
-  sortedExcelData:any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn:'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+  sortedExcelData: any[] = [
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
   ]
-  faktor_group: {[key:string]:{[key:string]:[number,number]}} = {}
-  vertikal_merge: [number,number][] = []
-  showTable:boolean = false
+  faktor_group: { [key: string]: { [key: string]: [number, number] } } = {}
+  vertikal_merge: [number, number][] = []
+  showTable: boolean = false
+  maxValuePosition: { [key: string]: number[] } = {}
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) {
-    
+
   }
   ngOnChanges(changes: SimpleChanges): void {
-   if (changes['experiment']['currentValue']){
-    this.init()
-   }
+    if (changes['experiment']['currentValue']) {
+      this.init()
+    }
   }
 
-  init(){
+  init() {
     this.showTable = false
     this.excelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn:'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
     ];
     this.sortedExcelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn:'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
     ]
     this.faktor_group = {}
     this.vertikal_merge = []
+    this.maxValuePosition = {}
     let position: number = 1
-    this.experiment['child'].forEach((versuch:any)=>{
-      versuch['probes'].forEach((probe:any)=>{
-        this.queryNeo4jService.queryTheFourElements(probe['PreData_ID'], probe['PostData_ID']).then((res:any)=>{
-          if (!this.faktor_group[versuch['versuch']['Versuch_ID']]){
+    this.experiment['child'].forEach((versuch: any) => {
+      versuch['probes'].forEach((probe: any) => {
+        this.queryNeo4jService.queryTheFourElements(probe['PreData_ID'], probe['PostData_ID']).then((res: any) => {
+          if (!this.faktor_group[versuch['versuch']['Versuch_ID']]) {
             this.faktor_group[versuch['versuch']['Versuch_ID']] = {}
           }
           const length = Math.max(probe['PostData_ID'].length, probe['PreData_ID'].length)
-          let arrayOfObjects = new Array(length+1).fill(null).map(() => ({ vid: versuch['versuch']['Versuch_ID'], preid: '', viabilitypre: '', recoveried_cellspre: '', rundheitpre: '', durchmetterpre: '', postid: '', viabilitypost: '', recoveried_cellspost: '', rundheitpost: '', durchmetterpost: '', viabilitypp: '', recoveried_cellspp: '', rundheitpp: '', durchmetterpp: '', viabilityppn: '', recoveried_cellsppn:'', rundheitppn: '', durchmetterppn: '' }));
+          let arrayOfObjects = new Array(length + 1).fill(null).map(() => ({ vid: versuch['versuch']['Versuch_ID'], preid: '', viabilitypre: '', recoveried_cellspre: '', rundheitpre: '', durchmetterpre: '', postid: '', viabilitypost: '', recoveried_cellspost: '', rundheitpost: '', durchmetterpost: '', viabilitypp: '', recoveried_cellspp: '', rundheitpp: '', durchmetterpp: '', viabilityppn: '', recoveried_cellsppn: '', rundheitppn: '', durchmetterppn: '' }));
           arrayOfObjects[0]['preid'] = probe['Sample_ID']
           arrayOfObjects[0]['viabilitypre'] = res['average_Viability_(%)_pre']
           arrayOfObjects[0]['recoveried_cellspre'] = res['average_Viable_cells_pre']
           arrayOfObjects[0]['rundheitpre'] = res['average_Average_circularity_pre']
           arrayOfObjects[0]['durchmetterpre'] = res['average_Average_diameter_(microns)_pre']
-          probe['PreData_ID'].forEach((predata_id:string, index:number)=>{
-            arrayOfObjects[index+1]['preid'] = predata_id
-            arrayOfObjects[index+1]['viabilitypre'] = res[predata_id]['Viability_(%)']
-            arrayOfObjects[index+1]['recoveried_cellspre'] = res[predata_id]['Viable_cells']
-            arrayOfObjects[index+1]['rundheitpre'] = res[predata_id]['Average_circularity']
-            arrayOfObjects[index+1]['durchmetterpre'] = res[predata_id]['Average_diameter_(microns)']
+          probe['PreData_ID'].forEach((predata_id: string, index: number) => {
+            arrayOfObjects[index + 1]['preid'] = predata_id
+            arrayOfObjects[index + 1]['viabilitypre'] = res[predata_id]['Viability_(%)']
+            arrayOfObjects[index + 1]['recoveried_cellspre'] = res[predata_id]['Viable_cells']
+            arrayOfObjects[index + 1]['rundheitpre'] = res[predata_id]['Average_circularity']
+            arrayOfObjects[index + 1]['durchmetterpre'] = res[predata_id]['Average_diameter_(microns)']
           })
-          probe['PostData_ID'].forEach((postdata_id:string, index:number)=>{
-            arrayOfObjects[index+1]['postid'] = postdata_id
-            arrayOfObjects[index+1]['viabilitypost'] = res[postdata_id]['Viability_(%)']
-            arrayOfObjects[index+1]['recoveried_cellspost'] = res[postdata_id]['Viable_cells']
-            arrayOfObjects[index+1]['rundheitpost'] = res[postdata_id]['Average_circularity']
-            arrayOfObjects[index+1]['durchmetterpost'] = res[postdata_id]['Average_diameter_(microns)']
-            arrayOfObjects[index+1]['viabilitypp'] = res[postdata_id]['Viability_(%)_relative']
-            arrayOfObjects[index+1]['recoveried_cellspp'] = res[postdata_id]['Viable_cells_relative']
-            arrayOfObjects[index+1]['rundheitpp'] = res[postdata_id]['Average_circularity_relative']
-            arrayOfObjects[index+1]['durchmetterpp'] = res[postdata_id]['Average_diameter_(microns)_relative']
+          probe['PostData_ID'].forEach((postdata_id: string, index: number) => {
+            arrayOfObjects[index + 1]['postid'] = postdata_id
+            arrayOfObjects[index + 1]['viabilitypost'] = res[postdata_id]['Viability_(%)']
+            arrayOfObjects[index + 1]['recoveried_cellspost'] = res[postdata_id]['Viable_cells']
+            arrayOfObjects[index + 1]['rundheitpost'] = res[postdata_id]['Average_circularity']
+            arrayOfObjects[index + 1]['durchmetterpost'] = res[postdata_id]['Average_diameter_(microns)']
+            arrayOfObjects[index + 1]['viabilitypp'] = res[postdata_id]['Viability_(%)_relative']
+            arrayOfObjects[index + 1]['recoveried_cellspp'] = res[postdata_id]['Viable_cells_relative']
+            arrayOfObjects[index + 1]['rundheitpp'] = res[postdata_id]['Average_circularity_relative']
+            arrayOfObjects[index + 1]['durchmetterpp'] = res[postdata_id]['Average_diameter_(microns)_relative']
           })
           this.excelData = this.excelData.concat(arrayOfObjects)
-          this.faktor_group[versuch['versuch']['Versuch_ID']][probe['Sample_ID']] = [position, position+length]
+          this.faktor_group[versuch['versuch']['Versuch_ID']][probe['Sample_ID']] = [position, position + length]
           position = position + length + 1
-          if (this.checkDone()){
+          if (this.checkDone()) {
             this.sortedExcel()
+            this.normalize()
           }
         })
       })
     })
   }
 
-  checkDone():boolean{
+  getFirstCol(): number[] {
+    let out: number[] = []
+    this.vertikal_merge.forEach((item: [number, number]) => {
+      out.push(item[0])
+    })
+    return out
+  }
+
+  checkDone(): boolean {
     let length = 0
-    this.experiment['child'].forEach((versuch:any)=>{
+    this.experiment['child'].forEach((versuch: any) => {
       length += versuch['probes'].length
     })
     let length_faktor = 0
-    this.getObjectKeys(this.faktor_group).forEach((versuch_id:string)=>{
+    this.getObjectKeys(this.faktor_group).forEach((versuch_id: string) => {
       length_faktor += this.getObjectKeys(this.faktor_group[versuch_id]).length
     })
-    
+
     return length_faktor === length
   }
 
-  sortedExcel(){
-    this.getObjectKeys(this.faktor_group).sort((a, b) => a.localeCompare(b)).forEach((versuch_id:string, v_index: number)=>{
-      let long: number = 3 
-      this.getObjectKeys(this.faktor_group[versuch_id]).sort((a, b) => a.localeCompare(b)).forEach((probe_id:string)=>{
-        this.sortedExcelData = this.sortedExcelData.concat(this.excelData.slice(this.faktor_group[versuch_id][probe_id][0],this.faktor_group[versuch_id][probe_id][1]+1))
+  sortedExcel() {
+    this.getObjectKeys(this.faktor_group).sort((a, b) => a.localeCompare(b)).forEach((versuch_id: string, v_index: number) => {
+      let long: number = 3
+      this.getObjectKeys(this.faktor_group[versuch_id]).sort((a, b) => a.localeCompare(b)).forEach((probe_id: string) => {
+        this.sortedExcelData = this.sortedExcelData.concat(this.excelData.slice(this.faktor_group[versuch_id][probe_id][0], this.faktor_group[versuch_id][probe_id][1] + 1))
         long += this.faktor_group[versuch_id][probe_id][1] - this.faktor_group[versuch_id][probe_id][0] - 1
       })
-      if (v_index == 0){
-        this.vertikal_merge.push([3,long+3])
-      } else{
-        this.vertikal_merge.push([this.vertikal_merge[v_index-1][1]+1, this.vertikal_merge[v_index-1][1]+1+long])
+      if (v_index == 0) {
+        this.vertikal_merge.push([3, long + 3])
+      } else {
+        this.vertikal_merge.push([this.vertikal_merge[v_index - 1][1] + 1, this.vertikal_merge[v_index - 1][1] + 1 + long])
       }
     })
     this.showTable = true
+  }
+
+  normalize() {
+    const oriList: string[] = ['viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
+    const taskList: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn']
+    oriList.forEach((ori: string, index: number) => {
+      this.vertikal_merge.forEach((item: [number, number]) => {
+        const start: number = item[0] - 2
+        const end: number = item[1] - 2
+        let dataList = this.sortedExcelData.slice(start, end + 1).map(obj => obj[ori])
+        this.maxNormalize(dataList, ori, taskList[index], start).forEach((aktuell: string, i: number) => {
+          this.sortedExcelData[start + i][taskList[index]] = aktuell
+        })
+      })
+    })
+  }
+
+  maxNormalize(stringArray: string[], ori: string, task: string, start: number): string[] {
+    let max = -Infinity;
+    let position: number[] = []
+    const floatArray = stringArray.map((str, index) => {
+      const num = str === "" ? 0 : parseFloat(str);
+      if (num >= max) {
+        max = num;
+      }
+      return num;
+    });
+
+    floatArray.forEach((value:number, index:number)=>{
+      if (value === max){
+        position.push(index + start)
+      }
+    })
+    if (!this.maxValuePosition[ori]) {
+      this.maxValuePosition[ori] = position
+      this.maxValuePosition[task] = position
+    }
+    else {
+      this.maxValuePosition[ori] = this.maxValuePosition[ori].concat(position)
+      this.maxValuePosition[task] = this.maxValuePosition[task].concat(position)
+    }
+
+
+    const normalizedArray = floatArray.map((num) => (num / max) === 0 ? "" : (num / max).toFixed(4).toString());
+    return normalizedArray
   }
 
 
@@ -145,18 +201,18 @@ export class UnitEditExcelComponent implements OnChanges {
     worksheet.mergeCells('H1:K1');
     worksheet.mergeCells('L1:O1');
     worksheet.mergeCells('P1:S1');
-    this.vertikal_merge.forEach((zone:[number,number])=>{
+    this.vertikal_merge.forEach((zone: [number, number]) => {
       worksheet.mergeCells(`A${zone[0]}:A${zone[1]}`)
     })
 
-    const border:any = {
+    const border: any = {
       top: { style: 'thin' },
       left: { style: 'thin' },
       bottom: { style: 'thin' },
       right: { style: 'thin' },
     };
 
-    for (let i = 1; i <= (this.sortedExcelData.length+1); i++) {
+    for (let i = 1; i <= (this.sortedExcelData.length + 1); i++) {
       for (let j = 1; j <= this.getObjectKeys(this.sortedExcelData[0]).length; j++) {
         const cell = worksheet.getCell(i, j);
 
@@ -188,11 +244,43 @@ export class UnitEditExcelComponent implements OnChanges {
         cell.border = border
       }
     }
+    const oriList: string[] = ['viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
+    const taskList: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn']
+
+    const hash: { [k: string]: string } = {
+      viabilitypp: 'L',
+      recoveried_cellspp: 'M',
+      rundheitpp: 'N',
+      durchmetterpp: 'O',
+      viabilityppn: 'P',
+      recoveried_cellsppn: 'Q',
+      rundheitppn: 'R',
+      durchmetterppn: 'S'
+    }
+
+    oriList.forEach((ori: string, index: number) => {
+      this.maxValuePosition[ori].forEach((i) => {
+        worksheet.getCell(`${hash[ori]}${i + 2}`).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'DA9694' },
+        }
+      })
+
+      this.maxValuePosition[taskList[index]].forEach((i) => {
+        worksheet.getCell(`${hash[taskList[index]]}${i + 2}`).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'DA9694' },
+        }
+      })
+
+    })
 
     const alignment = { horizontal: 'center', vertical: 'middle' };
 
-    worksheet.eachRow((row:any) => {
-      row.eachCell((cell:any) => {
+    worksheet.eachRow((row: any) => {
+      row.eachCell((cell: any) => {
         cell.alignment = alignment;
         const value = parseFloat(cell.value);
         if (!isNaN(value)) {
@@ -206,7 +294,7 @@ export class UnitEditExcelComponent implements OnChanges {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${this.experiment['experiment']['Experiment_ID'].replace(' ','_')}.xlsx`;
+      a.download = `${this.experiment['experiment']['Experiment_ID'].replace(' ', '_')}.xlsx`;
       a.click();
     });
   }
