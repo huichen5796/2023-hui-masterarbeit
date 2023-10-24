@@ -307,4 +307,12 @@ export class UnitEditExcelComponent implements OnChanges {
       return Object.keys(obj);
     }
   }
+
+  highlightCell(index:number, key:string):boolean{
+    if (this.maxValuePosition[key]){
+      return this.maxValuePosition[key].indexOf(index) != -1
+    }else{
+      return false
+    }
+  }
 }

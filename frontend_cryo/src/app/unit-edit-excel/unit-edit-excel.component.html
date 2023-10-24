@@ -12,7 +12,7 @@
         <tr *ngFor="let row of sortedExcelData; let i = index">
             <td *ngIf="i === 0"></td>
             <td *ngIf="getFirstCol().indexOf(i+2)!=-1" [attr.rowspan]="this.vertikal_merge[this.getFirstCol().indexOf(i+2)][1] - this.vertikal_merge[this.getFirstCol().indexOf(i+2)][0] + 1">{{ row['vid'] }}</td>
-            <td *ngFor="let key of getObjectKeys(row) | excludeItem:['vid']">{{ row[key] }}</td>
+            <td *ngFor="let key of getObjectKeys(row) | excludeItem:['vid']" [class.maxHighlight]="highlightCell(i, key)">{{ row[key] }}</td>
         </tr>
     </table>
     <button (click)="exportToExcel()">Export to Excel</button>

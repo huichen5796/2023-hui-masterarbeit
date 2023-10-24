@@ -19,3 +19,7 @@ td {
 td:hover {
     color: #1976d2;
 }
+
+.maxHighlight {
+    background-color: darksalmon;
+}
