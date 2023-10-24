@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import * as ExcelJS from 'exceljs';
 import { QueryNeo4jService } from '../app-services';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-unit-edit-excel',
@@ -16,10 +17,13 @@ export class UnitEditExcelComponent implements OnChanges {
   sortedExcelData: any[] = [
     { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
   ]
+  sortedResultData: { [key: string]: { [k: string]: [string,string][] } } = {}
   faktor_group: { [key: string]: { [key: string]: [number, number] } } = {}
   vertikal_merge: [number, number][] = []
   showTable: boolean = false
   maxValuePosition: { [key: string]: number[] } = {}
+  classColors: { [key: string]: string } = {}
+  formControl = new FormControl('0');
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) {
@@ -42,6 +46,8 @@ export class UnitEditExcelComponent implements OnChanges {
     this.faktor_group = {}
     this.vertikal_merge = []
     this.maxValuePosition = {}
+    this.sortedResultData = {}
+    this.classColors = {}
     let position: number = 1
     this.experiment['child'].forEach((versuch: any) => {
       versuch['probes'].forEach((probe: any) => {
@@ -80,6 +86,7 @@ export class UnitEditExcelComponent implements OnChanges {
           if (this.checkDone()) {
             this.sortedExcel()
             this.normalize()
+            this.statisticalResults()
           }
         })
       })
@@ -119,6 +126,7 @@ export class UnitEditExcelComponent implements OnChanges {
       } else {
         this.vertikal_merge.push([this.vertikal_merge[v_index - 1][1] + 1, this.vertikal_merge[v_index - 1][1] + 1 + long])
       }
+      this.classColors[versuch_id] = getRandomCoolColor()
     })
     this.showTable = true
   }
@@ -149,8 +157,8 @@ export class UnitEditExcelComponent implements OnChanges {
       return num;
     });
 
-    floatArray.forEach((value:number, index:number)=>{
-      if (value === max){
+    floatArray.forEach((value: number, index: number) => {
+      if (value === max) {
         position.push(index + start)
       }
     })
@@ -168,10 +176,89 @@ export class UnitEditExcelComponent implements OnChanges {
     return normalizedArray
   }
 
+  statisticalResults() {
+    const dict = ['viabilitypp', 'viabilityppn', 'recoveried_cellspp', 'recoveried_cellsppn', 'rundheitpp', 'rundheitppn', 'durchmetterpp', 'durchmetterppn']
+
+    const faktorNames = this.getObjectKeys(this.faktor_group[this.getObjectKeys(this.faktor_group)[0]]).sort((a, b) => a.localeCompare(b))
+    faktorNames.forEach((faktor: string) => {
+      if (!this.sortedResultData[faktor]) {
+        this.sortedResultData[faktor] = {}
+        dict.forEach(item => this.sortedResultData[faktor][item] = [])
+      }
+
+      for (const versuch_id of this.getObjectKeys(this.faktor_group).sort((a, b) => a.localeCompare(b))) {
+        this.excelData.slice(this.faktor_group[versuch_id][faktor][0] + 1, this.faktor_group[versuch_id][faktor][1] + 1).forEach((item: any) => {
+          dict.forEach(itemDict => this.sortedResultData[faktor][itemDict].push([item[itemDict],versuch_id]))
+        })
+      }
+    })
+
+  }
+
+  generateSheet(sheetName: string, workbook: ExcelJS.Workbook) {
+    const hash: { [k: string]: string } = {
+      viabilityppn: 'norm. viability',
+      durchmetterppn: 'norm. diameter',
+      recoveried_cellsppn: 'norm. recovery rate',
+      rundheitppn: 'norm. circularity',
+      viabilitypp: 'viability',
+      durchmetterpp: 'diameter',
+      recoveried_cellspp: 'recovery rate',
+      rundheitpp: 'circularity'
+    }
+    const ws = workbook.addWorksheet(hash[sheetName])
+    this.getObjectKeys(this.sortedResultData).forEach((faktorName: string, index: number) => {
+      let cell = ws.getCell(`${String.fromCharCode(65 + index)}1`)
+      cell.value = faktorName
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+      this.sortedResultData[faktorName][sheetName].forEach((data: [string,string], indexData: number) => {
+        let cell = ws.getCell(`${String.fromCharCode(65 + index)}${indexData + 2}`)
+        cell.value = data[0]
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: this.classColors[data[1]].replace('#','') },
+        };
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      })
+
+      this.getObjectKeys(this.classColors).forEach((info:string, index:number)=>{
+        ws.getCell(`G${index+3}`).value = info
+        ws.getCell(`F${index+3}`).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: this.classColors[info].replace('#','') },
+        };
+
+      })
+    })
+
+    const alignment = { horizontal: 'center', vertical: 'middle' };
+
+    ws.eachRow((row: any) => {
+      row.eachCell((cell: any) => {
+        cell.alignment = alignment;
+        const value = parseFloat(cell.value);
+        if (!isNaN(value)) {
+          cell.value = value;
+        }
+      });
+    });
+  }
 
   exportToExcel() {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Sheet1');
+    const worksheet = workbook.addWorksheet('raw data');
 
     worksheet.columns = [
       { header: '', key: 'vid' },
@@ -288,6 +375,8 @@ export class UnitEditExcelComponent implements OnChanges {
         }
       });
     });
+    const taskTodoSheet: string[] = ['viabilityppn', 'durchmetterppn', 'recoveried_cellsppn', 'rundheitppn', 'viabilitypp', 'durchmetterpp', 'recoveried_cellspp', 'rundheitpp']
+    taskTodoSheet.forEach(task=>this.generateSheet(task, workbook))
 
     workbook.xlsx.writeBuffer().then((data: BlobPart) => {
       const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -308,11 +397,28 @@ export class UnitEditExcelComponent implements OnChanges {
     }
   }
 
-  highlightCell(index:number, key:string):boolean{
-    if (this.maxValuePosition[key]){
+  highlightCell(index: number, key: string): boolean {
+    if (this.maxValuePosition[key]) {
       return this.maxValuePosition[key].indexOf(index) != -1
-    }else{
+    } else {
       return false
     }
   }
+
+  getFormValue():string{
+    return this.formControl.value ? this.formControl.value : ''
+  }
+}
+
+
+function getRandomCoolColor(): string {
+  const blueRange = 10;
+  const greenRange = 10;
+  const purpleRange = 10;
+
+  const blue = (Math.floor((0.8 + Math.random() * 0.2) * (255 - blueRange))).toString(16).padStart(2, '0');
+  const green = (Math.floor((0.8 + Math.random() * 0.2) * (255 - greenRange))).toString(16).padStart(2, '0');
+  const purple = (Math.floor((0.8 + Math.random() * 0.2) * (255 - purpleRange))).toString(16).padStart(2, '0');
+
+  return `#${blue}${green}${purple}`;
 }

@@ -6,6 +6,7 @@
 
 table{
     border-collapse: collapse;
+    border-spacing:0px
 }
 
 td {
@@ -13,7 +14,7 @@ td {
     border: solid;
     border-color: black;
     border-width: 1px;
-    padding: 4px
+    padding: 4px;
 }
 
 td:hover {
@@ -22,4 +23,20 @@ td:hover {
 
 .maxHighlight {
     background-color: darksalmon;
+}
+
+.toggle {
+    position: relative;
+    margin-left: 20px;
+    min-height: none;
+}
+
+.colum {
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+.longCell {
+    width: 100px;
 }

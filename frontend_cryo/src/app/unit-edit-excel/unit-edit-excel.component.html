@@ -1,5 +1,23 @@
 <div class="main" *ngIf="showTable">
-    <table>
+    <mat-form-field>
+        <mat-label>Select</mat-label>
+        <mat-select [formControl]="formControl">
+            <mat-option value="0">raw data</mat-option>
+            <mat-option value="viabilityppn">norm. viability</mat-option>
+            <mat-option value="durchmetterppn">norm. diameter</mat-option>
+            <mat-option value="recoveried_cellsppn">norm. recovery rate</mat-option>
+            <mat-option value="rundheitppn">norm. circularity</mat-option>
+            <mat-option value="viabilitypp">viability</mat-option>
+            <mat-option value="durchmetterpp">diameter</mat-option>
+            <mat-option value="recoveried_cellspp">recovery rate</mat-option>
+            <mat-option value="rundheitpp">circularity</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-stroked-button class="toggle" (click)="exportToExcel()"><span style="color: #1976d2;">Export to
+            excel</span></button>
+    <mat-divider style="transform: translateY(-11px);"></mat-divider>
+    <table *ngIf="formControl.value === '0'">
         <tr>
             <td></td>
             <td></td>
@@ -11,9 +29,30 @@
         </tr>
         <tr *ngFor="let row of sortedExcelData; let i = index">
             <td *ngIf="i === 0"></td>
-            <td *ngIf="getFirstCol().indexOf(i+2)!=-1" [attr.rowspan]="this.vertikal_merge[this.getFirstCol().indexOf(i+2)][1] - this.vertikal_merge[this.getFirstCol().indexOf(i+2)][0] + 1">{{ row['vid'] }}</td>
-            <td *ngFor="let key of getObjectKeys(row) | excludeItem:['vid']" [class.maxHighlight]="highlightCell(i, key)">{{ row[key] }}</td>
+            <td *ngIf="getFirstCol().indexOf(i+2)!=-1" [ngStyle]="{'background-color': classColors[row['vid']] }"
+                [attr.rowspan]="this.vertikal_merge[this.getFirstCol().indexOf(i+2)][1] - this.vertikal_merge[this.getFirstCol().indexOf(i+2)][0] + 1">
+                {{ row['vid'] }}</td>
+            <td *ngFor="let key of getObjectKeys(row) | excludeItem:['vid']"
+                [class.maxHighlight]="highlightCell(i, key)">{{ row[key] }}</td>
         </tr>
     </table>
-    <button (click)="exportToExcel()">Export to Excel</button>
+
+    <table *ngIf="formControl.value != '0' && sortedResultData != {}">
+        <div>
+            <div *ngFor="let faktor of getObjectKeys(sortedResultData)" class="colum">
+                <tr>
+                    <td class="longCell">{{ faktor }}</td>
+                </tr>
+            </div>
+        </div>
+
+        <div>
+            <div *ngFor="let faktor of getObjectKeys(sortedResultData)" class="colum">
+                <tr *ngFor="let cell of sortedResultData[faktor][getFormValue()]">
+                    <td [ngStyle]="{'background-color': classColors[cell[1]] }" class="longCell">{{ cell[0] }}</td>
+                </tr>
+            </div>
+        </div>
+    </table>
+
 </div>
