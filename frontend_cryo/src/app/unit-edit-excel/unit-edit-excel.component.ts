@@ -17,13 +17,13 @@ export class UnitEditExcelComponent implements OnChanges {
   sortedExcelData: any[] = [
     { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
   ]
-  sortedResultData: { [key: string]: { [k: string]: [string,string][] } } = {}
+  sortedResultData: { [key: string]: { [k: string]: [string, string][] } } = {}
   faktor_group: { [key: string]: { [key: string]: [number, number] } } = {}
   vertikal_merge: [number, number][] = []
   showTable: boolean = false
   maxValuePosition: { [key: string]: number[] } = {}
   classColors: { [key: string]: string } = {}
-  formControl = new FormControl('0');
+  formControl: string = 'raw';
   constructor(
     private queryNeo4jService: QueryNeo4jService,
   ) {
@@ -48,6 +48,7 @@ export class UnitEditExcelComponent implements OnChanges {
     this.maxValuePosition = {}
     this.sortedResultData = {}
     this.classColors = {}
+    this.formControl = 'raw'
     let position: number = 1
     this.experiment['child'].forEach((versuch: any) => {
       versuch['probes'].forEach((probe: any) => {
@@ -59,24 +60,24 @@ export class UnitEditExcelComponent implements OnChanges {
           let arrayOfObjects = new Array(length + 1).fill(null).map(() => ({ vid: versuch['versuch']['Versuch_ID'], preid: '', viabilitypre: '', recoveried_cellspre: '', rundheitpre: '', durchmetterpre: '', postid: '', viabilitypost: '', recoveried_cellspost: '', rundheitpost: '', durchmetterpost: '', viabilitypp: '', recoveried_cellspp: '', rundheitpp: '', durchmetterpp: '', viabilityppn: '', recoveried_cellsppn: '', rundheitppn: '', durchmetterppn: '' }));
           arrayOfObjects[0]['preid'] = probe['Sample_ID']
           arrayOfObjects[0]['viabilitypre'] = res['average_Viability_(%)_pre']
-          arrayOfObjects[0]['recoveried_cellspre'] = res['average_Viable_cells_pre']
+          arrayOfObjects[0]['recoveried_cellspre'] = res['average_Total_viable_cells_/_ml_(x_10^6)_pre']
           arrayOfObjects[0]['rundheitpre'] = res['average_Average_circularity_pre']
           arrayOfObjects[0]['durchmetterpre'] = res['average_Average_diameter_(microns)_pre']
           probe['PreData_ID'].forEach((predata_id: string, index: number) => {
             arrayOfObjects[index + 1]['preid'] = predata_id
             arrayOfObjects[index + 1]['viabilitypre'] = res[predata_id]['Viability_(%)']
-            arrayOfObjects[index + 1]['recoveried_cellspre'] = res[predata_id]['Viable_cells']
+            arrayOfObjects[index + 1]['recoveried_cellspre'] = res[predata_id]['Total_viable_cells_/_ml_(x_10^6)']
             arrayOfObjects[index + 1]['rundheitpre'] = res[predata_id]['Average_circularity']
             arrayOfObjects[index + 1]['durchmetterpre'] = res[predata_id]['Average_diameter_(microns)']
           })
           probe['PostData_ID'].forEach((postdata_id: string, index: number) => {
             arrayOfObjects[index + 1]['postid'] = postdata_id
             arrayOfObjects[index + 1]['viabilitypost'] = res[postdata_id]['Viability_(%)']
-            arrayOfObjects[index + 1]['recoveried_cellspost'] = res[postdata_id]['Viable_cells']
+            arrayOfObjects[index + 1]['recoveried_cellspost'] = res[postdata_id]['Total_viable_cells_/_ml_(x_10^6)']
             arrayOfObjects[index + 1]['rundheitpost'] = res[postdata_id]['Average_circularity']
             arrayOfObjects[index + 1]['durchmetterpost'] = res[postdata_id]['Average_diameter_(microns)']
             arrayOfObjects[index + 1]['viabilitypp'] = res[postdata_id]['Viability_(%)_relative']
-            arrayOfObjects[index + 1]['recoveried_cellspp'] = res[postdata_id]['Viable_cells_relative']
+            arrayOfObjects[index + 1]['recoveried_cellspp'] = res[postdata_id]['Total_viable_cells_/_ml_(x_10^6)_relative']
             arrayOfObjects[index + 1]['rundheitpp'] = res[postdata_id]['Average_circularity_relative']
             arrayOfObjects[index + 1]['durchmetterpp'] = res[postdata_id]['Average_diameter_(microns)_relative']
           })
@@ -188,7 +189,7 @@ export class UnitEditExcelComponent implements OnChanges {
 
       for (const versuch_id of this.getObjectKeys(this.faktor_group).sort((a, b) => a.localeCompare(b))) {
         this.excelData.slice(this.faktor_group[versuch_id][faktor][0] + 1, this.faktor_group[versuch_id][faktor][1] + 1).forEach((item: any) => {
-          dict.forEach(itemDict => this.sortedResultData[faktor][itemDict].push([item[itemDict],versuch_id]))
+          dict.forEach(itemDict => this.sortedResultData[faktor][itemDict].push([item[itemDict], versuch_id]))
         })
       }
     })
@@ -216,13 +217,13 @@ export class UnitEditExcelComponent implements OnChanges {
         bottom: { style: 'thin' },
         right: { style: 'thin' },
       };
-      this.sortedResultData[faktorName][sheetName].forEach((data: [string,string], indexData: number) => {
+      this.sortedResultData[faktorName][sheetName].forEach((data: [string, string], indexData: number) => {
         let cell = ws.getCell(`${String.fromCharCode(65 + index)}${indexData + 2}`)
         cell.value = data[0]
         cell.fill = {
           type: 'pattern',
           pattern: 'solid',
-          fgColor: { argb: this.classColors[data[1]].replace('#','') },
+          fgColor: { argb: this.classColors[data[1]].replace('#', '') },
         };
         cell.border = {
           top: { style: 'thin' },
@@ -232,12 +233,12 @@ export class UnitEditExcelComponent implements OnChanges {
         };
       })
 
-      this.getObjectKeys(this.classColors).forEach((info:string, index:number)=>{
-        ws.getCell(`G${index+3}`).value = info
-        ws.getCell(`F${index+3}`).fill = {
+      this.getObjectKeys(this.classColors).forEach((info: string, index: number) => {
+        ws.getCell(`G${index + 3}`).value = info
+        ws.getCell(`F${index + 3}`).fill = {
           type: 'pattern',
           pattern: 'solid',
-          fgColor: { argb: this.classColors[info].replace('#','') },
+          fgColor: { argb: this.classColors[info].replace('#', '') },
         };
 
       })
@@ -376,7 +377,7 @@ export class UnitEditExcelComponent implements OnChanges {
       });
     });
     const taskTodoSheet: string[] = ['viabilityppn', 'durchmetterppn', 'recoveried_cellsppn', 'rundheitppn', 'viabilitypp', 'durchmetterpp', 'recoveried_cellspp', 'rundheitpp']
-    taskTodoSheet.forEach(task=>this.generateSheet(task, workbook))
+    taskTodoSheet.forEach(task => this.generateSheet(task, workbook))
 
     workbook.xlsx.writeBuffer().then((data: BlobPart) => {
       const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -405,9 +406,10 @@ export class UnitEditExcelComponent implements OnChanges {
     }
   }
 
-  getFormValue():string{
-    return this.formControl.value ? this.formControl.value : ''
-  }
+  // getFormValue(): string {
+  //   return this.formControl.value ? this.formControl.value : ''
+  // }
+
 }
 
 

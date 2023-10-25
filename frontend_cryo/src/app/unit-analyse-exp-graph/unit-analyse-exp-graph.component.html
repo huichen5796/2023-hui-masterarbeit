@@ -1,0 +1,5 @@
+<div class="main">
+    {{ dataToShow | json }}
+    <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions" *ngIf="show"></highcharts-chart>
+</div>
+

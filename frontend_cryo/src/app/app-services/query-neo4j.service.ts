@@ -141,7 +141,7 @@ export class QueryNeo4jService {
       'postdata': post_data_list
     });
     var promise = new Promise<string>((resolve, reject) => {
-      this.http.post(`${backendUrl}/queryTheFourElements/`, body, {'headers':headers})
+      this.http.post(`${backendUrl}/queryTheFourElements`, body, {'headers':headers})
         .subscribe((rep: any) => {
           resolve(rep)
         })

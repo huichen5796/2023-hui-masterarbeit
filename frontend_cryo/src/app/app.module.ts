@@ -70,6 +70,7 @@ import { UnitCpaSubComponent } from './unit-cpa-sub/unit-cpa-sub.component';
 import { SeiteStartComponent } from './seite-start/seite-start.component';
 import { UnitEditDatabaseComponent } from './unit-edit-database/unit-edit-database.component';
 import { UnitEditExcelComponent } from './unit-edit-excel/unit-edit-excel.component';
+import { UnitAnalyseExpGraphComponent } from './unit-analyse-exp-graph/unit-analyse-exp-graph.component';
 
 
 @NgModule({
@@ -99,6 +100,7 @@ import { UnitEditExcelComponent } from './unit-edit-excel/unit-edit-excel.compon
     SeiteStartComponent,
     UnitEditDatabaseComponent,
     UnitEditExcelComponent,
+    UnitAnalyseExpGraphComponent,
   ],
   imports: [
     BrowserModule,

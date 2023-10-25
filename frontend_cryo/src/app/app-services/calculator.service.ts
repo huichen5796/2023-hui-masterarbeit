@@ -33,4 +33,16 @@ export class CalculatorService {
     })
     return promise
   }
+
+  buildColumn(data: {[key:string]:[string,string][]}): Promise<string> {
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify(data);
+    var promise = new Promise<string>((resolve, reject) => {
+      this.http.post(`${backendUrl}/buildColumn/`, body, {'headers':headers})
+        .subscribe((rep: any) => {
+          resolve(rep)
+        })
+    })
+    return promise
+  }
 }

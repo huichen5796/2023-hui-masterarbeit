@@ -1,8 +1,8 @@
 <div class="main" *ngIf="showTable">
     <mat-form-field>
         <mat-label>Select</mat-label>
-        <mat-select [formControl]="formControl">
-            <mat-option value="0">raw data</mat-option>
+        <mat-select [(ngModel)]="formControl">
+            <mat-option value="raw">raw data</mat-option>
             <mat-option value="viabilityppn">norm. viability</mat-option>
             <mat-option value="durchmetterppn">norm. diameter</mat-option>
             <mat-option value="recoveried_cellsppn">norm. recovery rate</mat-option>
@@ -17,7 +17,7 @@
     <button mat-stroked-button class="toggle" (click)="exportToExcel()"><span style="color: #1976d2;">Export to
             excel</span></button>
     <mat-divider style="transform: translateY(-11px);"></mat-divider>
-    <table *ngIf="formControl.value === '0'">
+    <table *ngIf="formControl=== 'raw'">
         <tr>
             <td></td>
             <td></td>
@@ -37,22 +37,27 @@
         </tr>
     </table>
 
-    <table *ngIf="formControl.value != '0' && sortedResultData != {}">
-        <div>
-            <div *ngFor="let faktor of getObjectKeys(sortedResultData)" class="colum">
-                <tr>
-                    <td class="longCell">{{ faktor }}</td>
-                </tr>
+    <div *ngIf="formControl != 'raw' && sortedResultData != {}" class="analyse-field">
+        <table>
+            <div>
+                <div *ngFor="let faktor of getObjectKeys(sortedResultData)" class="colum">
+                    <tr>
+                        <td class="longCell">{{ faktor }}</td>
+                    </tr>
+                </div>
             </div>
-        </div>
 
-        <div>
-            <div *ngFor="let faktor of getObjectKeys(sortedResultData)" class="colum">
-                <tr *ngFor="let cell of sortedResultData[faktor][getFormValue()]">
-                    <td [ngStyle]="{'background-color': classColors[cell[1]] }" class="longCell">{{ cell[0] }}</td>
-                </tr>
+            <div>
+                <div *ngFor="let faktor of getObjectKeys(sortedResultData)" class="colum">
+                    <tr *ngFor="let cell of sortedResultData[faktor][formControl]">
+                        <td [ngStyle]="{'background-color': classColors[cell[1]] }" class="longCell">{{ cell[0] }}</td>
+                    </tr>
+                </div>
             </div>
+        </table>
+        <div>
+            <app-unit-analyse-exp-graph [sortedResultData]="sortedResultData" [which]="formControl"></app-unit-analyse-exp-graph>
         </div>
-    </table>
-
+        
+    </div>
 </div>
