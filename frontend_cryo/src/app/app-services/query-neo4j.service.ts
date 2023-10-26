@@ -82,46 +82,6 @@ export class QueryNeo4jService {
     return promise
   }
 
-  buildColumn(pre_data_list: string[], post_data_list: string[], key:string): Promise<string> {
-    const headers = { 'content-type': 'application/json'}  
-    const body=JSON.stringify({
-      'predata': pre_data_list,
-      'postdata': post_data_list,
-      'key':key
-    });
-    var promise = new Promise<string>((resolve, reject) => {
-      this.http.post(`${backendUrl}/buildColumn/`, body, {'headers':headers})
-        .subscribe((rep: any) => {
-          resolve(rep)
-        })
-    })
-    return promise
-  }
-
-  buildAnovaTable(data: { [k: string]: { [k: string]: string[] } }, key:string): Promise<string> {
-
-    let postObject:{[key:string]: string[]} = {};
-    let preObject:{[key:string]:string[]} = {};
-
-    for (const [key, value] of Object.entries(data)) {
-      postObject[key] = value['post']
-      preObject[key] = value['pre']
-    }
-    const headers = { 'content-type': 'application/json'}  
-    const body=JSON.stringify({
-      'postdata': postObject,
-      'predata': preObject,
-      'key':key
-    });
-    var promise = new Promise<string>((resolve, reject) => {
-      this.http.post(`${backendUrl}/buildAnovaTable/`, body, {'headers': headers})
-        .subscribe((rep: any) => {
-          resolve(rep)
-        })
-    })
-    return promise
-  }
-
   addDelModi(todoSQL: { addition: any, deletion: any, changeAttr: any, changeName: any }): Promise<string> {
     const headers = { 'content-type': 'application/json'}  
     const body=JSON.stringify(todoSQL);
@@ -141,7 +101,7 @@ export class QueryNeo4jService {
       'postdata': post_data_list
     });
     var promise = new Promise<string>((resolve, reject) => {
-      this.http.post(`${backendUrl}/queryTheFourElements`, body, {'headers':headers})
+      this.http.post(`${backendUrl}/queryTheFourElements/`, body, {'headers':headers})
         .subscribe((rep: any) => {
           resolve(rep)
         })

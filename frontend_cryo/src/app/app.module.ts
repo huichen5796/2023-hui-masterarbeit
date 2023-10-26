@@ -56,7 +56,6 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { UnitBackendCheckComponent } from './unit-backend-check/unit-backend-check.component';
 import { UnitDatabaseCheckComponent } from './unit-database-check/unit-database-check.component';
 import { UnitDataUploadComponent } from './unit-data-upload/unit-data-upload.component';
-import { UnitHighchartsGraphComponent } from './unit-highcharts-graph/unit-highcharts-graph.component';
 import { UnitCreateInstanceComponent } from './unit-create-instance/unit-create-instance.component';
 import { SeiteDataStorageComponent } from './seite-data-storage/seite-data-storage.component';
 import { SeiteDataAnalyseComponent } from './seite-data-analyse/seite-data-analyse.component';
@@ -85,7 +84,6 @@ import { UnitAnalyseExpGraphComponent } from './unit-analyse-exp-graph/unit-anal
     UnitBackendCheckComponent,
     UnitDatabaseCheckComponent,
     UnitDataUploadComponent,
-    UnitHighchartsGraphComponent,
     UnitCreateInstanceComponent,
     SeiteDataStorageComponent,
     SeiteDataAnalyseComponent,

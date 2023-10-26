@@ -3,14 +3,14 @@
         <mat-label>Select</mat-label>
         <mat-select [(ngModel)]="formControl">
             <mat-option value="raw">raw data</mat-option>
-            <mat-option value="viabilityppn">norm. viability</mat-option>
-            <mat-option value="durchmetterppn">norm. diameter</mat-option>
+            <mat-option value="viabilityppn">norm. rel. viability</mat-option>
+            <mat-option value="durchmetterppn">norm. rel. diameter</mat-option>
             <mat-option value="recoveried_cellsppn">norm. recovery rate</mat-option>
-            <mat-option value="rundheitppn">norm. circularity</mat-option>
-            <mat-option value="viabilitypp">viability</mat-option>
-            <mat-option value="durchmetterpp">diameter</mat-option>
+            <mat-option value="rundheitppn">norm. rel. circularity</mat-option>
+            <mat-option value="viabilitypp">rel. viability</mat-option>
+            <mat-option value="durchmetterpp">rel. diameter</mat-option>
             <mat-option value="recoveried_cellspp">recovery rate</mat-option>
-            <mat-option value="rundheitpp">circularity</mat-option>
+            <mat-option value="rundheitpp">rel. circularity</mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -56,7 +56,7 @@
             </div>
         </table>
         <div>
-            <app-unit-analyse-exp-graph [sortedResultData]="sortedResultData" [which]="formControl"></app-unit-analyse-exp-graph>
+            <app-unit-analyse-exp-graph [sortedResultData]="sortedResultData" [which]="formControl" [classColors]="classColors"></app-unit-analyse-exp-graph>
         </div>
         
     </div>

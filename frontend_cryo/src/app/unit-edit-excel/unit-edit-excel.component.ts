@@ -12,10 +12,10 @@ import { FormControl } from '@angular/forms';
 export class UnitEditExcelComponent implements OnChanges {
   @Input() experiment!: any
   excelData: any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
   ];
   sortedExcelData: any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
   ]
   sortedResultData: { [key: string]: { [k: string]: [string, string][] } } = {}
   faktor_group: { [key: string]: { [key: string]: [number, number] } } = {}
@@ -38,10 +38,10 @@ export class UnitEditExcelComponent implements OnChanges {
   init() {
     this.showTable = false
     this.excelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
     ];
     this.sortedExcelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rundheit', durchmetterpp: 'durchmetter', viabilityppn: 'viability', recoveried_cellsppn: 'recovery rate', rundheitppn: 'rundheit', durchmetterppn: 'durchmetter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
     ]
     this.faktor_group = {}
     this.vertikal_merge = []
@@ -198,14 +198,14 @@ export class UnitEditExcelComponent implements OnChanges {
 
   generateSheet(sheetName: string, workbook: ExcelJS.Workbook) {
     const hash: { [k: string]: string } = {
-      viabilityppn: 'norm. viability',
-      durchmetterppn: 'norm. diameter',
+      viabilityppn: 'norm. rel. viability',
+      durchmetterppn: 'norm. rel. diameter',
       recoveried_cellsppn: 'norm. recovery rate',
-      rundheitppn: 'norm. circularity',
-      viabilitypp: 'viability',
-      durchmetterpp: 'diameter',
+      rundheitppn: 'norm. rel. circularity',
+      viabilitypp: 'rel. viability',
+      durchmetterpp: 'rel. diameter',
       recoveried_cellspp: 'recovery rate',
-      rundheitpp: 'circularity'
+      rundheitpp: 'rel. circularity'
     }
     const ws = workbook.addWorksheet(hash[sheetName])
     this.getObjectKeys(this.sortedResultData).forEach((faktorName: string, index: number) => {

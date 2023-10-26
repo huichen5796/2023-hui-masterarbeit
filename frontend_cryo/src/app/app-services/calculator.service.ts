@@ -11,12 +11,12 @@ export class CalculatorService {
   ) { }
 
   getMeanAndVariance(dataList: string[]): Promise<any> {
-    const headers = { 'content-type': 'application/json'}  
-    const body=JSON.stringify({
+    const headers = { 'content-type': 'application/json' }
+    const body = JSON.stringify({
       'data': dataList
     });
     var promise = new Promise<any>((resolve, reject) => {
-      this.http.post(`${backendUrl}/getMeanAndVariance/`, body, {'headers': headers})
+      this.http.post(`${backendUrl}/getMeanAndVariance/`, body, { 'headers': headers })
         .subscribe((rep: any) => {
           resolve(rep)
         })
@@ -24,9 +24,11 @@ export class CalculatorService {
     return promise
   }
 
-  anovaTest(data: { [k: string]: string[] }): Promise<any> {
+  anovaTest(data: { [key: string]: [string, string][] }): Promise<any> {
+    const headers = { 'content-type': 'application/json' }
+    const body = JSON.stringify(data);
     var promise = new Promise<any>((resolve, reject) => {
-      this.http.get(`${backendUrl}/anovaTest/${JSON.stringify(data)}`)
+      this.http.post(`${backendUrl}/anovaTest/`, body, { 'headers': headers })
         .subscribe((rep: any) => {
           resolve(rep)
         })
@@ -34,11 +36,11 @@ export class CalculatorService {
     return promise
   }
 
-  buildColumn(data: {[key:string]:[string,string][]}): Promise<string> {
-    const headers = { 'content-type': 'application/json'}  
-    const body=JSON.stringify(data);
+  buildColumn(data: { [key: string]: [string, string][] }): Promise<string> {
+    const headers = { 'content-type': 'application/json' }
+    const body = JSON.stringify(data);
     var promise = new Promise<string>((resolve, reject) => {
-      this.http.post(`${backendUrl}/buildColumn/`, body, {'headers':headers})
+      this.http.post(`${backendUrl}/buildColumn/`, body, { 'headers': headers })
         .subscribe((rep: any) => {
           resolve(rep)
         })

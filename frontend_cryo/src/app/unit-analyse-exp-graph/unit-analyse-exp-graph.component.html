@@ -1,5 +1,18 @@
 <div class="main">
-    {{ dataToShow | json }}
     <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions" *ngIf="show"></highcharts-chart>
-</div>
 
+    <div class="subtitle-table">One-Way ANOVA: (F: {{ tableData['F-statistic'] }}, p: {{
+        tableData['p-value'] }}) + Tukey</div>
+    <table mat-table [dataSource]="tableData['Tukey HSD 0.05']" class="mat-elevation-z8">
+        <ng-container matColumnDef="{{ item }}" *ngFor="let item of tableHeader">
+            <th mat-header-cell *matHeaderCellDef>{{ item }}</th>
+            <td mat-cell *matCellDef="let element" [class.green]="setGreen(element[item])">
+                {{ element[item] }}
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableHeader"></tr>
+    </table>
+
+</div>
