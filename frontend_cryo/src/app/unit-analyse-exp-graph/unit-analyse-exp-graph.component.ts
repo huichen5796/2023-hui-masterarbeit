@@ -24,15 +24,21 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
 
   @Input() sortedResultData!: { [key: string]: { [k: string]: [string, string][] } }
   @Input() which!: string
-  @Input() classColors:any
+  @Input() classColors: any
   dataToShow: any
   chartOptions!: Highcharts.Options
   Highcharts: typeof Highcharts = Highcharts;
   show: boolean = false
 
+  chartOptionsBoxplot!: Highcharts.Options
+  showBoxplot: boolean = false
+
   tableData: any = {}
   showTable: boolean = false
   tableHeader: string[] = ["group1", "group2", "meandiff", "p-adj", "lower", "upper", "reject"]
+  tableHeaderSumm: string[] = ["mean", "variance", "SD", 'SE', "CI 95%", 'low', 'q1', 'median', 'q3', 'high', 'outliers']
+  tableSummery: any = []
+  showSummery: boolean = false
   constructor(
     private calculatorService: CalculatorService,
   ) {
@@ -53,10 +59,11 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
 
   buildColumn() {
     this.show = false
+    this.showSummery = false
     this.calculatorService.buildColumn(this.getDataToShow(this.which)).then((res: any) => {
       this.dataToShow = res
       this.anovaTest()
-
+      this.getTableDataSummery()
     })
   }
 
@@ -85,12 +92,12 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
   anovaTest() {
     this.tableData = {}
     this.showTable = false
-
+    this.tableSummery = []
     this.calculatorService.anovaTest(this.getDataToShow(this.which)).then((res: any) => {
       this.tableData = res
-      this.showTable = true
       this.updateChartOptions()
       this.show = true
+      this.showTable = true
     })
   }
 
@@ -155,15 +162,20 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
         }
       ],
       drilldown: {
-        series: []
+        series: [],
+        activeAxisLabelStyle: {
+          position: 'end'
+        }
       }
     }
     this.getObjectKeys(this.dataToShow).forEach(faktor_id => {
       const drillData = this.getDrillDown(faktor_id)
-      this.chartOptions.drilldown?.series?.push({ type: 'column', id: faktor_id, data: drillData, name: faktor_id, dataLabels: {
-        enabled: true,
-        format: '{point.y:.4f}'
-    } })
+      this.chartOptions.drilldown?.series?.push({
+        type: 'column', id: faktor_id, data: drillData, name: faktor_id, dataLabels: {
+          enabled: true,
+          format: '{point.y:.4f}'
+        }
+      })
 
       // error-bar
       // let out: { [k: string]: any } = {}
@@ -182,6 +194,89 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     })
   }
 
+  updateChartOptionsBoxplot() {
+    this.chartOptionsBoxplot = {
+      title: {
+        align: 'left',
+        text: this.hash[this.which]
+      },
+      subtitle: {
+        align: 'left',
+        text: 'Click the columns to view trial data.'
+      },
+      xAxis: {
+        type: 'category'
+      },
+      yAxis: [{
+        title: {
+          text: '%'
+        }
+      }],
+      legend: {
+        enabled: false
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 0,
+        }
+      },
+      series: [
+        {
+          name: this.hash[this.which],
+          type: 'boxplot',
+          colorByPoint: true,
+          data: this.getObjectKeys(this.dataToShow).map(faktor_id => {
+            return {low: parseFloat(this.dataToShow[faktor_id]['low']), q1: parseFloat(this.dataToShow[faktor_id]['q1']), median: parseFloat(this.dataToShow[faktor_id]['median']), q3: parseFloat(this.dataToShow[faktor_id]['q3']), high: parseFloat(this.dataToShow[faktor_id]['high']), drilldown: faktor_id, name: faktor_id }
+          }),
+          tooltip: {
+            headerFormat: `<em>${this.hash[this.which]} {point.key}</em><br/>`
+          }
+        },
+        {
+          name: 'Outliers',
+          color: 'red',
+          type: 'scatter',
+          data: this.getOutliers(),
+          marker: {
+            fillColor: 'white',
+            lineWidth: 1,
+            // lineColor: this.HighchartsBoxplot.getOptions()?.colors[0]
+          },
+          tooltip: {
+            pointFormat: `${this.hash[this.which]}: {point.y}`
+          }
+        }
+      ],
+      drilldown: {
+        series: [],
+        activeAxisLabelStyle: {
+          position: 'end'
+        }
+      }
+    }
+    // this.getObjectKeys(this.dataToShow).forEach(faktor_id => {
+    //   const drillData = this.getDrillDown(faktor_id)
+    //   this.chartOptions.drilldown?.series?.push({
+    //     type: 'column', id: faktor_id, data: drillData, name: faktor_id, dataLabels: {
+    //       enabled: true,
+    //       format: '{point.y:.4f}'
+    //     }
+    //   })
+    // })
+
+  }
+
+  getOutliers():[number,number][]{
+    let outliers:[number,number][] = []
+    this.getObjectKeys(this.dataToShow).forEach((faktor_id:string, index:number)=>{
+      if (this.dataToShow[faktor_id]['outliers'].length != 0){
+        outliers = outliers.concat(this.dataToShow[faktor_id]['outliers'].map((item:number)=>[index,item]))
+      }
+    })
+    return outliers
+  }
+
   setGreen(value: any) {
     return value === true
   }
@@ -196,8 +291,18 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
       }
     })
     return this.getObjectKeys(out).map((versuch_id: string) => {
-      return {name:versuch_id, y:calculateArrayAverage(out[versuch_id]), color:this.classColors[versuch_id]}
+      return { name: versuch_id, y: calculateArrayAverage(out[versuch_id]), color: this.classColors[versuch_id] }
     })
+  }
+
+  getTableDataSummery() {
+    this.showBoxplot = false
+    this.tableSummery = this.getObjectKeys(this.dataToShow).map((item: string) => {
+      return { factor: item, ...this.dataToShow[item] }
+    })
+    this.updateChartOptionsBoxplot()
+    this.showBoxplot = true
+    this.showSummery = true
   }
 }
 
