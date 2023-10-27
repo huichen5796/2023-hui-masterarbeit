@@ -139,14 +139,22 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           }),
           tooltip: {
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + self.getDataToShow(self.which)[this.name].length;
+              return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + this.y 
+              + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + self.dataToShow[this.name]['n']
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> CI 95% = ' + JSON.stringify(self.dataToShow[this.name]['CI 95%'])
             }
           },
         },
         {
           name: 'CI 95%',
           type: 'errorbar',
-          data: this.getObjectKeys(this.dataToShow).map(faktor_id => [parseFloat(this.dataToShow[faktor_id]['mean']) - 1.96 * parseFloat(this.dataToShow[faktor_id]['SE']), parseFloat(this.dataToShow[faktor_id]['mean']) + 1.96 * parseFloat(this.dataToShow[faktor_id]['SE'])]),
+          data: this.getObjectKeys(this.dataToShow).map(faktor_id => {
+            return {
+              low: parseFloat(this.dataToShow[faktor_id]['CI 95%'][0]),
+              high: parseFloat(this.dataToShow[faktor_id]['CI 95%'][1]),
+              drilldown: faktor_id + 'errorbar'
+            }
+          }),
           dataLabels: {
             enabled: true,
             formatter: function () {
@@ -158,43 +166,67 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
               return null;
             },
           },
-          linkedTo: this.hash[this.which]
+          tooltip: {
+            pointFormatter: function () {
+              return ''
+            }
+          },
         }
       ],
       drilldown: {
+        allowPointDrilldown: false,
         series: [],
         activeAxisLabelStyle: {
           position: 'end'
         }
       }
     }
+
     this.getObjectKeys(this.dataToShow).forEach(faktor_id => {
-      const drillData = this.getDrillDown(faktor_id)
-      this.chartOptions.drilldown?.series?.push({
-        type: 'column', id: faktor_id, data: drillData, name: faktor_id, dataLabels: {
-          enabled: true,
-          format: '{point.y:.4f}'
+
+      let out: { [k: string]: any } = {}
+      this.getDataToShow(this.which)[faktor_id].forEach((item: [string, string]) => {
+        if (!out[item[1]]) {
+          out[item[1]] = [item]
+        } else {
+          out[item[1]].push(item)
         }
       })
+      this.calculatorService.buildColumn(out).then((res: any) => {
+        const drillData:any = this.getObjectKeys(res).map((versuch_id: string) => {
+          return { name: versuch_id, y: parseFloat(res[versuch_id]['mean']), color: this.classColors[versuch_id] }
+        })
+        this.chartOptions.drilldown?.series?.push({
+          type: 'column', id: faktor_id, data: drillData, name: faktor_id, dataLabels: {
+            enabled: true,
+            format: '{point.y:.4f}',
+            position:'right'
+          }, 
 
-      // error-bar
-      // let out: { [k: string]: any } = {}
-      // this.getDataToShow(this.which)[faktor_id].forEach((item: [string, string]) => {
-      //   if (!out[item[1]]) {
-      //     out[item[1]] = [item]
-      //   } else {
-      //     out[item[1]].push(item)
-      //   }
-      // })
-      // this.calculatorService.buildColumn(out).then((res:any)=>{
-      //   this.chartOptions.drilldown?.series?.push({ type: 'errorbar', id: faktor_id, data: this.getObjectKeys(res).map((versuch_id:string)=>{
-      //     return [parseFloat(res[versuch_id]['mean']) - 1.96 * parseFloat(res[versuch_id]['SE']), parseFloat(res[versuch_id]['mean']) + 1.96 * parseFloat(res[versuch_id]['SE'])]
-      //   }), name: 'CI 95%' })
-      // })
+          tooltip: {
+            pointFormatter: function () {
+              return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + this.y 
+              + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + res[this.name]['n']
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> CI 95% = ' + JSON.stringify(res[this.name]['CI 95%'])
+            }
+          },
+        })
+
+        this.chartOptions.drilldown?.series?.push({
+          type: 'errorbar', id: faktor_id + 'errorbar', data: this.getObjectKeys(res).map((versuch_id: string) => {
+            return {low:parseFloat(res[versuch_id]['CI 95%'][0]), high: parseFloat(res[versuch_id]['CI 95%'][1]), name:versuch_id}
+          }), name: 'CI 95%',tooltip: {
+            pointFormatter: function () {
+              return ''
+            }
+          },
+        })
+      })
     })
   }
 
   updateChartOptionsBoxplot() {
+    const self = this
     this.chartOptionsBoxplot = {
       title: {
         align: 'left',
@@ -227,11 +259,18 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           type: 'boxplot',
           colorByPoint: true,
           data: this.getObjectKeys(this.dataToShow).map(faktor_id => {
-            return {low: parseFloat(this.dataToShow[faktor_id]['low']), q1: parseFloat(this.dataToShow[faktor_id]['q1']), median: parseFloat(this.dataToShow[faktor_id]['median']), q3: parseFloat(this.dataToShow[faktor_id]['q3']), high: parseFloat(this.dataToShow[faktor_id]['high']), drilldown: faktor_id, name: faktor_id }
+            return { low: parseFloat(this.dataToShow[faktor_id]['low']), q1: parseFloat(this.dataToShow[faktor_id]['q1']), median: parseFloat(this.dataToShow[faktor_id]['median']), q3: parseFloat(this.dataToShow[faktor_id]['q3']), high: parseFloat(this.dataToShow[faktor_id]['high']), drilldown: faktor_id, name: faktor_id }
           }),
           tooltip: {
-            headerFormat: `<em>${this.hash[this.which]} {point.key}</em><br/>`
-          }
+            pointFormatter: function () {
+              return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + self.dataToShow[this.name]['mean']
+              + '</b><br/><span style="color:' + this.color + '">\u25CF</span> high = ' + this.options.high
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> q3 = ' + this.options.q3
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> median = ' + this.options.median
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> q1 = ' + this.options.q1
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> low = ' + this.options.low
+            }
+          },
         },
         {
           name: 'Outliers',
@@ -241,37 +280,35 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           marker: {
             fillColor: 'white',
             lineWidth: 1,
-            // lineColor: this.HighchartsBoxplot.getOptions()?.colors[0]
+            lineColor: 'red'
           },
           tooltip: {
-            pointFormat: `${this.hash[this.which]}: {point.y}`
+            pointFormat: `{point.name}: {point.y}`
           }
         }
       ],
       drilldown: {
+        allowPointDrilldown: false,
         series: [],
         activeAxisLabelStyle: {
           position: 'end'
         }
       }
     }
-    // this.getObjectKeys(this.dataToShow).forEach(faktor_id => {
-    //   const drillData = this.getDrillDown(faktor_id)
-    //   this.chartOptions.drilldown?.series?.push({
-    //     type: 'column', id: faktor_id, data: drillData, name: faktor_id, dataLabels: {
-    //       enabled: true,
-    //       format: '{point.y:.4f}'
-    //     }
-    //   })
-    // })
+
+    this.getObjectKeys(this.dataToShow).forEach(faktor_id => {
+      this.getDrillDownBoxplot(faktor_id)
+    })
 
   }
 
-  getOutliers():[number,number][]{
-    let outliers:[number,number][] = []
-    this.getObjectKeys(this.dataToShow).forEach((faktor_id:string, index:number)=>{
-      if (this.dataToShow[faktor_id]['outliers'].length != 0){
-        outliers = outliers.concat(this.dataToShow[faktor_id]['outliers'].map((item:number)=>[index,item]))
+  getOutliers(): any[] {
+    let outliers: any[] = []
+    this.getObjectKeys(this.dataToShow).forEach((faktor_id: string, index: number) => {
+      if (this.dataToShow[faktor_id]['outliers'].length != 0) {
+        outliers = outliers.concat(this.dataToShow[faktor_id]['outliers'].map((item: number) => {
+          return { name: faktor_id, drilldown: faktor_id + 'out', y: item }
+        }))
       }
     })
     return outliers
@@ -281,18 +318,55 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     return value === true
   }
 
-  getDrillDown(faktor_id: string): { name: string; y: number; color: any; }[] {
+  getDrillDownBoxplot(faktor_id: string) {
     let out: { [k: string]: any } = {}
     this.getDataToShow(this.which)[faktor_id].forEach((item: [string, string]) => {
       if (!out[item[1]]) {
-        out[item[1]] = [parseFloat(item[0])]
+        out[item[1]] = [item]
       } else {
-        out[item[1]].push(parseFloat(item[0]))
+        out[item[1]].push(item)
       }
     })
-    return this.getObjectKeys(out).map((versuch_id: string) => {
-      return { name: versuch_id, y: calculateArrayAverage(out[versuch_id]), color: this.classColors[versuch_id] }
+    this.calculatorService.buildColumn(out).then((res: any) => {
+      const drillData: { low: number, q1: number, median: number, q3: number, high: number, name: string, color: any }[] = []
+      this.getObjectKeys(res).forEach((versuch_id: string) => {
+        drillData.push({ low: parseFloat(res[versuch_id]['low']), q1: parseFloat(res[versuch_id]['q1']), median: parseFloat(res[versuch_id]['median']), q3: parseFloat(res[versuch_id]['q3']), high: parseFloat(res[versuch_id]['high']), name: versuch_id, color: this.classColors[versuch_id] })
+      })
+      this.chartOptionsBoxplot.drilldown?.series?.push({
+        type: 'boxplot', id: faktor_id, data: drillData, name: faktor_id, 
+        tooltip: {
+          pointFormatter: function () {
+            return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + res[this.name]['mean']
+            + '</b><br/><span style="color:' + this.color + '">\u25CF</span> high = ' + this.options.high
+            + '<br/><span style="color:' + this.color + '">\u25CF</span> q3 = ' + this.options.q3
+            + '<br/><span style="color:' + this.color + '">\u25CF</span> median = ' + this.options.median
+            + '<br/><span style="color:' + this.color + '">\u25CF</span> q1 = ' + this.options.q1
+            + '<br/><span style="color:' + this.color + '">\u25CF</span> low = ' + this.options.low
+          }
+        },
+      })
+
+      let outliers: any[] = []
+      this.getObjectKeys(res).forEach((versuch_id: string, index: number) => {
+        if (res[versuch_id]['outliers'].length != 0) {
+          outliers = outliers.concat(res[versuch_id]['outliers'].map((item: number) => {
+            return { name: versuch_id, y: item }
+          }))
+        }
+      })
+      this.chartOptionsBoxplot.drilldown?.series?.push({
+        type: 'scatter', id: faktor_id + 'out', data: outliers, name: 'Outliers', marker: {
+          fillColor: 'white',
+          lineWidth: 1,
+          lineColor: 'red'
+        },
+        tooltip: {
+          pointFormat: `{point.name}: {point.y}`
+        }
+      })
+
     })
+
   }
 
   getTableDataSummery() {
