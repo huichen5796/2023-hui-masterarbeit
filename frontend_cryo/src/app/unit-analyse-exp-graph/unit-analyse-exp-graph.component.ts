@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CalculatorService } from '../app-services';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import * as Highcharts from 'highcharts';
 import HC_more from 'highcharts/highcharts-more';
 import HC_accessibility from 'highcharts/modules/accessibility';
@@ -12,13 +11,6 @@ import HC_exporting from 'highcharts/modules/exporting';
   selector: 'app-unit-analyse-exp-graph',
   templateUrl: './unit-analyse-exp-graph.component.html',
   styleUrls: ['./unit-analyse-exp-graph.component.css'],
-  // animations: [
-  //   trigger('detailExpand', [
-  //     state('collapsed', style({height: '0px', minHeight: '0'})),
-  //     state('expanded', style({height: '*'})),
-  //     transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-  //   ]),
-  // ],
 })
 export class UnitAnalyseExpGraphComponent implements OnChanges {
   hash: { [k: string]: string } = {
@@ -89,7 +81,6 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     } else {
       return {}
     }
-
   }
 
   getObjectKeys(obj: any): string[] {
@@ -458,17 +449,6 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     }
 
   }
-}
-
-function calculateArrayAverage(arr: number[]): number {
-  if (arr.length === 0) {
-    return 0
-  }
-
-  const sum = arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-  const average = sum / arr.length;
-
-  return average;
 }
 
 

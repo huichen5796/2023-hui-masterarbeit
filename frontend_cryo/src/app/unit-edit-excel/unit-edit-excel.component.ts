@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import * as ExcelJS from 'exceljs';
-import { QueryNeo4jService } from '../app-services';
+import { CalculatorService, QueryNeo4jService } from '../app-services';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -24,8 +24,21 @@ export class UnitEditExcelComponent implements OnChanges {
   maxValuePosition: { [key: string]: number[] } = {}
   classColors: { [key: string]: string } = {}
   formControl: string = 'raw';
+  statisticalResults: { [key: string]: any } = {}
+  dict: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn', 'viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
+  hash: { [k: string]: string } = {
+    viabilityppn: 'norm. rel. viability',
+    durchmetterppn: 'norm. rel. diameter',
+    recoveried_cellsppn: 'norm. recovery rate',
+    rundheitppn: 'norm. rel. circularity',
+    viabilitypp: 'rel. viability',
+    durchmetterpp: 'rel. diameter',
+    recoveried_cellspp: 'recovery rate',
+    rundheitpp: 'rel. circularity'
+  }
   constructor(
     private queryNeo4jService: QueryNeo4jService,
+    private calculatorService: CalculatorService,
   ) {
 
   }
@@ -49,6 +62,7 @@ export class UnitEditExcelComponent implements OnChanges {
     this.sortedResultData = {}
     this.classColors = {}
     this.formControl = 'raw'
+    this.statisticalResults = {}
     let position: number = 1
     this.experiment['child'].forEach((versuch: any) => {
       versuch['probes'].forEach((probe: any) => {
@@ -87,7 +101,7 @@ export class UnitEditExcelComponent implements OnChanges {
           if (this.checkDone()) {
             this.sortedExcel()
             this.normalize()
-            this.statisticalResults()
+            this.statisticalData()
           }
         })
       })
@@ -177,37 +191,99 @@ export class UnitEditExcelComponent implements OnChanges {
     return normalizedArray
   }
 
-  statisticalResults() {
-    const dict = ['viabilitypp', 'viabilityppn', 'recoveried_cellspp', 'recoveried_cellsppn', 'rundheitpp', 'rundheitppn', 'durchmetterpp', 'durchmetterppn']
-
+  statisticalData() {
     const faktorNames = this.getObjectKeys(this.faktor_group[this.getObjectKeys(this.faktor_group)[0]]).sort((a, b) => a.localeCompare(b))
     faktorNames.forEach((faktor: string) => {
       if (!this.sortedResultData[faktor]) {
         this.sortedResultData[faktor] = {}
-        dict.forEach(item => this.sortedResultData[faktor][item] = [])
+        this.dict.forEach(item => this.sortedResultData[faktor][item] = [])
       }
 
       for (const versuch_id of this.getObjectKeys(this.faktor_group).sort((a, b) => a.localeCompare(b))) {
         this.excelData.slice(this.faktor_group[versuch_id][faktor][0] + 1, this.faktor_group[versuch_id][faktor][1] + 1).forEach((item: any) => {
-          dict.forEach(itemDict => this.sortedResultData[faktor][itemDict].push([item[itemDict], versuch_id]))
+          this.dict.forEach(itemDict => this.sortedResultData[faktor][itemDict].push([item[itemDict], versuch_id]))
         })
       }
     })
+  }
 
+  getAllStatisticalData(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      let anovaTestPormise: Promise<string>[] = []
+      this.dict.forEach((item: string) => {
+        var promise = new Promise<string>((resolve, reject) => {
+          this.calculatorService.anovaTest(this.getDataToShow(item)).then((res: any) => {
+            if (!this.statisticalResults[item]) {
+              this.statisticalResults[item] = {}
+            }
+            this.statisticalResults[item]['anovaTestResult'] = res
+            resolve('done')
+          })
+        })
+        anovaTestPormise.push(promise)
+      })
+      Promise.all(anovaTestPormise).then(() => {
+        let buildColumnPromise: Promise<string>[] = []
+        this.dict.forEach((item: string) => {
+          var promise = new Promise<string>((resolve, reject) => {
+            this.calculatorService.buildColumn(this.getDataToShow(item)).then((res: any) => {
+              if (!this.statisticalResults[item]) {
+                this.statisticalResults[item] = {}
+              }
+              this.statisticalResults[item]['buildColumn'] = res
+              resolve('done')
+            })
+          })
+          buildColumnPromise.push(promise)
+        })
+        Promise.all(buildColumnPromise).then(() => {
+          let childPromise: Promise<string>[] = []
+          this.dict.forEach((item: string) => {
+            this.getObjectKeys(this.statisticalResults[item]['buildColumn']).forEach((faktor_id:string)=>{
+              childPromise.push(this.getDrillDownBoxplot(faktor_id,item))
+            })
+          })
+
+          Promise.all(childPromise).then(() => {
+            resolve()
+          })
+        })
+      })
+    })
+  }
+
+  getDrillDownBoxplot(faktor_id: string, which: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      let out: { [k: string]: any } = {}
+      this.getDataToShow(which)[faktor_id].forEach((item: [string, string]) => {
+        if (!out[item[1]]) {
+          out[item[1]] = [item]
+        } else {
+          out[item[1]].push(item)
+        }
+      })
+      this.calculatorService.buildColumn(out).then((res: any) => {
+        this.statisticalResults[which]['buildColumn'][faktor_id]['child'] = res
+        resolve('done')
+      })
+    })
+  }
+
+
+  getDataToShow(which: string | null): { [key: string]: [string, string][] } {
+    if (which) {
+      let out: { [key: string]: [string, string][] } = {}
+      this.getObjectKeys(this.sortedResultData).forEach((faktor: string) => {
+        out[faktor] = this.sortedResultData[faktor][which]
+      })
+      return out
+    } else {
+      return {}
+    }
   }
 
   generateSheet(sheetName: string, workbook: ExcelJS.Workbook) {
-    const hash: { [k: string]: string } = {
-      viabilityppn: 'norm. rel. viability',
-      durchmetterppn: 'norm. rel. diameter',
-      recoveried_cellsppn: 'norm. recovery rate',
-      rundheitppn: 'norm. rel. circularity',
-      viabilitypp: 'rel. viability',
-      durchmetterpp: 'rel. diameter',
-      recoveried_cellspp: 'recovery rate',
-      rundheitpp: 'rel. circularity'
-    }
-    const ws = workbook.addWorksheet(hash[sheetName])
+    const ws = workbook.addWorksheet(this.hash[sheetName])
     this.getObjectKeys(this.sortedResultData).forEach((faktorName: string, index: number) => {
       let cell = ws.getCell(`${String.fromCharCode(65 + index)}1`)
       cell.value = faktorName
@@ -258,6 +334,9 @@ export class UnitEditExcelComponent implements OnChanges {
   }
 
   exportToExcel() {
+    this.getAllStatisticalData().then(()=>{
+      console.log(this.statisticalResults) //hier build table and column in excel
+    })
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('raw data');
 
@@ -405,10 +484,6 @@ export class UnitEditExcelComponent implements OnChanges {
       return false
     }
   }
-
-  // getFormValue(): string {
-  //   return this.formControl.value ? this.formControl.value : ''
-  // }
 
 }
 
