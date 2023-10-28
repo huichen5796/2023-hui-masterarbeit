@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CalculatorService } from '../app-services';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import * as Highcharts from 'highcharts';
 import HC_more from 'highcharts/highcharts-more';
 import HC_accessibility from 'highcharts/modules/accessibility';
@@ -12,16 +12,15 @@ import HC_exporting from 'highcharts/modules/exporting';
   selector: 'app-unit-analyse-exp-graph',
   templateUrl: './unit-analyse-exp-graph.component.html',
   styleUrls: ['./unit-analyse-exp-graph.component.css'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  // animations: [
+  //   trigger('detailExpand', [
+  //     state('collapsed', style({height: '0px', minHeight: '0'})),
+  //     state('expanded', style({height: '*'})),
+  //     transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+  //   ]),
+  // ],
 })
 export class UnitAnalyseExpGraphComponent implements OnChanges {
-  expandedElement!: any
   hash: { [k: string]: string } = {
     viabilityppn: 'norm. rel. viability',
     durchmetterppn: 'norm. rel. diameter',
@@ -380,12 +379,12 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     this.calculatorService.buildColumn(out).then((res: any) => {
       const drillData: { low: number, q1: number, median: number, q3: number, high: number, name: string, color: any }[] = []
       this.getObjectKeys(res).forEach((versuch_id: string) => {
-        this.tableSummery.forEach((item:any)=>{
-          if (item['factor'] === faktor_id){
-            if (!item['child']){
+        this.tableSummery.forEach((item: any) => {
+          if (item['factor'] === faktor_id) {
+            if (!item['child']) {
               item['child'] = []
             }
-            item['child'].push({factor:versuch_id, ...res[versuch_id]})
+            item['child'].push({ factor: versuch_id, ...res[versuch_id] })
             return false
           }
           return true
@@ -425,19 +424,39 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
         }
       })
 
-    })  
-    
+    })
+
 
   }
 
   getTableDataSummery() {
     this.showBoxplot = false
     this.tableSummery = this.getObjectKeys(this.dataToShow).map((item: string) => {
-      return { factor: item, ...this.dataToShow[item] }
+      return { factor: item, ...this.dataToShow[item], expand: false }
     })
     this.updateChartOptionsBoxplot()
     this.showBoxplot = true
     this.showSummery = true
+  }
+
+  expand(faktor_id: string, child: any) {
+    if (child) {
+      this.tableSummery.forEach((item: any, index: number) => {
+        if (item['factor'] === faktor_id) {
+          if (item['expand']) {
+            this.tableSummery.splice(index + 1, item['child'].length)
+          }
+          else {
+            this.tableSummery.splice(index + 1, 0, ...item['child'])
+          }
+          item['expand'] = !item['expand']
+          return false
+        }
+        return true
+      })
+      this.tableSummery = [...this.tableSummery]
+    }
+
   }
 }
 

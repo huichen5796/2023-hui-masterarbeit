@@ -2,6 +2,15 @@
     margin-left: 40px;
 }
 
+.graph-box {
+    display: flex;
+}
+
+.graph {
+    border:solid;
+    border-width: 1px;
+}
+
 .green {
     color: rgb(7, 219, 7);
     font-weight: bold;
@@ -62,6 +71,6 @@ tr.example-element-row:not(.example-expanded-row):active {
     border-bottom-width: 0;
 }
 
-.example-element-detail {
-    transform: translateX(-16px);
+.expander {
+    background-color:rgb(230, 229, 229);
 }
