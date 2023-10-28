@@ -1,16 +1,27 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CalculatorService } from '../app-services';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import * as Highcharts from 'highcharts';
 import HC_more from 'highcharts/highcharts-more';
 import HC_accessibility from 'highcharts/modules/accessibility';
 import HC_drilldown from 'highcharts/modules/drilldown';
+import HC_exportData from 'highcharts/modules/export-data';
+import HC_exporting from 'highcharts/modules/exporting';
 
 @Component({
   selector: 'app-unit-analyse-exp-graph',
   templateUrl: './unit-analyse-exp-graph.component.html',
-  styleUrls: ['./unit-analyse-exp-graph.component.css']
+  styleUrls: ['./unit-analyse-exp-graph.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class UnitAnalyseExpGraphComponent implements OnChanges {
+  expandedElement!: any
   hash: { [k: string]: string } = {
     viabilityppn: 'norm. rel. viability',
     durchmetterppn: 'norm. rel. diameter',
@@ -36,7 +47,7 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
   tableData: any = {}
   showTable: boolean = false
   tableHeader: string[] = ["group1", "group2", "meandiff", "p-adj", "lower", "upper", "reject"]
-  tableHeaderSumm: string[] = ["mean", "variance", "SD", 'SE', "CI 95%", 'low', 'q1', 'median', 'q3', 'high', 'outliers']
+  tableHeaderSumm: string[] = ['factor', "mean", "variance", "SD", 'SE', "CI 95%", 'low', 'q1', 'median', 'q3', 'high', 'outliers', 'expand']
   tableSummery: any = []
   showSummery: boolean = false
   constructor(
@@ -49,6 +60,8 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     HC_more(Highcharts)
     HC_accessibility(Highcharts);
     HC_drilldown(Highcharts);
+    HC_exportData(Highcharts);
+    HC_exporting(Highcharts);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -139,9 +152,9 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           }),
           tooltip: {
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + this.y 
-              + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + self.dataToShow[this.name]['n']
-              + '<br/><span style="color:' + this.color + '">\u25CF</span> CI 95% = ' + JSON.stringify(self.dataToShow[this.name]['CI 95%'])
+              return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + this.y
+                + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + self.dataToShow[this.name]['n']
+                + '<br/><span style="color:' + this.color + '">\u25CF</span> CI 95% = ' + JSON.stringify(self.dataToShow[this.name]['CI 95%'])
             }
           },
         },
@@ -179,7 +192,25 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
         activeAxisLabelStyle: {
           position: 'end'
         }
-      }
+      },
+      exporting: {
+        buttons: {
+          contextButton: {
+            menuItems: [
+              'viewFullscreen', 'separator', 'downloadPNG',
+              'downloadSVG', 'downloadPDF'
+            ]
+          },
+        },
+        enabled: true,
+      },
+      navigation: {
+        buttonOptions: {
+          align: 'right',
+          verticalAlign: 'top',
+          y: 0
+        }
+      },
     }
 
     this.getObjectKeys(this.dataToShow).forEach(faktor_id => {
@@ -193,11 +224,11 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
         }
       })
       this.calculatorService.buildColumn(out).then((res: any) => {
-        const drillData:any = this.getObjectKeys(res).map((versuch_id: string) => {
+        const drillData: any = this.getObjectKeys(res).map((versuch_id: string) => {
           return { name: versuch_id, y: parseFloat(res[versuch_id]['mean']), color: this.classColors[versuch_id] }
         })
         this.chartOptions.drilldown?.series?.push({
-          type: 'column', id: faktor_id, data: drillData, name: faktor_id, 
+          type: 'column', id: faktor_id, data: drillData, name: faktor_id,
           // dataLabels: {
           //   enabled: true,
           //   format: '{point.y:.4f}',
@@ -205,17 +236,17 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           // }, 
           tooltip: {
             pointFormatter: function () {
-              return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + this.y 
-              + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + res[this.name]['n']
-              + '<br/><span style="color:' + this.color + '">\u25CF</span> CI 95% = ' + JSON.stringify(res[this.name]['CI 95%'])
+              return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + this.y
+                + '</b><br/><span style="color:' + this.color + '">\u25CF</span> n = ' + res[this.name]['n']
+                + '<br/><span style="color:' + this.color + '">\u25CF</span> CI 95% = ' + JSON.stringify(res[this.name]['CI 95%'])
             }
           },
         })
 
         this.chartOptions.drilldown?.series?.push({
           type: 'errorbar', id: faktor_id + 'errorbar', data: this.getObjectKeys(res).map((versuch_id: string) => {
-            return {low:parseFloat(res[versuch_id]['CI 95%'][0]), high: parseFloat(res[versuch_id]['CI 95%'][1]), name:versuch_id}
-          }), name: 'CI 95%',tooltip: {
+            return { low: parseFloat(res[versuch_id]['CI 95%'][0]), high: parseFloat(res[versuch_id]['CI 95%'][1]), name: versuch_id }
+          }), name: 'CI 95%', tooltip: {
             pointFormatter: function () {
               return ''
             }
@@ -264,11 +295,11 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           tooltip: {
             pointFormatter: function () {
               return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + self.dataToShow[this.name]['mean']
-              + '</b><br/><span style="color:' + this.color + '">\u25CF</span> high = ' + this.options.high
-              + '<br/><span style="color:' + this.color + '">\u25CF</span> q3 = ' + this.options.q3
-              + '<br/><span style="color:' + this.color + '">\u25CF</span> median = ' + this.options.median
-              + '<br/><span style="color:' + this.color + '">\u25CF</span> q1 = ' + this.options.q1
-              + '<br/><span style="color:' + this.color + '">\u25CF</span> low = ' + this.options.low
+                + '</b><br/><span style="color:' + this.color + '">\u25CF</span> high = ' + this.options.high
+                + '<br/><span style="color:' + this.color + '">\u25CF</span> q3 = ' + this.options.q3
+                + '<br/><span style="color:' + this.color + '">\u25CF</span> median = ' + this.options.median
+                + '<br/><span style="color:' + this.color + '">\u25CF</span> q1 = ' + this.options.q1
+                + '<br/><span style="color:' + this.color + '">\u25CF</span> low = ' + this.options.low
             }
           },
         },
@@ -293,7 +324,26 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
         activeAxisLabelStyle: {
           position: 'end'
         }
-      }
+      },
+
+      exporting: {
+        buttons: {
+          contextButton: {
+            menuItems: [
+              'viewFullscreen', 'separator', 'downloadPNG',
+              'downloadSVG', 'downloadPDF'
+            ]
+          },
+        },
+        enabled: true,
+      },
+      navigation: {
+        buttonOptions: {
+          align: 'right',
+          verticalAlign: 'top',
+          y: 0
+        }
+      },
     }
 
     this.getObjectKeys(this.dataToShow).forEach(faktor_id => {
@@ -330,18 +380,28 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     this.calculatorService.buildColumn(out).then((res: any) => {
       const drillData: { low: number, q1: number, median: number, q3: number, high: number, name: string, color: any }[] = []
       this.getObjectKeys(res).forEach((versuch_id: string) => {
+        this.tableSummery.forEach((item:any)=>{
+          if (item['factor'] === faktor_id){
+            if (!item['child']){
+              item['child'] = []
+            }
+            item['child'].push({factor:versuch_id, ...res[versuch_id]})
+            return false
+          }
+          return true
+        })
         drillData.push({ low: parseFloat(res[versuch_id]['low']), q1: parseFloat(res[versuch_id]['q1']), median: parseFloat(res[versuch_id]['median']), q3: parseFloat(res[versuch_id]['q3']), high: parseFloat(res[versuch_id]['high']), name: versuch_id, color: darkenColor(this.classColors[versuch_id]) })
       })
       this.chartOptionsBoxplot.drilldown?.series?.push({
-        type: 'boxplot', id: faktor_id, data: drillData, name: faktor_id, 
+        type: 'boxplot', id: faktor_id, data: drillData, name: faktor_id,
         tooltip: {
           pointFormatter: function () {
             return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + res[this.name]['mean']
-            + '</b><br/><span style="color:' + this.color + '">\u25CF</span> high = ' + this.options.high
-            + '<br/><span style="color:' + this.color + '">\u25CF</span> q3 = ' + this.options.q3
-            + '<br/><span style="color:' + this.color + '">\u25CF</span> median = ' + this.options.median
-            + '<br/><span style="color:' + this.color + '">\u25CF</span> q1 = ' + this.options.q1
-            + '<br/><span style="color:' + this.color + '">\u25CF</span> low = ' + this.options.low
+              + '</b><br/><span style="color:' + this.color + '">\u25CF</span> high = ' + this.options.high
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> q3 = ' + this.options.q3
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> median = ' + this.options.median
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> q1 = ' + this.options.q1
+              + '<br/><span style="color:' + this.color + '">\u25CF</span> low = ' + this.options.low
           }
         },
       })
@@ -365,7 +425,8 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
         }
       })
 
-    })
+    })  
+    
 
   }
 
@@ -402,7 +463,7 @@ function checkType(value: any): number {
   }
 }
 
-function darkenColor(color:string, factor:number=50) {
+function darkenColor(color: string, factor: number = 50) {
   const r = parseInt(color.slice(1, 3), 16);
   const g = parseInt(color.slice(3, 5), 16);
   const b = parseInt(color.slice(5, 7), 16);
