@@ -197,12 +197,12 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           return { name: versuch_id, y: parseFloat(res[versuch_id]['mean']), color: this.classColors[versuch_id] }
         })
         this.chartOptions.drilldown?.series?.push({
-          type: 'column', id: faktor_id, data: drillData, name: faktor_id, dataLabels: {
-            enabled: true,
-            format: '{point.y:.4f}',
-            position:'right'
-          }, 
-
+          type: 'column', id: faktor_id, data: drillData, name: faktor_id, 
+          // dataLabels: {
+          //   enabled: true,
+          //   format: '{point.y:.4f}',
+          //   position:'right'
+          // }, 
           tooltip: {
             pointFormatter: function () {
               return '<span style="color:' + this.color + '">\u25CF</span> mean = <b>' + this.y 
@@ -330,7 +330,7 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     this.calculatorService.buildColumn(out).then((res: any) => {
       const drillData: { low: number, q1: number, median: number, q3: number, high: number, name: string, color: any }[] = []
       this.getObjectKeys(res).forEach((versuch_id: string) => {
-        drillData.push({ low: parseFloat(res[versuch_id]['low']), q1: parseFloat(res[versuch_id]['q1']), median: parseFloat(res[versuch_id]['median']), q3: parseFloat(res[versuch_id]['q3']), high: parseFloat(res[versuch_id]['high']), name: versuch_id, color: this.classColors[versuch_id] })
+        drillData.push({ low: parseFloat(res[versuch_id]['low']), q1: parseFloat(res[versuch_id]['q1']), median: parseFloat(res[versuch_id]['median']), q3: parseFloat(res[versuch_id]['q3']), high: parseFloat(res[versuch_id]['high']), name: versuch_id, color: darkenColor(this.classColors[versuch_id]) })
       })
       this.chartOptionsBoxplot.drilldown?.series?.push({
         type: 'boxplot', id: faktor_id, data: drillData, name: faktor_id, 
@@ -400,4 +400,18 @@ function checkType(value: any): number {
   } else {
     return 0
   }
+}
+
+function darkenColor(color:string, factor:number=50) {
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
+
+  const newR = Math.max(0, r - factor);
+  const newG = Math.max(0, g - factor);
+  const newB = Math.max(0, b - factor);
+
+  const newColor = `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+
+  return newColor;
 }
