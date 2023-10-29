@@ -25,6 +25,7 @@ export class UnitEditExcelComponent implements OnChanges {
   classColors: { [key: string]: string } = {}
   formControl: string = 'raw';
   statisticalResults: { [key: string]: any } = {}
+  exporting:boolean = false
   dict: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn', 'viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
   hash: { [k: string]: string } = {
     viabilityppn: 'norm. rel. viability',
@@ -48,7 +49,7 @@ export class UnitEditExcelComponent implements OnChanges {
     }
   }
 
-  init() {
+  initParameters(){
     this.showTable = false
     this.excelData = [
       { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
@@ -63,6 +64,11 @@ export class UnitEditExcelComponent implements OnChanges {
     this.classColors = {}
     this.formControl = 'raw'
     this.statisticalResults = {}
+    this.exporting = false
+  }
+
+  init() {
+    this.initParameters()
     let position: number = 1
     this.experiment['child'].forEach((versuch: any) => {
       versuch['probes'].forEach((probe: any) => {
@@ -308,56 +314,78 @@ export class UnitEditExcelComponent implements OnChanges {
           right: { style: 'thin' },
         };
       })
+    })
 
-      this.getObjectKeys(this.classColors).forEach((info: string, index: number) => {
-        ws.getCell(`G${index + 2}`).value = info
-        ws.getCell(`F${index + 2}`).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: this.classColors[info].replace('#', '') },
-        };
-      })
-      let summeryRow: { [key: string]: any }[] = []
-      this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map((faktor_id: string) => {
-        return { "factor / trial ID": faktor_id, ...this.statisticalResults[sheetName]['buildColumn'][faktor_id] }
-      }).forEach((objFaktor: any) => {
-        summeryRow.push(objFaktor)
-        this.getObjectKeys(objFaktor['child']).forEach((versuch_id: string) => {
-          summeryRow.push({ "factor / trial ID": versuch_id, ...objFaktor['child'][versuch_id] })
-        })
-      })
+    this.getObjectKeys(this.classColors).forEach((info: string, index: number) => {
+      ws.getCell(`G${index + 2}`).value = info
+      ws.getCell(`F${index + 2}`).fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: this.classColors[info].replace('#', '') },
+      };
+    })
 
-      const headers: string[] = this.getObjectKeys(summeryRow[1])
-      headers.forEach((header: string, index: number) => {
-        ws.getCell(`${String.fromCharCode(73 + index)}1`).value = header
-        ws.getCell(`${String.fromCharCode(73 + index)}1`).border = {
+    let summeryRow: { [key: string]: any }[] = []
+    this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map((faktor_id: string) => {
+      return { "factor / trial ID": faktor_id, ...this.statisticalResults[sheetName]['buildColumn'][faktor_id] }
+    }).forEach((objFaktor: any) => {
+      summeryRow.push(objFaktor)
+      this.getObjectKeys(objFaktor['child']).forEach((versuch_id: string) => {
+        summeryRow.push({ "factor / trial ID": versuch_id, ...objFaktor['child'][versuch_id] })
+      })
+    })
+    const headers: string[] = this.getObjectKeys(summeryRow[1])
+    headers.forEach((header: string, index: number) => {
+      ws.getCell(`${String.fromCharCode(73 + index)}2`).value = header
+      ws.getCell(`${String.fromCharCode(73 + index)}2`).style.font = { bold: true }
+      ws.getCell(`${String.fromCharCode(73 + index)}2`).border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+      summeryRow.forEach((row: any, i: number) => {
+        var cell = ws.getCell(`${String.fromCharCode(73 + index)}${i + 3}`)
+        cell.value = row[header]
+        cell.border = {
           top: { style: 'thin' },
           left: { style: 'thin' },
           bottom: { style: 'thin' },
           right: { style: 'thin' },
         };
-        summeryRow.forEach((row: any, i: number) => {
-          var cell = ws.getCell(`${String.fromCharCode(73 + index)}${i + 2}`)
-          cell.value = row[header]
-          cell.border = {
-            top: { style: 'thin' },
-            left: { style: 'thin' },
-            bottom: { style: 'thin' },
-            right: { style: 'thin' },
+        if (!row['child']) {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: this.classColors[row["factor / trial ID"]].replace('#', '') },
           };
-          if (!row['child']) {
-            cell.fill = {
-              type: 'pattern',
-              pattern: 'solid',
-              fgColor: { argb: this.classColors[row["factor / trial ID"]].replace('#', '') },
-            };
-          }
-        })
+        }
+      })
+    })
+
+    const annovaResultsHeader: string[] = this.getObjectKeys(this.statisticalResults[sheetName]['anovaTestResult']['Tukey HSD 0.05'][0])
+    annovaResultsHeader.forEach((header: string, index: number) => {
+      ws.getCell(`${String.fromCharCode(73 + index)}${summeryRow.length + 9}`).value = header
+      ws.getCell(`${String.fromCharCode(73 + index)}${summeryRow.length + 9}`).style.font = { bold: true }
+      ws.getCell(`${String.fromCharCode(73 + index)}${summeryRow.length + 9}`).border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+      this.statisticalResults[sheetName]['anovaTestResult']['Tukey HSD 0.05'].forEach((row: any, i: number) => {
+        var cell = ws.getCell(`${String.fromCharCode(73 + index)}${i + summeryRow.length + 10}`)
+        cell.value = row[header]
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
       })
     })
 
     const alignment = { horizontal: 'center', vertical: 'middle' };
-
     ws.eachRow((row: any) => {
       row.eachCell((cell: any) => {
         cell.alignment = alignment;
@@ -377,9 +405,52 @@ export class UnitEditExcelComponent implements OnChanges {
 
       });
     });
+    ws.getCell(`I1`).value = 'Statistical results'
+    ws.getCell(`I1`).border = {
+      top: { style: 'thick' },
+      bottom: { style: 'thick' },
+    };
+    ws.getCell('I1').alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.getCell('I1').style.font = { bold: true }
+    ws.mergeCells(`I1:U1`)
+
+    ws.getCell(`I${summeryRow.length + 5}`).value = 'One-Way ANOVA'
+    ws.getCell(`I${summeryRow.length + 5}`).border = {
+      top: { style: 'thick' },
+      bottom: { style: 'thick' },
+    };
+    ws.getCell(`I${summeryRow.length + 5}`).alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.getCell(`I${summeryRow.length + 5}`).style.font = { bold: true }
+    ws.mergeCells(`I${summeryRow.length + 5}:K${summeryRow.length + 5}`)
+
+    ws.getCell(`I${summeryRow.length + 6}`).value = 'F-statistic'
+    var fCell = ws.getCell(`J${summeryRow.length + 6}`)
+    fCell.value = this.statisticalResults[sheetName]['anovaTestResult']['F-statistic']
+    fCell.alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.mergeCells(`J${summeryRow.length + 6}: K${summeryRow.length + 6}`)
+
+    ws.getCell(`I${summeryRow.length + 7}`).value = 'p-value'
+    var pCell = ws.getCell(`J${summeryRow.length + 7}`)
+    pCell.value = this.statisticalResults[sheetName]['anovaTestResult']['p-value']
+    pCell.alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.mergeCells(`J${summeryRow.length + 7}: K${summeryRow.length + 7}`)
+
+    ws.getCell(`I${summeryRow.length + 8}`).value = 'Tukey'
+    ws.getCell(`I${summeryRow.length + 8}`).border = {
+      top: { style: 'thick' },
+      bottom: { style: 'thick' },
+    };
+    ws.getCell(`I${summeryRow.length + 8}`).alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.getCell(`I${summeryRow.length + 8}`).style.font = { bold: true }
+    ws.mergeCells(`I${summeryRow.length + 8}:O${summeryRow.length + 8}`)
+  }
+
+  generateGraph(ws:ExcelJS.Worksheet, sheetName:string){
+
   }
 
   exportToExcel() {
+    this.exporting = true
     this.getAllStatisticalData().then(() => {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('raw data');
@@ -511,7 +582,7 @@ export class UnitEditExcelComponent implements OnChanges {
         a.download = `${this.experiment['experiment']['Experiment_ID'].replace(' ', '_')}.xlsx`;
         a.click();
       });
-
+      this.exporting = false
     })
   }
 

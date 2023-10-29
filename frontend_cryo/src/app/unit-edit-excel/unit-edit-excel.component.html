@@ -7,8 +7,10 @@
         </mat-select>
     </mat-form-field>
 
-    <button mat-stroked-button class="toggle" (click)="exportToExcel()"><span style="color: #1976d2;">Export to
+    <button mat-stroked-button class="toggle" (click)="exportToExcel()" [disabled]="exporting"><span style="color: #1976d2;">Export to
             excel</span></button>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="exporting" style="transform: translateY(-11px);"></mat-progress-bar>
     <mat-divider style="transform: translateY(-11px);"></mat-divider>
     <table *ngIf="formControl=== 'raw'">
         <tr>
@@ -49,8 +51,9 @@
             </div>
         </table>
         <div>
-            <app-unit-analyse-exp-graph [sortedResultData]="sortedResultData" [which]="formControl" [classColors]="classColors"></app-unit-analyse-exp-graph>
+            <app-unit-analyse-exp-graph [sortedResultData]="sortedResultData" [which]="formControl"
+                [classColors]="classColors"></app-unit-analyse-exp-graph>
         </div>
-        
+
     </div>
 </div>
