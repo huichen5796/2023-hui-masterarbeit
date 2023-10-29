@@ -1,7 +1,12 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as ExcelJS from 'exceljs';
 import { CalculatorService, QueryNeo4jService } from '../app-services';
-import { FormControl } from '@angular/forms';
+import * as Highcharts from 'highcharts';
+import HC_more from 'highcharts/highcharts-more';
+import HC_accessibility from 'highcharts/modules/accessibility';
+import HC_drilldown from 'highcharts/modules/drilldown';
+import HC_exportData from 'highcharts/modules/export-data';
+import HC_exporting from 'highcharts/modules/exporting';
 
 @Component({
   selector: 'app-unit-edit-excel',
@@ -25,7 +30,7 @@ export class UnitEditExcelComponent implements OnChanges {
   classColors: { [key: string]: string } = {}
   formControl: string = 'raw';
   statisticalResults: { [key: string]: any } = {}
-  exporting:boolean = false
+  exporting: boolean = false
   dict: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn', 'viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
   hash: { [k: string]: string } = {
     viabilityppn: 'norm. rel. viability',
@@ -37,19 +42,27 @@ export class UnitEditExcelComponent implements OnChanges {
     recoveried_cellspp: 'recovery rate',
     rundheitpp: 'rel. circularity'
   }
+  Highcharts: typeof Highcharts = Highcharts;
   constructor(
     private queryNeo4jService: QueryNeo4jService,
     private calculatorService: CalculatorService,
-  ) {
+  ) { }
 
+  ngOnInit(): void {
+    HC_more(Highcharts)
+    HC_accessibility(Highcharts);
+    HC_drilldown(Highcharts);
+    HC_exportData(Highcharts);
+    HC_exporting(Highcharts);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['experiment']['currentValue']) {
       this.init()
     }
   }
 
-  initParameters(){
+  initParameters() {
     this.showTable = false
     this.excelData = [
       { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
@@ -288,7 +301,8 @@ export class UnitEditExcelComponent implements OnChanges {
     }
   }
 
-  generateSheet(sheetName: string, workbook: ExcelJS.Workbook) {
+  generateSheet(sheetName: string, workbook: ExcelJS.Workbook):ExcelJS.Worksheet {
+    const fn = this.getObjectKeys(this.sortedResultData).length
     const ws = workbook.addWorksheet(this.hash[sheetName])
     this.getObjectKeys(this.sortedResultData).forEach((faktorName: string, index: number) => {
       let cell = ws.getCell(`${String.fromCharCode(65 + index)}1`)
@@ -317,8 +331,8 @@ export class UnitEditExcelComponent implements OnChanges {
     })
 
     this.getObjectKeys(this.classColors).forEach((info: string, index: number) => {
-      ws.getCell(`G${index + 2}`).value = info
-      ws.getCell(`F${index + 2}`).fill = {
+      ws.getCell(`${String.fromCharCode(69 + fn)}${index + 2}`).value = info
+      ws.getCell(`${String.fromCharCode(68 + fn)}${index + 2}`).fill = {
         type: 'pattern',
         pattern: 'solid',
         fgColor: { argb: this.classColors[info].replace('#', '') },
@@ -405,48 +419,204 @@ export class UnitEditExcelComponent implements OnChanges {
 
       });
     });
-    ws.getCell(`I1`).value = 'Statistical results'
-    ws.getCell(`I1`).border = {
+    ws.getCell(`${String.fromCharCode(71 + fn)}1`).value = 'Statistical results'
+    ws.getCell(`${String.fromCharCode(71 + fn)}1`).border = {
       top: { style: 'thick' },
       bottom: { style: 'thick' },
     };
-    ws.getCell('I1').alignment = { horizontal: 'left', vertical: 'middle' }
-    ws.getCell('I1').style.font = { bold: true }
-    ws.mergeCells(`I1:U1`)
+    ws.getCell(`${String.fromCharCode(71 + fn)}1`).alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.getCell(`${String.fromCharCode(71 + fn)}1`).style.font = { bold: true }
+    ws.mergeCells(`${String.fromCharCode(71 + fn)}1:${String.fromCharCode(83 + fn)}1`)
 
-    ws.getCell(`I${summeryRow.length + 5}`).value = 'One-Way ANOVA'
-    ws.getCell(`I${summeryRow.length + 5}`).border = {
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 5}`).value = 'One-Way ANOVA'
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 5}`).border = {
       top: { style: 'thick' },
       bottom: { style: 'thick' },
     };
-    ws.getCell(`I${summeryRow.length + 5}`).alignment = { horizontal: 'left', vertical: 'middle' }
-    ws.getCell(`I${summeryRow.length + 5}`).style.font = { bold: true }
-    ws.mergeCells(`I${summeryRow.length + 5}:K${summeryRow.length + 5}`)
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 5}`).alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 5}`).style.font = { bold: true }
+    ws.mergeCells(`${String.fromCharCode(71 + fn)}${summeryRow.length + 5}:${String.fromCharCode(73 + fn)}${summeryRow.length + 5}`)
 
-    ws.getCell(`I${summeryRow.length + 6}`).value = 'F-statistic'
-    var fCell = ws.getCell(`J${summeryRow.length + 6}`)
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 6}`).value = 'F-statistic'
+    var fCell = ws.getCell(`${String.fromCharCode(72 + fn)}${summeryRow.length + 6}`)
     fCell.value = this.statisticalResults[sheetName]['anovaTestResult']['F-statistic']
     fCell.alignment = { horizontal: 'left', vertical: 'middle' }
-    ws.mergeCells(`J${summeryRow.length + 6}: K${summeryRow.length + 6}`)
+    ws.mergeCells(`${String.fromCharCode(72 + fn)}${summeryRow.length + 6}: ${String.fromCharCode(73 + fn)}${summeryRow.length + 6}`)
 
-    ws.getCell(`I${summeryRow.length + 7}`).value = 'p-value'
-    var pCell = ws.getCell(`J${summeryRow.length + 7}`)
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 7}`).value = 'p-value'
+    var pCell = ws.getCell(`${String.fromCharCode(72 + fn)}${summeryRow.length + 7}`)
     pCell.value = this.statisticalResults[sheetName]['anovaTestResult']['p-value']
     pCell.alignment = { horizontal: 'left', vertical: 'middle' }
-    ws.mergeCells(`J${summeryRow.length + 7}: K${summeryRow.length + 7}`)
+    ws.mergeCells(`${String.fromCharCode(72 + fn)}${summeryRow.length + 7}: ${String.fromCharCode(73 + fn)}${summeryRow.length + 7}`)
 
-    ws.getCell(`I${summeryRow.length + 8}`).value = 'Tukey'
-    ws.getCell(`I${summeryRow.length + 8}`).border = {
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 8}`).value = 'Tukey'
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 8}`).border = {
       top: { style: 'thick' },
       bottom: { style: 'thick' },
     };
-    ws.getCell(`I${summeryRow.length + 8}`).alignment = { horizontal: 'left', vertical: 'middle' }
-    ws.getCell(`I${summeryRow.length + 8}`).style.font = { bold: true }
-    ws.mergeCells(`I${summeryRow.length + 8}:O${summeryRow.length + 8}`)
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 8}`).alignment = { horizontal: 'left', vertical: 'middle' }
+    ws.getCell(`${String.fromCharCode(71 + fn)}${summeryRow.length + 8}`).style.font = { bold: true }
+    ws.mergeCells(`${String.fromCharCode(71 + fn)}${summeryRow.length + 8}:${String.fromCharCode(77 + fn)}${summeryRow.length + 8}`)
+
+    return ws
   }
 
-  generateGraph(ws:ExcelJS.Worksheet, sheetName:string){
+  generateGraph(sheetName: string): any {
+    const self = this
+    var chartOptions: Highcharts.Options = {
+      title: { align: 'center', text: this.hash[sheetName] },
+      xAxis: { type: 'category' },
+      yAxis: [{ title: { text: '%' } }],
+      legend: { enabled: false },
+      plotOptions: { column: { pointPadding: 0.2, borderWidth: 0, } },
+      series: [
+        {
+          name: this.hash[sheetName],
+          type: 'column',
+          colorByPoint: true,
+          data: this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map(faktor_id => {
+            return { y: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['mean']), name: faktor_id }
+          })
+        },
+        {
+          name: 'CI 95%',
+          type: 'errorbar',
+          data: this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map(faktor_id => {
+            return {
+              low: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['CI 95%'][0]),
+              high: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['CI 95%'][1])
+            }
+          }),
+          dataLabels: {
+            enabled: true,
+            formatter: function () {
+              if (this.point.high === this.y) {
+                const index: number = checkType(this.point.category)
+                this.point.name = self.getObjectKeys(self.statisticalResults[sheetName]['buildColumn'])[index]
+                return self.statisticalResults[sheetName]['anovaTestResult']['Tukey Group'][self.getObjectKeys(self.statisticalResults[sheetName]['buildColumn'])[index]];
+              }
+              return null;
+            }
+          }
+        }
+      ]
+    }
 
+    return chartOptions
+  }
+
+  generateGraphBoxplot(sheetName: string): any {
+    var chartOptions: Highcharts.Options = {
+      title: { align: 'center', text: this.hash[sheetName] },
+      xAxis: { type: 'category' },
+      yAxis: [{ title: { text: '%' } }],
+      legend: { enabled: false },
+      plotOptions: { column: { pointPadding: 0.2, borderWidth: 0, } },
+      series: [
+        {
+          name: this.hash[sheetName],
+          type: 'boxplot',
+          colorByPoint: true,
+          data: this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map(faktor_id => {
+            return { low: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['low']), q1: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['q1']), median: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['median']), q3: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['q3']), high: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['high']), drilldown: faktor_id, name: faktor_id }
+          })
+        },
+        {
+          name: 'Outliers',
+          color: 'red',
+          type: 'scatter',
+          data: this.getOutliers(sheetName),
+          marker: {
+            fillColor: 'white',
+            lineWidth: 1,
+            lineColor: 'red'
+          }
+        },
+        {
+          name: 'mean',
+          type: 'scatter',
+          data: this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map(faktor_id => {
+            return { drilldown: faktor_id + 'out', name: faktor_id, y: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['mean']) }
+          }),
+          marker: {
+            fillColor: 'white',
+            lineWidth: 1,
+            lineColor: 'green'
+          }
+        }
+      ]
+    }
+
+    return chartOptions
+  }
+
+  getOutliers(sheetName:string): any[] {
+    let outliers: any[] = []
+    this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).forEach((faktor_id: string, index: number) => {
+      if (this.statisticalResults[sheetName]['buildColumn'][faktor_id]['outliers'].length != 0) {
+        outliers = outliers.concat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['outliers'].map((item: number) => {
+          return { name: faktor_id, y: item }
+        }))
+      }
+    })
+    return outliers
+  }
+
+  @ViewChild('chartContainer') chartContainer!: ElementRef;
+
+  exportChartAsImage(wb: ExcelJS.Workbook, ws: ExcelJS.Worksheet, sheetName: string): Promise<void> {
+    const l = this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn'])
+    const h = l.length + this.statisticalResults[sheetName]['buildColumn'][l[0]]['child'].length * l.length + 8 + calculateCombination(l.length,2)
+    return new Promise<void>((resolve, reject) => {
+      const fn = this.getObjectKeys(this.sortedResultData).length
+      const cartOptions = this.generateGraph(sheetName)
+      const divElement = this.chartContainer.nativeElement;
+      var chart = Highcharts.chart(divElement, cartOptions);
+      // chart.exportChart({
+      //   type: 'image/svg+xml',
+      //   filename: 'chart-image',
+      //   url: ''
+      // }, cartOptions);
+      const svg = chart.getSVG()
+      const svgBlob = new Blob([svg], { type: 'image/svg+xml' });
+
+      const reader = new FileReader();
+      reader.onloadend = function (event: any) {
+        const base64Data = event.target.result;
+        const imageId = wb.addImage({
+          base64: base64Data,
+          extension: 'png',
+        });
+        ws.addImage(imageId, `${String.fromCharCode(68 + fn)}${h}:${String.fromCharCode(74 + fn)}${h + 12}`);
+        resolve()
+      };
+      reader.readAsDataURL(svgBlob);
+    })
+  }
+
+  exportChartAsImageBoxplot(wb: ExcelJS.Workbook, ws: ExcelJS.Worksheet, sheetName: string): Promise<void> {
+    const l = this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn'])
+    const h = l.length + this.statisticalResults[sheetName]['buildColumn'][l[0]]['child'].length * l.length + 8 + calculateCombination(l.length,2)
+    return new Promise<void>((resolve, reject) => {
+      const fn = this.getObjectKeys(this.sortedResultData).length
+      const cartOptions = this.generateGraphBoxplot(sheetName)
+      const divElement = this.chartContainer.nativeElement;
+      var chart = Highcharts.chart(divElement, cartOptions);
+      const svg = chart.getSVG()
+      const svgBlob = new Blob([svg], { type: 'image/svg+xml' });
+
+      const reader = new FileReader();
+      reader.onloadend = function (event: any) {
+        const base64Data = event.target.result;
+        const imageId = wb.addImage({
+          base64: base64Data,
+          extension: 'png',
+        });
+        ws.addImage(imageId, `${String.fromCharCode(77 + fn)}${h}:${String.fromCharCode(83 + fn)}${h+12}`);
+        resolve()
+      };
+      reader.readAsDataURL(svgBlob);
+    })
   }
 
   exportToExcel() {
@@ -571,18 +741,26 @@ export class UnitEditExcelComponent implements OnChanges {
         });
       });
 
-      console.log(this.statisticalResults) //hier build table and column in excel
-      this.dict.forEach(task => this.generateSheet(task, workbook))
+      let promiseList: Promise<void>[] = []
 
-      workbook.xlsx.writeBuffer().then((data: BlobPart) => {
-        const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${this.experiment['experiment']['Experiment_ID'].replace(' ', '_')}.xlsx`;
-        a.click();
-      });
-      this.exporting = false
+      console.log(this.statisticalResults) //hier build table and column in excel
+      this.dict.forEach(task => {
+        var ws = this.generateSheet(task, workbook)
+        promiseList.push(this.exportChartAsImage(workbook, ws, task))
+        promiseList.push(this.exportChartAsImageBoxplot(workbook, ws, task))
+      })
+
+      Promise.all(promiseList).then(() => {
+        workbook.xlsx.writeBuffer().then((data: BlobPart) => {
+          const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${this.experiment['experiment']['Experiment_ID'].replace(' ', '_')}.xlsx`;
+          a.click();
+        });
+        this.exporting = false
+      })
     })
   }
 
@@ -616,4 +794,32 @@ function getRandomCoolColor(): string {
   const purple = (Math.floor((0.8 + Math.random() * 0.2) * (255 - purpleRange))).toString(16).padStart(2, '0');
 
   return `#${blue}${green}${purple}`;
+}
+
+function checkType(value: any): number {
+  if (typeof value === 'string') {
+    return parseInt(value)
+  } else if (typeof value === 'number') {
+    return value
+  } else {
+    return 0
+  }
+}
+
+function calculateCombination(n: number, k: number): number {
+  if (k < 0 || k > n) {
+    return 0; // Invalid input
+  }
+
+  if (k === 0 || k === n) {
+    return 1; // Base case
+  }
+
+  // Calculate n! / (k! * (n - k)!)
+  let result = 1;
+  for (let i = 1; i <= k; i++) {
+    result = (result * (n - i + 1)) / i;
+  }
+
+  return result;
 }
