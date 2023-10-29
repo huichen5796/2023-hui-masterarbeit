@@ -239,8 +239,8 @@ export class UnitEditExcelComponent implements OnChanges {
         Promise.all(buildColumnPromise).then(() => {
           let childPromise: Promise<string>[] = []
           this.dict.forEach((item: string) => {
-            this.getObjectKeys(this.statisticalResults[item]['buildColumn']).forEach((faktor_id:string)=>{
-              childPromise.push(this.getDrillDownBoxplot(faktor_id,item))
+            this.getObjectKeys(this.statisticalResults[item]['buildColumn']).forEach((faktor_id: string) => {
+              childPromise.push(this.getDrillDownBoxplot(faktor_id, item))
             })
           })
 
@@ -310,13 +310,49 @@ export class UnitEditExcelComponent implements OnChanges {
       })
 
       this.getObjectKeys(this.classColors).forEach((info: string, index: number) => {
-        ws.getCell(`G${index + 3}`).value = info
-        ws.getCell(`F${index + 3}`).fill = {
+        ws.getCell(`G${index + 2}`).value = info
+        ws.getCell(`F${index + 2}`).fill = {
           type: 'pattern',
           pattern: 'solid',
           fgColor: { argb: this.classColors[info].replace('#', '') },
         };
+      })
+      let summeryRow: { [key: string]: any }[] = []
+      this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map((faktor_id: string) => {
+        return { "factor / trial ID": faktor_id, ...this.statisticalResults[sheetName]['buildColumn'][faktor_id] }
+      }).forEach((objFaktor: any) => {
+        summeryRow.push(objFaktor)
+        this.getObjectKeys(objFaktor['child']).forEach((versuch_id: string) => {
+          summeryRow.push({ "factor / trial ID": versuch_id, ...objFaktor['child'][versuch_id] })
+        })
+      })
 
+      const headers: string[] = this.getObjectKeys(summeryRow[1])
+      headers.forEach((header: string, index: number) => {
+        ws.getCell(`${String.fromCharCode(73 + index)}1`).value = header
+        ws.getCell(`${String.fromCharCode(73 + index)}1`).border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+        summeryRow.forEach((row: any, i: number) => {
+          var cell = ws.getCell(`${String.fromCharCode(73 + index)}${i + 2}`)
+          cell.value = row[header]
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' },
+          };
+          if (!row['child']) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: this.classColors[row["factor / trial ID"]].replace('#', '') },
+            };
+          }
+        })
       })
     })
 
@@ -325,147 +361,158 @@ export class UnitEditExcelComponent implements OnChanges {
     ws.eachRow((row: any) => {
       row.eachCell((cell: any) => {
         cell.alignment = alignment;
-        const value = parseFloat(cell.value);
-        if (!isNaN(value)) {
-          cell.value = value;
+        if (!Array.isArray(cell.value)) {
+          const value = parseFloat(cell.value);
+          if (!isNaN(value)) {
+            cell.value = value;
+          }
         }
+        else {
+          if (cell.value.length === 0) {
+            cell.value = ''
+          } else if (cell.value.length === 1) {
+            cell.value = parseFloat(cell.value[0])
+          }
+        }
+
       });
     });
   }
 
   exportToExcel() {
-    this.getAllStatisticalData().then(()=>{
-      console.log(this.statisticalResults) //hier build table and column in excel
-    })
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('raw data');
+    this.getAllStatisticalData().then(() => {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('raw data');
 
-    worksheet.columns = [
-      { header: '', key: 'vid' },
-      { header: '', key: 'preid' },
-      { header: 'pre data', key: 'viabilitypre' },
-      { header: 'pre data', key: 'recoveried_cellspre' },
-      { header: 'pre data', key: 'rundheitpre' },
-      { header: 'pre data', key: 'durchmetterpre' },
-      { header: '', key: 'postid' },
-      { header: 'post data', key: 'viabilitypost' },
-      { header: 'post data', key: 'recoveried_cellspost' },
-      { header: 'post data', key: 'rundheitpost' },
-      { header: 'post data', key: 'durchmetterpost' },
-      { header: 'post / pre', key: 'viabilitypp' },
-      { header: 'post / pre', key: 'recoveried_cellspp' },
-      { header: 'post / pre', key: 'rundheitpp' },
-      { header: 'post / pre', key: 'durchmetterpp' },
-      { header: 'norm. post / pre', key: 'viabilityppn' },
-      { header: 'norm. post / pre', key: 'recoveried_cellsppn' },
-      { header: 'norm. post / pre', key: 'rundheitppn' },
-      { header: 'norm. post / pre', key: 'durchmetterppn' },
-    ];
+      worksheet.columns = [
+        { header: '', key: 'vid' },
+        { header: '', key: 'preid' },
+        { header: 'pre data', key: 'viabilitypre' },
+        { header: 'pre data', key: 'recoveried_cellspre' },
+        { header: 'pre data', key: 'rundheitpre' },
+        { header: 'pre data', key: 'durchmetterpre' },
+        { header: '', key: 'postid' },
+        { header: 'post data', key: 'viabilitypost' },
+        { header: 'post data', key: 'recoveried_cellspost' },
+        { header: 'post data', key: 'rundheitpost' },
+        { header: 'post data', key: 'durchmetterpost' },
+        { header: 'post / pre', key: 'viabilitypp' },
+        { header: 'post / pre', key: 'recoveried_cellspp' },
+        { header: 'post / pre', key: 'rundheitpp' },
+        { header: 'post / pre', key: 'durchmetterpp' },
+        { header: 'norm. post / pre', key: 'viabilityppn' },
+        { header: 'norm. post / pre', key: 'recoveried_cellsppn' },
+        { header: 'norm. post / pre', key: 'rundheitppn' },
+        { header: 'norm. post / pre', key: 'durchmetterppn' },
+      ];
 
-    worksheet.addRows(this.sortedExcelData, "n");
+      worksheet.addRows(this.sortedExcelData, "n");
 
-    worksheet.mergeCells('C1:F1');
-    worksheet.mergeCells('H1:K1');
-    worksheet.mergeCells('L1:O1');
-    worksheet.mergeCells('P1:S1');
-    this.vertikal_merge.forEach((zone: [number, number]) => {
-      worksheet.mergeCells(`A${zone[0]}:A${zone[1]}`)
-    })
+      worksheet.mergeCells('C1:F1');
+      worksheet.mergeCells('H1:K1');
+      worksheet.mergeCells('L1:O1');
+      worksheet.mergeCells('P1:S1');
+      this.vertikal_merge.forEach((zone: [number, number]) => {
+        worksheet.mergeCells(`A${zone[0]}:A${zone[1]}`)
+      })
 
-    const border: any = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' },
-    };
+      const border: any = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
 
-    for (let i = 1; i <= (this.sortedExcelData.length + 1); i++) {
-      for (let j = 1; j <= this.getObjectKeys(this.sortedExcelData[0]).length; j++) {
-        const cell = worksheet.getCell(i, j);
+      for (let i = 1; i <= (this.sortedExcelData.length + 1); i++) {
+        for (let j = 1; j <= this.getObjectKeys(this.sortedExcelData[0]).length; j++) {
+          const cell = worksheet.getCell(i, j);
 
-        if ((j >= 3 && j <= 6)) {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'E2EFDA' },
-          };
-        } else if (j >= 8 && j <= 11) {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'C5D9F1' },
-          };
-        } else if (j >= 12 && j <= 15) {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FFF2CC' },
-          };
-        } else if (j >= 16 && j <= 19) {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FCE4D6' },
-          };
+          if ((j >= 3 && j <= 6)) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'E2EFDA' },
+            };
+          } else if (j >= 8 && j <= 11) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'C5D9F1' },
+            };
+          } else if (j >= 12 && j <= 15) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFF2CC' },
+            };
+          } else if (j >= 16 && j <= 19) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FCE4D6' },
+            };
+          }
+          cell.border = border
         }
-        cell.border = border
       }
-    }
-    const oriList: string[] = ['viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
-    const taskList: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn']
+      const oriList: string[] = ['viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
+      const taskList: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn']
 
-    const hash: { [k: string]: string } = {
-      viabilitypp: 'L',
-      recoveried_cellspp: 'M',
-      rundheitpp: 'N',
-      durchmetterpp: 'O',
-      viabilityppn: 'P',
-      recoveried_cellsppn: 'Q',
-      rundheitppn: 'R',
-      durchmetterppn: 'S'
-    }
+      const hash: { [k: string]: string } = {
+        viabilitypp: 'L',
+        recoveried_cellspp: 'M',
+        rundheitpp: 'N',
+        durchmetterpp: 'O',
+        viabilityppn: 'P',
+        recoveried_cellsppn: 'Q',
+        rundheitppn: 'R',
+        durchmetterppn: 'S'
+      }
 
-    oriList.forEach((ori: string, index: number) => {
-      this.maxValuePosition[ori].forEach((i) => {
-        worksheet.getCell(`${hash[ori]}${i + 2}`).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'DA9694' },
-        }
+      oriList.forEach((ori: string, index: number) => {
+        this.maxValuePosition[ori].forEach((i) => {
+          worksheet.getCell(`${hash[ori]}${i + 2}`).fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'DA9694' },
+          }
+        })
+
+        this.maxValuePosition[taskList[index]].forEach((i) => {
+          worksheet.getCell(`${hash[taskList[index]]}${i + 2}`).fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'DA9694' },
+          }
+        })
+
       })
 
-      this.maxValuePosition[taskList[index]].forEach((i) => {
-        worksheet.getCell(`${hash[taskList[index]]}${i + 2}`).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'DA9694' },
-        }
-      })
+      const alignment = { horizontal: 'center', vertical: 'middle' };
+
+      worksheet.eachRow((row: any) => {
+        row.eachCell((cell: any) => {
+          cell.alignment = alignment;
+          const value = parseFloat(cell.value);
+          if (!isNaN(value)) {
+            cell.value = value;
+          }
+        });
+      });
+
+      console.log(this.statisticalResults) //hier build table and column in excel
+      this.dict.forEach(task => this.generateSheet(task, workbook))
+
+      workbook.xlsx.writeBuffer().then((data: BlobPart) => {
+        const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${this.experiment['experiment']['Experiment_ID'].replace(' ', '_')}.xlsx`;
+        a.click();
+      });
 
     })
-
-    const alignment = { horizontal: 'center', vertical: 'middle' };
-
-    worksheet.eachRow((row: any) => {
-      row.eachCell((cell: any) => {
-        cell.alignment = alignment;
-        const value = parseFloat(cell.value);
-        if (!isNaN(value)) {
-          cell.value = value;
-        }
-      });
-    });
-    const taskTodoSheet: string[] = ['viabilityppn', 'durchmetterppn', 'recoveried_cellsppn', 'rundheitppn', 'viabilitypp', 'durchmetterpp', 'recoveried_cellspp', 'rundheitpp']
-    taskTodoSheet.forEach(task => this.generateSheet(task, workbook))
-
-    workbook.xlsx.writeBuffer().then((data: BlobPart) => {
-      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${this.experiment['experiment']['Experiment_ID'].replace(' ', '_')}.xlsx`;
-      a.click();
-    });
   }
 
   getObjectKeys(obj: any): string[] {

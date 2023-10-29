@@ -306,6 +306,21 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
           tooltip: {
             pointFormat: `{point.name}: {point.y}`
           }
+        },
+        {
+          name: 'mean',
+          type: 'scatter',
+          data: this.getObjectKeys(this.dataToShow).map(faktor_id => {
+            return { drilldown: faktor_id + 'out', name: faktor_id, y: parseFloat(this.dataToShow[faktor_id]['mean']) }
+          }),
+          marker: {
+            fillColor: 'white',
+            lineWidth: 1,
+            lineColor: 'green'
+          },
+          tooltip: {
+            pointFormat: `{point.name}: {point.y}`
+          }
         }
       ],
       drilldown: {
@@ -347,7 +362,7 @@ export class UnitAnalyseExpGraphComponent implements OnChanges {
     this.getObjectKeys(this.dataToShow).forEach((faktor_id: string, index: number) => {
       if (this.dataToShow[faktor_id]['outliers'].length != 0) {
         outliers = outliers.concat(this.dataToShow[faktor_id]['outliers'].map((item: number) => {
-          return { name: faktor_id, drilldown: faktor_id + 'out', y: item }
+          return { name: faktor_id, y: item }
         }))
       }
     })
