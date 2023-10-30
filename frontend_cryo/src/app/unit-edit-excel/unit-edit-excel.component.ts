@@ -7,6 +7,7 @@ import HC_accessibility from 'highcharts/modules/accessibility';
 import HC_drilldown from 'highcharts/modules/drilldown';
 import HC_exportData from 'highcharts/modules/export-data';
 import HC_exporting from 'highcharts/modules/exporting';
+import { Canvg } from 'canvg';
 
 @Component({
   selector: 'app-unit-edit-excel',
@@ -301,7 +302,7 @@ export class UnitEditExcelComponent implements OnChanges {
     }
   }
 
-  generateSheet(sheetName: string, workbook: ExcelJS.Workbook):ExcelJS.Worksheet {
+  generateSheet(sheetName: string, workbook: ExcelJS.Workbook): ExcelJS.Worksheet {
     const fn = this.getObjectKeys(this.sortedResultData).length
     const ws = workbook.addWorksheet(this.hash[sheetName])
     this.getObjectKeys(this.sortedResultData).forEach((faktorName: string, index: number) => {
@@ -467,6 +468,7 @@ export class UnitEditExcelComponent implements OnChanges {
       title: { align: 'center', text: this.hash[sheetName] },
       xAxis: { type: 'category' },
       yAxis: [{ title: { text: '%' } }],
+      credits: { enabled: false },
       legend: { enabled: false },
       plotOptions: { column: { pointPadding: 0.2, borderWidth: 0, } },
       series: [
@@ -510,6 +512,7 @@ export class UnitEditExcelComponent implements OnChanges {
       title: { align: 'center', text: this.hash[sheetName] },
       xAxis: { type: 'category' },
       yAxis: [{ title: { text: '%' } }],
+      credits: { enabled: false },
       legend: { enabled: false },
       plotOptions: { column: { pointPadding: 0.2, borderWidth: 0, } },
       series: [
@@ -518,7 +521,7 @@ export class UnitEditExcelComponent implements OnChanges {
           type: 'boxplot',
           colorByPoint: true,
           data: this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map(faktor_id => {
-            return { low: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['low']), q1: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['q1']), median: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['median']), q3: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['q3']), high: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['high']), drilldown: faktor_id, name: faktor_id }
+            return { low: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['low']), q1: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['q1']), median: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['median']), q3: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['q3']), high: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['high']), name: faktor_id }
           })
         },
         {
@@ -536,7 +539,7 @@ export class UnitEditExcelComponent implements OnChanges {
           name: 'mean',
           type: 'scatter',
           data: this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).map(faktor_id => {
-            return { drilldown: faktor_id + 'out', name: faktor_id, y: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['mean']) }
+            return { name: faktor_id, y: parseFloat(this.statisticalResults[sheetName]['buildColumn'][faktor_id]['mean']) }
           }),
           marker: {
             fillColor: 'white',
@@ -550,7 +553,7 @@ export class UnitEditExcelComponent implements OnChanges {
     return chartOptions
   }
 
-  getOutliers(sheetName:string): any[] {
+  getOutliers(sheetName: string): any[] {
     let outliers: any[] = []
     this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn']).forEach((faktor_id: string, index: number) => {
       if (this.statisticalResults[sheetName]['buildColumn'][faktor_id]['outliers'].length != 0) {
@@ -566,56 +569,47 @@ export class UnitEditExcelComponent implements OnChanges {
 
   exportChartAsImage(wb: ExcelJS.Workbook, ws: ExcelJS.Worksheet, sheetName: string): Promise<void> {
     const l = this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn'])
-    const h = l.length + this.statisticalResults[sheetName]['buildColumn'][l[0]]['child'].length * l.length + 8 + calculateCombination(l.length,2)
+    const fn = this.getObjectKeys(this.sortedResultData).length
+    const h = l.length + this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn'][l[0]]['child']).length * l.length + 11 + calculateCombination(l.length, 2)
+
     return new Promise<void>((resolve, reject) => {
-      const fn = this.getObjectKeys(this.sortedResultData).length
       const cartOptions = this.generateGraph(sheetName)
       const divElement = this.chartContainer.nativeElement;
       var chart = Highcharts.chart(divElement, cartOptions);
-      // chart.exportChart({
-      //   type: 'image/svg+xml',
-      //   filename: 'chart-image',
-      //   url: ''
-      // }, cartOptions);
-      const svg = chart.getSVG()
-      const svgBlob = new Blob([svg], { type: 'image/svg+xml' });
-
-      const reader = new FileReader();
-      reader.onloadend = function (event: any) {
-        const base64Data = event.target.result;
-        const imageId = wb.addImage({
-          base64: base64Data,
-          extension: 'png',
-        });
-        ws.addImage(imageId, `${String.fromCharCode(68 + fn)}${h}:${String.fromCharCode(74 + fn)}${h + 12}`);
-        resolve()
-      };
-      reader.readAsDataURL(svgBlob);
+      const svgString = chart.getSVG()
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      convertSvgToPngBase64(svgString)
+        .then((dataUrl: any) => {
+          const imageId = wb.addImage({
+            base64: dataUrl,
+            extension: 'png',
+          });
+          ws.addImage(imageId, `${String.fromCharCode(68 + fn)}${h}:${String.fromCharCode(74 + fn)}${h + 14}`);
+          resolve()
+        })
     })
   }
 
   exportChartAsImageBoxplot(wb: ExcelJS.Workbook, ws: ExcelJS.Worksheet, sheetName: string): Promise<void> {
     const l = this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn'])
-    const h = l.length + this.statisticalResults[sheetName]['buildColumn'][l[0]]['child'].length * l.length + 8 + calculateCombination(l.length,2)
+    const fn = this.getObjectKeys(this.sortedResultData).length
+    const h = l.length + this.getObjectKeys(this.statisticalResults[sheetName]['buildColumn'][l[0]]['child']).length * l.length + 11 + calculateCombination(l.length, 2)
+
     return new Promise<void>((resolve, reject) => {
-      const fn = this.getObjectKeys(this.sortedResultData).length
       const cartOptions = this.generateGraphBoxplot(sheetName)
       const divElement = this.chartContainer.nativeElement;
       var chart = Highcharts.chart(divElement, cartOptions);
-      const svg = chart.getSVG()
-      const svgBlob = new Blob([svg], { type: 'image/svg+xml' });
-
-      const reader = new FileReader();
-      reader.onloadend = function (event: any) {
-        const base64Data = event.target.result;
-        const imageId = wb.addImage({
-          base64: base64Data,
-          extension: 'png',
-        });
-        ws.addImage(imageId, `${String.fromCharCode(77 + fn)}${h}:${String.fromCharCode(83 + fn)}${h+12}`);
-        resolve()
-      };
-      reader.readAsDataURL(svgBlob);
+      const svgString = chart.getSVG()
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      convertSvgToPngBase64(svgString)
+        .then((dataUrl: any) => {
+          const imageId = wb.addImage({
+            base64: dataUrl,
+            extension: 'png',
+          });
+          ws.addImage(imageId, `${String.fromCharCode(77 + fn)}${h}:${String.fromCharCode(83 + fn)}${h + 14}`);
+          resolve()
+        })
     })
   }
 
@@ -743,7 +737,6 @@ export class UnitEditExcelComponent implements OnChanges {
 
       let promiseList: Promise<void>[] = []
 
-      console.log(this.statisticalResults) //hier build table and column in excel
       this.dict.forEach(task => {
         var ws = this.generateSheet(task, workbook)
         promiseList.push(this.exportChartAsImage(workbook, ws, task))
@@ -822,4 +815,30 @@ function calculateCombination(n: number, k: number): number {
   }
 
   return result;
+}
+
+function convertSvgToPngBase64(svgString: string) {
+  const width = 300;
+  const height = 200;
+  const scale = 4;
+
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      ctx.scale(scale, scale);
+
+      const v = Canvg.fromString(ctx, svgString);
+      v.start();
+      const dataUrl = canvas.toDataURL('image/png');
+      resolve(dataUrl);
+      v.stop();
+    }
+    else {
+      resolve('')
+    }
+  });
 }
