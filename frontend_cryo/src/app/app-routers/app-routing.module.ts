@@ -23,6 +23,9 @@ const routes: Routes = [
     { path: 'guide', component: SeiteDataAnalyseComponent },
     { path: 'data-storage', component: SeiteDataStorageComponent },
     { path: 'data-analyse', component: SeiteDataAnalyseComponent },
+    { path: 'cells-count', component: SeiteDataAnalyseComponent },
+    { path: 'survivalrate-predict', component: SeiteDataAnalyseComponent },
+    { path: 'parameter-optimize', component: SeiteDataAnalyseComponent },
   ]},
 ];
 

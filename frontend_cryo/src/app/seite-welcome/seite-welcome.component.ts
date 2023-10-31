@@ -19,6 +19,7 @@ export class SeiteWelcomeComponent {
   functionCards: { icon: string, span: string, href: string }[] = [
     { icon: 'storage', span: 'Data storage', href: '/start/data-storage' },
     { icon: 'insert_chart_outlined', span: 'Data analyse', href: '/start/data-analyse' },
+    { icon: 'center_focus_weak', span: 'Cells count', href: '/start/cells-count' },
     { icon: 'bubble_chart', span: 'Survivalrate predict', href: '/start/survivalrate-predict' },
     { icon: 'trending_up', span: 'Parameter optimize', href: '/start/parameter-optimize' },
     { icon: 'favorite_border', span: 'Feedback', href: '/start/feedback' }
