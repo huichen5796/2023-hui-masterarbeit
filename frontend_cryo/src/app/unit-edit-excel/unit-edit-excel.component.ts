@@ -154,12 +154,14 @@ export class UnitEditExcelComponent implements OnChanges {
       let long: number = 3
       this.getObjectKeys(this.faktor_group[versuch_id]).sort((a, b) => a.localeCompare(b)).forEach((probe_id: string) => {
         this.sortedExcelData = this.sortedExcelData.concat(this.excelData.slice(this.faktor_group[versuch_id][probe_id][0], this.faktor_group[versuch_id][probe_id][1] + 1))
-        long += this.faktor_group[versuch_id][probe_id][1] - this.faktor_group[versuch_id][probe_id][0] - 1
+        long += this.faktor_group[versuch_id][probe_id][1] - this.faktor_group[versuch_id][probe_id][0]
+        console.log(this.faktor_group[versuch_id][probe_id])
       })
+      console.log(long)
       if (v_index == 0) {
-        this.vertikal_merge.push([3, long + 3])
+        this.vertikal_merge.push([3, long +2])
       } else {
-        this.vertikal_merge.push([this.vertikal_merge[v_index - 1][1] + 1, this.vertikal_merge[v_index - 1][1] + 1 + long])
+        this.vertikal_merge.push([this.vertikal_merge[v_index - 1][1] + 1, this.vertikal_merge[v_index - 1][1] + long])
       }
       this.classColors[versuch_id] = getRandomCoolColor()
     })
