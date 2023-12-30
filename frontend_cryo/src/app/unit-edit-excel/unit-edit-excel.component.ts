@@ -155,11 +155,9 @@ export class UnitEditExcelComponent implements OnChanges {
       this.getObjectKeys(this.faktor_group[versuch_id]).sort((a, b) => a.localeCompare(b)).forEach((probe_id: string) => {
         this.sortedExcelData = this.sortedExcelData.concat(this.excelData.slice(this.faktor_group[versuch_id][probe_id][0], this.faktor_group[versuch_id][probe_id][1] + 1))
         long += this.faktor_group[versuch_id][probe_id][1] - this.faktor_group[versuch_id][probe_id][0]
-        console.log(this.faktor_group[versuch_id][probe_id])
       })
-      console.log(long)
       if (v_index == 0) {
-        this.vertikal_merge.push([3, long +2])
+        this.vertikal_merge.push([3, long + 2])
       } else {
         this.vertikal_merge.push([this.vertikal_merge[v_index - 1][1] + 1, this.vertikal_merge[v_index - 1][1] + long])
       }
@@ -223,7 +221,12 @@ export class UnitEditExcelComponent implements OnChanges {
 
       for (const versuch_id of this.getObjectKeys(this.faktor_group).sort((a, b) => a.localeCompare(b))) {
         this.excelData.slice(this.faktor_group[versuch_id][faktor][0] + 1, this.faktor_group[versuch_id][faktor][1] + 1).forEach((item: any) => {
-          this.dict.forEach(itemDict => this.sortedResultData[faktor][itemDict].push([item[itemDict], versuch_id]))
+          this.dict.forEach(itemDict => {
+            if (item[itemDict] != '') {
+              this.sortedResultData[faktor][itemDict].push([item[itemDict], versuch_id])
+            }
+
+          })
         })
       }
     })

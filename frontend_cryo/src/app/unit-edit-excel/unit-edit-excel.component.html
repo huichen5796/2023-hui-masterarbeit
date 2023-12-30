@@ -45,7 +45,7 @@
             <div>
                 <div *ngFor="let faktor of getObjectKeys(sortedResultData)" class="colum">
                     <tr *ngFor="let cell of sortedResultData[faktor][formControl]">
-                        <td [ngStyle]="{'background-color': classColors[cell[1]] }" class="longCell">{{ cell[0] }}</td>
+                        <td [ngStyle]="{'background-color': classColors[cell[1]] }" class="longCell" *ngIf="cell[0] != ''">{{ cell[0] }}</td>
                     </tr>
                 </div>
             </div>
