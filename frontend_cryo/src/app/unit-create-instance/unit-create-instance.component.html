@@ -98,7 +98,7 @@
                 <label class="table-line-head"></label>
                 <div class="table-head">
                     <div class="table-cell" *ngFor="let index of getObjectKeys(newFileData['Versuche 1']['Probe 1'])">
-                        {{ index }}</div>
+                        {{ index.replace('Sample ID', 'Factor ID') }}</div>
                 </div>
                 <u class="add-delete" style="cursor:unset;"></u>
             </div>

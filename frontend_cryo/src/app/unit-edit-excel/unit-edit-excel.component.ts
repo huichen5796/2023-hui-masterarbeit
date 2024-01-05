@@ -94,24 +94,24 @@ export class UnitEditExcelComponent implements OnChanges {
           let arrayOfObjects = new Array(length + 1).fill(null).map(() => ({ vid: versuch['versuch']['Versuch_ID'], preid: '', viabilitypre: '', recoveried_cellspre: '', rundheitpre: '', durchmetterpre: '', postid: '', viabilitypost: '', recoveried_cellspost: '', rundheitpost: '', durchmetterpost: '', viabilitypp: '', recoveried_cellspp: '', rundheitpp: '', durchmetterpp: '', viabilityppn: '', recoveried_cellsppn: '', rundheitppn: '', durchmetterppn: '' }));
           arrayOfObjects[0]['preid'] = probe['Sample_ID']
           arrayOfObjects[0]['viabilitypre'] = res['average_Viability_(%)_pre']
-          arrayOfObjects[0]['recoveried_cellspre'] = res['average_Total_viable_cells_/_ml_(x_10^6)_pre']
+          arrayOfObjects[0]['recoveried_cellspre'] = res['average_Viable_cells_pre']
           arrayOfObjects[0]['rundheitpre'] = res['average_Average_circularity_pre']
           arrayOfObjects[0]['durchmetterpre'] = res['average_Average_diameter_(microns)_pre']
           probe['PreData_ID'].forEach((predata_id: string, index: number) => {
             arrayOfObjects[index + 1]['preid'] = predata_id
             arrayOfObjects[index + 1]['viabilitypre'] = res[predata_id]['Viability_(%)']
-            arrayOfObjects[index + 1]['recoveried_cellspre'] = res[predata_id]['Total_viable_cells_/_ml_(x_10^6)']
+            arrayOfObjects[index + 1]['recoveried_cellspre'] = res[predata_id]['Viable_cells']
             arrayOfObjects[index + 1]['rundheitpre'] = res[predata_id]['Average_circularity']
             arrayOfObjects[index + 1]['durchmetterpre'] = res[predata_id]['Average_diameter_(microns)']
           })
           probe['PostData_ID'].forEach((postdata_id: string, index: number) => {
             arrayOfObjects[index + 1]['postid'] = postdata_id
             arrayOfObjects[index + 1]['viabilitypost'] = res[postdata_id]['Viability_(%)']
-            arrayOfObjects[index + 1]['recoveried_cellspost'] = res[postdata_id]['Total_viable_cells_/_ml_(x_10^6)']
+            arrayOfObjects[index + 1]['recoveried_cellspost'] = res[postdata_id]['Viable_cells']
             arrayOfObjects[index + 1]['rundheitpost'] = res[postdata_id]['Average_circularity']
             arrayOfObjects[index + 1]['durchmetterpost'] = res[postdata_id]['Average_diameter_(microns)']
             arrayOfObjects[index + 1]['viabilitypp'] = res[postdata_id]['Viability_(%)_relative']
-            arrayOfObjects[index + 1]['recoveried_cellspp'] = res[postdata_id]['Total_viable_cells_/_ml_(x_10^6)_relative']
+            arrayOfObjects[index + 1]['recoveried_cellspp'] = res[postdata_id]['Viable_cells_relative']
             arrayOfObjects[index + 1]['rundheitpp'] = res[postdata_id]['Average_circularity_relative']
             arrayOfObjects[index + 1]['durchmetterpp'] = res[postdata_id]['Average_diameter_(microns)_relative']
           })
