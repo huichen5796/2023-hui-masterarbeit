@@ -26,6 +26,7 @@ export class UnitEditExcelComponent implements OnChanges {
   sortedResultData: { [key: string]: { [k: string]: [string, string][] } } = {}
   faktor_group: { [key: string]: { [key: string]: [number, number] } } = {}
   vertikal_merge: [number, number][] = []
+  cache:{ [key: string]: string } = {}
   showTable: boolean = false
   maxValuePosition: { [key: string]: number[] } = {}
   classColors: { [key: string]: string } = {}
@@ -79,10 +80,12 @@ export class UnitEditExcelComponent implements OnChanges {
     this.formControl = 'raw'
     this.statisticalResults = {}
     this.exporting = false
+    this.cache = {}
   }
 
   init() {
     this.initParameters()
+    this.getCache()
     let position: number = 1
     this.experiment['child'].forEach((versuch: any) => {
       versuch['probes'].forEach((probe: any) => {
@@ -126,6 +129,22 @@ export class UnitEditExcelComponent implements OnChanges {
         })
       })
     })
+  }
+  getCache(){
+    this.experiment['child'].forEach((child:any)=>{
+      this.cache[child['versuch']['Versuch_ID']] = child['versuch']['F_factor']
+    })
+  }
+
+  getF(versuch_id:string){
+    if (!this.cache[versuch_id]){
+      this.experiment['child'].forEach((child:any)=>{
+        if (child['versuch']['Versuch_ID'] === versuch_id){
+          this.cache[versuch_id] = child['versuch']['F_factor']
+        }
+      })
+    }
+    return this.cache[versuch_id]
   }
 
   getFirstCol(): number[] {
@@ -337,8 +356,12 @@ export class UnitEditExcelComponent implements OnChanges {
     })
 
     this.getObjectKeys(this.classColors).forEach((info: string, index: number) => {
-      ws.getCell(`${String.fromCharCode(69 + fn)}${index + 2}`).value = info
-      ws.getCell(`${String.fromCharCode(68 + fn)}${index + 2}`).fill = {
+      if (index == 0){
+        ws.getCell(`${String.fromCharCode(69 + fn)}${1}`).value = 'F factor'
+      }
+      ws.getCell(`${String.fromCharCode(69 + fn)}${index + 2}`).value = Number(this.getF(info))
+      ws.getCell(`${String.fromCharCode(68 + fn)}${index + 2}`).value = info
+      ws.getCell(`${String.fromCharCode(67 + fn)}${index + 2}`).fill = {
         type: 'pattern',
         pattern: 'solid',
         fgColor: { argb: this.classColors[info].replace('#', '') },

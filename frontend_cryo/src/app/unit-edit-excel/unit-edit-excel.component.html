@@ -10,6 +10,11 @@
     <button mat-stroked-button class="toggle" (click)="exportToExcel()" [disabled]="exporting"><span style="color: #1976d2;">Export to
             excel</span></button>
 
+    <button mat-stroked-button [matMenuTriggerFor]="menu" class="toggle">see F factors</button>
+    <mat-menu #menu="matMenu">
+        <mat-list-item *ngFor="let versuch_id of getObjectKeys(cache)">{{ versuch_id }}: <span style="color: #1976d2; font-weight: bold">{{ cache[versuch_id] }}</span></mat-list-item>
+    </mat-menu>
+
     <mat-progress-bar mode="indeterminate" *ngIf="exporting" style="transform: translateY(-11px);"></mat-progress-bar>
     <mat-divider style="transform: translateY(-11px);"></mat-divider>
     <table *ngIf="formControl=== 'raw'">
