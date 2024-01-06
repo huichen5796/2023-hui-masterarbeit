@@ -88,6 +88,7 @@ export class UnitEditExcelComponent implements OnChanges {
     this.getCache()
     let position: number = 1
     this.experiment['child'].forEach((versuch: any) => {
+      console.log(this.experiment)
       versuch['probes'].forEach((probe: any) => {
         this.queryNeo4jService.queryTheFourElements(probe['PreData_ID'], probe['PostData_ID']).then((res: any) => {
           if (!this.faktor_group[versuch['versuch']['Versuch_ID']]) {
@@ -114,7 +115,7 @@ export class UnitEditExcelComponent implements OnChanges {
             arrayOfObjects[index + 1]['rundheitpost'] = res[postdata_id]['Average_circularity']
             arrayOfObjects[index + 1]['durchmetterpost'] = res[postdata_id]['Average_diameter_(microns)']
             arrayOfObjects[index + 1]['viabilitypp'] = res[postdata_id]['Viability_(%)_relative']
-            arrayOfObjects[index + 1]['recoveried_cellspp'] = res[postdata_id]['Viable_cells_relative']
+            arrayOfObjects[index + 1]['recoveried_cellspp'] = `${(Number(res[postdata_id]['Viable_cells_relative']) * Number(this.cache[versuch['versuch']['Versuch_ID']])).toFixed(4)}`
             arrayOfObjects[index + 1]['rundheitpp'] = res[postdata_id]['Average_circularity_relative']
             arrayOfObjects[index + 1]['durchmetterpp'] = res[postdata_id]['Average_diameter_(microns)_relative']
           })
