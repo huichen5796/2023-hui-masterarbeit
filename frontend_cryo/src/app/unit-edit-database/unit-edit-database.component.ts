@@ -24,6 +24,8 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
   oldSubName: { [key: string]: string } = {}
   currentSubName: { [key: string]: string } = {}
   statusSubName: { [key: string]: string } = {}
+  currentFfactor: { [key: string]: string } = {}
+  statusFfactor: { [key: string]: string } = {}
   pppcDataControler: { [key: string]: { [key: string]: any } } = {}
   pppcDataMemory: { [key: string]: { [key: string]: any } } = {}
   addControler: { [key: string]: any } = {}
@@ -55,7 +57,9 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
     this.undoDisabled = false
     this.oldSubName = {}
     this.currentSubName = {}
+    this.currentFfactor = {}
     this.statusSubName = {}
+    this.statusFfactor = {}
     this.pppcDataControler = {}
     this.pppcDataMemory = {}
     this.addControler = {}
@@ -78,7 +82,9 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
             this.callBack['child'].forEach((item: any) => {
             this.oldSubName[item['versuch']['Unique_ID']] = item['versuch']['Versuch_ID']
             this.currentSubName[item['versuch']['Unique_ID']] = item['versuch']['Versuch_ID']
+            this.currentFfactor[item['versuch']['Unique_ID']] = item['versuch']['F_factor']
             this.statusSubName[item['versuch']['Unique_ID']] = 'none'
+            this.statusFfactor[item['versuch']['Unique_ID']] = 'none'
             item['probes'].forEach((sub: any) => {
               this.oldSubName[sub['Unique_ID']] = sub['Sample_ID']
               this.currentSubName[sub['Unique_ID']] = sub['Sample_ID']
@@ -149,6 +155,26 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
         })
       }
     }
+  }
+
+  checkFfactor(versuch_unique:string, oldF:string, currentF: string) {
+    if (!currentF){
+      this.statusFfactor[versuch_unique] = 'type2'
+    }
+    else if (!Number(currentF)){
+      this.statusFfactor[versuch_unique] = 'type3'
+    }
+    else {
+      if (Number(currentF) === Number(oldF)){
+        this.statusFfactor[versuch_unique] = 'none'
+      }
+      else{
+        this.statusFfactor[versuch_unique] = 'change'
+      }
+    }
+  }
+  isNumber(value: any): boolean {
+    return !Number(value)
   }
 
   checkTheVersuch(versuchOrProbe: 'Versuch' | 'Probe', unique_id: string, currentName: string) {
@@ -400,6 +426,11 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
             this.todoSQL.changeAttr.push({ class: 'Probe', attrKey: item, unique_id: key, currentValue: this.pppcDataControler[key][item] })
           }
         })
+      })
+      this.getObjectKeys(this.statusFfactor).forEach((key: string) => {
+        if (this.statusFfactor[key] === 'change'){
+          this.todoSQL.changeAttr.push({ class: 'Versuch', attrKey: 'F_factor', unique_id: key, currentValue: this.currentFfactor[key] })
+        }
       })
       this.getObjectKeys(this.currentSubName).forEach((key: string) => {
         const idficationArray: string[] = key.split('*-*')
