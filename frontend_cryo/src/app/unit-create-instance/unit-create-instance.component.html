@@ -118,8 +118,20 @@
                 <u class="add-delete" (click)="deleteItem(key)" *ngIf="deletedItems.indexOf(key) == -1">delete</u>
                 <u class="add-return" (click)="undoItem(key)" *ngIf="deletedItems.indexOf(key) != -1">undo</u>
             </div>
+            <div class="table-li">
+                <div class="red-line" *ngIf="deletedItems.indexOf(key) != -1"></div>
+                <label>factor F</label>
+                <label>:</label>
+                <input type="search" [(ngModel)]="newFileData[key]['F_factor']" placeholder="1" style="height:24px;">
+                <p class="position-holder">
+                    <mat-error *ngIf="!newFileData[key]['F_factor']">Factor F is required.</mat-error>
+                    <mat-error *ngIf="isNumber(newFileData[key]['F_factor'])">Factor F shall be number.</mat-error>
+                </p>
+                <u class="add-delete" *ngIf="deletedItems.indexOf(key) == -1" style="color: #e2e2e2;">delete</u>
+                <u class="add-return" *ngIf="deletedItems.indexOf(key) != -1" style="color: #e2e2e2;">undo</u>
+            </div>
             <div class="table-probes"
-                *ngFor="let probe of (getObjectKeys(newFileData[key]) | excludeItem: ['Remark', 'Versuche ID'])">
+                *ngFor="let probe of (getObjectKeys(newFileData[key]) | excludeItem: ['Remark', 'Versuche ID', 'F_factor'])">
                 <div class="red-line" *ngIf="deletedItemItems.indexOf(transformer(key,probe)) != -1"></div>
                 <div class="red-line-big" *ngIf="deletedItems.indexOf(key) != -1"></div>
                 <label class="table-line-head">{{ makeIndex(probe) }} |</label>
@@ -147,7 +159,7 @@
                 <u class="add-return" (click)="undoItemItems(key, probe)"
                     *ngIf="deletedItemItems.indexOf(transformer(key,probe)) != -1 && deletedItems.indexOf(key) == -1">undo</u>
             </div>
-            <div><u class="add-new" (click)="addNewItemItems(key)">+ add new Probe</u></div>
+            <div><u *ngIf="deletedItems.indexOf(key) == -1" class="add-new" (click)="addNewItemItems(key)">+ add new Probe</u></div>
         </li>
         <li>
             <u class="add-new" (click)="addNewItem()">+ add new Versuche</u>

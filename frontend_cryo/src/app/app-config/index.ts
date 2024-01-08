@@ -32,7 +32,7 @@ export const defaultProbe: Probe = {
 
 export const defaultVersuche: Versuche = {
     "Versuche ID": '',
-    "F_factor":'',
+    "F_factor":'1',
     'Probe 1': defaultProbe
 }
 

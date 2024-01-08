@@ -120,12 +120,16 @@ export class UnitCreateInstanceComponent implements OnInit, OnChanges {
   }
 
   addNewItemItems(itemName: string) {
-    this.newFileData[itemName][`Probe ${Object.keys(this.newFileData[itemName]).length}`] = cloneDeep(defaultProbe)
+    this.newFileData[itemName][`Probe ${Object.keys(this.newFileData[itemName]).length - 1}`] = cloneDeep(defaultProbe)
   }
 
   updateKey() {
     delete this.newFileData['']
     this.newFileData[this.currrentKey] = ''
+  }
+
+  isNumber(value: any): boolean {
+    return !Number(value)
   }
 
   checkFileName() {
