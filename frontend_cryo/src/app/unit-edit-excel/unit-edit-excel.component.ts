@@ -18,10 +18,10 @@ import { Canvg } from 'canvg';
 export class UnitEditExcelComponent implements OnChanges {
   @Input() experiment!: any
   excelData: any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
   ];
   sortedExcelData: any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
   ]
   sortedResultData: { [key: string]: { [k: string]: [string, string][] } } = {}
   faktor_group: { [key: string]: { [key: string]: [number, number] } } = {}
@@ -67,10 +67,10 @@ export class UnitEditExcelComponent implements OnChanges {
   initParameters() {
     this.showTable = false
     this.excelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
     ];
     this.sortedExcelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'viable cells', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'viable cells', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
     ]
     this.faktor_group = {}
     this.vertikal_merge = []
@@ -88,7 +88,6 @@ export class UnitEditExcelComponent implements OnChanges {
     this.getCache()
     let position: number = 1
     this.experiment['child'].forEach((versuch: any) => {
-      console.log(this.experiment)
       versuch['probes'].forEach((probe: any) => {
         this.queryNeo4jService.queryTheFourElements(probe['PreData_ID'], probe['PostData_ID']).then((res: any) => {
           if (!this.faktor_group[versuch['versuch']['Versuch_ID']]) {
@@ -98,26 +97,26 @@ export class UnitEditExcelComponent implements OnChanges {
           let arrayOfObjects = new Array(length + 1).fill(null).map(() => ({ vid: versuch['versuch']['Versuch_ID'], preid: '', viabilitypre: '', recoveried_cellspre: '', rundheitpre: '', durchmetterpre: '', postid: '', viabilitypost: '', recoveried_cellspost: '', rundheitpost: '', durchmetterpost: '', viabilitypp: '', recoveried_cellspp: '', rundheitpp: '', durchmetterpp: '', viabilityppn: '', recoveried_cellsppn: '', rundheitppn: '', durchmetterppn: '' }));
           arrayOfObjects[0]['preid'] = probe['Sample_ID']
           arrayOfObjects[0]['viabilitypre'] = res['average_Viability_(%)_pre']
-          arrayOfObjects[0]['recoveried_cellspre'] = res['average_Viable_cells_pre']
+          arrayOfObjects[0]['recoveried_cellspre'] = res['average_Total_viable_cells_/_ml_(x_10^6)_pre']
           arrayOfObjects[0]['rundheitpre'] = res['average_Average_circularity_pre']
           arrayOfObjects[0]['durchmetterpre'] = res['average_Average_diameter_(microns)_pre']
           probe['PreData_ID'].forEach((predata_id: string, index: number) => {
             arrayOfObjects[index + 1]['preid'] = predata_id
             arrayOfObjects[index + 1]['viabilitypre'] = res[predata_id]['Viability_(%)']
-            arrayOfObjects[index + 1]['recoveried_cellspre'] = res[predata_id]['Viable_cells']
+            arrayOfObjects[index + 1]['recoveried_cellspre'] = res[predata_id]['Total_viable_cells_/_ml_(x_10^6)']
             arrayOfObjects[index + 1]['rundheitpre'] = res[predata_id]['Average_circularity']
             arrayOfObjects[index + 1]['durchmetterpre'] = res[predata_id]['Average_diameter_(microns)']
           })
-          probe['PostData_ID'].forEach((postdata_id: string, index: number) => {
-            arrayOfObjects[index + 1]['postid'] = postdata_id
-            arrayOfObjects[index + 1]['viabilitypost'] = res[postdata_id]['Viability_(%)']
-            arrayOfObjects[index + 1]['recoveried_cellspost'] = res[postdata_id]['Viable_cells']
-            arrayOfObjects[index + 1]['rundheitpost'] = res[postdata_id]['Average_circularity']
-            arrayOfObjects[index + 1]['durchmetterpost'] = res[postdata_id]['Average_diameter_(microns)']
-            arrayOfObjects[index + 1]['viabilitypp'] = res[postdata_id]['Viability_(%)_relative']
-            arrayOfObjects[index + 1]['recoveried_cellspp'] = `${(Number(res[postdata_id]['Viable_cells_relative']) * Number(this.cache[versuch['versuch']['Versuch_ID']])).toFixed(4)}`
-            arrayOfObjects[index + 1]['rundheitpp'] = res[postdata_id]['Average_circularity_relative']
-            arrayOfObjects[index + 1]['durchmetterpp'] = res[postdata_id]['Average_diameter_(microns)_relative']
+          probe['PostData_ID'].forEach((postdata_id: string, indexx: number) => {
+            arrayOfObjects[indexx + 1]['postid'] = postdata_id
+            arrayOfObjects[indexx + 1]['viabilitypost'] = res[postdata_id]['Viability_(%)']
+            arrayOfObjects[indexx + 1]['recoveried_cellspost'] = res[postdata_id]['Total_viable_cells_/_ml_(x_10^6)']
+            arrayOfObjects[indexx + 1]['rundheitpost'] = res[postdata_id]['Average_circularity']
+            arrayOfObjects[indexx + 1]['durchmetterpost'] = res[postdata_id]['Average_diameter_(microns)']
+            arrayOfObjects[indexx + 1]['viabilitypp'] = res[postdata_id]['Viability_(%)_relative']
+            arrayOfObjects[indexx + 1]['recoveried_cellspp'] = `${(Number(res[postdata_id]['Total_viable_cells_/_ml_(x_10^6)_relative']) * Number(this.cache[versuch['versuch']['Versuch_ID']])).toFixed(4)}`
+            arrayOfObjects[indexx + 1]['rundheitpp'] = res[postdata_id]['Average_circularity_relative']
+            arrayOfObjects[indexx + 1]['durchmetterpp'] = res[postdata_id]['Average_diameter_(microns)_relative']
           })
           this.excelData = this.excelData.concat(arrayOfObjects)
           this.faktor_group[versuch['versuch']['Versuch_ID']][probe['Sample_ID']] = [position, position + length]
