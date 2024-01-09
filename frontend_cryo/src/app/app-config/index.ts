@@ -1,4 +1,4 @@
-export const backendUrl: string = 'http://127.0.0.1:8000'
+export const backendUrl: string = 'http://ec2-13-48-58-32.eu-north-1.compute.amazonaws.com:8000'
 // export const backendUrl: string = 'http://3.72.113.129:8000'
 export const dataStoreName: string = 'data_store'
 
