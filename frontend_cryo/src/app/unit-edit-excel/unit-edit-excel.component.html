@@ -18,22 +18,43 @@
     <mat-progress-bar mode="indeterminate" *ngIf="exporting" style="transform: translateY(-11px);"></mat-progress-bar>
     <mat-divider style="transform: translateY(-11px);"></mat-divider>
     <table *ngIf="formControl=== 'raw'">
+        <colgroup>
+            <col class="dobfett">
+            <col class="colfett">
+            <col>
+            <col>
+            <col>
+            <col class="colfett">
+            <col class="colfett">
+            <col>
+            <col>
+            <col>
+            <col class="colfett">
+            <col>
+            <col>
+            <col>
+            <col class="colfett">
+            <col>
+            <col>
+            <col>
+            <col class="colfett">
+        </colgroup>
         <tr>
-            <td></td>
-            <td></td>
-            <td colspan="4">pre data</td>
-            <td></td>
-            <td colspan="4">post data</td>
-            <td colspan="4">post / pre</td>
-            <td colspan="4">norm. post / pre</td>
+            <td class="rowfix"></td>
+            <td class="rowfix"></td>
+            <td colspan="4" class="rowfix">pre data</td>
+            <td class="rowfix"></td>
+            <td colspan="4" class="rowfix">post data</td>
+            <td colspan="4" class="rowfix">post / pre</td>
+            <td colspan="4" class="rowfix">norm. post / pre</td>
         </tr>
-        <tr *ngFor="let row of sortedExcelData; let i = index">
-            <td *ngIf="i === 0"></td>
-            <td *ngIf="getFirstCol().indexOf(i+2)!=-1" [ngStyle]="{'background-color': classColors[row['vid']] }"
+        <tr *ngFor="let row of sortedExcelData; let i = index" [class.highlight-row]="row['postid']==='' && row['preid'] != ''">
+            <td *ngIf="i === 0" [class.rowfix]="i === 0"></td>
+            <td [class.rowfix]="i === 0" *ngIf="getFirstCol().indexOf(i+2)!=-1" [ngStyle]="{'background-color': classColors[row['vid']] }"
                 [attr.rowspan]="this.vertikal_merge[this.getFirstCol().indexOf(i+2)][1] - this.vertikal_merge[this.getFirstCol().indexOf(i+2)][0] + 1">
                 {{ row['vid'] }}</td>
-            <td *ngFor="let key of getObjectKeys(row) | excludeItem:['vid']"
-                [class.maxHighlight]="highlightCell(i, key)">{{ row[key] }}</td>
+            <td [class.rowfix]="i === 0" *ngFor="let key of getObjectKeys(row) | excludeItem:['vid'];let ii = index"
+                [class.maxHighlight]="highlightCell(i, key)" title="{{ hash[getObjectKeys(row)[ii+1]] }}">{{ row[key] }}</td>
         </tr>
     </table>
 

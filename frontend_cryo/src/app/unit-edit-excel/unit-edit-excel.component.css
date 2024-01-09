@@ -23,7 +23,7 @@ td:hover {
 }
 
 .maxHighlight {
-    background-color: darksalmon;
+    background-color: rgb(237, 186, 168);
 }
 
 .toggle {
@@ -44,4 +44,23 @@ td:hover {
 
 .analyse-field {
     display: flex;
+}
+
+.highlight-row {
+    font-weight: bold;
+}
+
+.colfett{
+    border-right: 2px solid #000; 
+}
+.dobfett{
+    border-right: 2px solid #000; 
+    border-left: 2px solid #000; 
+}
+
+.rowfix {
+    position: sticky;
+    top: 60px;
+    z-index: 100; 
+    border: 2px solid #000;
 }

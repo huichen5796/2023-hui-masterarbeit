@@ -18,10 +18,10 @@ import { Canvg } from 'canvg';
 export class UnitEditExcelComponent implements OnChanges {
   @Input() experiment!: any
   excelData: any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'circularity', durchmetterpre: 'diameter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'circularity', durchmetterpost: 'diameter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
   ];
   sortedExcelData: any[] = [
-    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+    { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'circularity', durchmetterpre: 'diameter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'circularity', durchmetterpost: 'diameter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
   ]
   sortedResultData: { [key: string]: { [k: string]: [string, string][] } } = {}
   faktor_group: { [key: string]: { [key: string]: [number, number] } } = {}
@@ -42,7 +42,15 @@ export class UnitEditExcelComponent implements OnChanges {
     viabilitypp: 'rel. viability',
     durchmetterpp: 'rel. diameter',
     recoveried_cellspp: 'recovery rate',
-    rundheitpp: 'rel. circularity'
+    rundheitpp: 'rel. circularity',
+    viabilitypre: 'viiability of predata',
+    durchmetterpre: 'diameter of predata',
+    recoveried_cellspre: 'recovery rate of predata',
+    rundheitpre: 'circularity of predata',
+    viabilitypost: 'viiability of postdata',
+    durchmetterpost: 'diameter of postdata',
+    recoveried_cellspost: 'recovery rate of postdata',
+    rundheitpost: 'circularity of postdata',
   }
   Highcharts: typeof Highcharts = Highcharts;
   constructor(
@@ -67,10 +75,10 @@ export class UnitEditExcelComponent implements OnChanges {
   initParameters() {
     this.showTable = false
     this.excelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'circularity', durchmetterpre: 'diameter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'circularity', durchmetterpost: 'diameter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
     ];
     this.sortedExcelData = [
-      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'rundheit', durchmetterpre: 'durchmetter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'rundheit', durchmetterpost: 'durchmetter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
+      { vid: '', preid: '', viabilitypre: 'viability', recoveried_cellspre: 'Total viable cells / ml (x 10^6)', rundheitpre: 'circularity', durchmetterpre: 'diameter', postid: '', viabilitypost: 'viability', recoveried_cellspost: 'Total viable cells / ml (x 10^6)', rundheitpost: 'circularity', durchmetterpost: 'diameter', viabilitypp: 'rel. viability', recoveried_cellspp: 'recovery rate', rundheitpp: 'rel. circularity', durchmetterpp: 'rel. diameter', viabilityppn: 'norm. rel. viability', recoveried_cellsppn: 'norm. recovery rate', rundheitppn: 'norm. rel. circularity', durchmetterppn: 'norm. rel. diameter' },
     ]
     this.faktor_group = {}
     this.vertikal_merge = []
@@ -100,6 +108,17 @@ export class UnitEditExcelComponent implements OnChanges {
           arrayOfObjects[0]['recoveried_cellspre'] = res['average_Total_viable_cells_/_ml_(x_10^6)_pre']
           arrayOfObjects[0]['rundheitpre'] = res['average_Average_circularity_pre']
           arrayOfObjects[0]['durchmetterpre'] = res['average_Average_diameter_(microns)_pre']
+
+          arrayOfObjects[0]['viabilitypost'] = res['average_Viability_(%)_post']
+          arrayOfObjects[0]['recoveried_cellspost'] = res['average_Total_viable_cells_/_ml_(x_10^6)_post']
+          arrayOfObjects[0]['rundheitpost'] = res['average_Average_circularity_post']
+          arrayOfObjects[0]['durchmetterpost'] = res['average_Average_diameter_(microns)_post']
+
+          arrayOfObjects[0]['viabilitypp'] = res['average_Viability_(%)_pp']
+          arrayOfObjects[0]['recoveried_cellspp'] = `${(Number(res['average_Total_viable_cells_/_ml_(x_10^6)_pp']) * Number(this.cache[versuch['versuch']['Versuch_ID']])).toFixed(4)}`
+          arrayOfObjects[0]['rundheitpp'] = res['average_Average_circularity_pp']
+          arrayOfObjects[0]['durchmetterpp'] = res['average_Average_diameter_(microns)_pp']
+
           probe['PreData_ID'].forEach((predata_id: string, index: number) => {
             arrayOfObjects[index + 1]['preid'] = predata_id
             arrayOfObjects[index + 1]['viabilitypre'] = res[predata_id]['Viability_(%)']
@@ -670,6 +689,14 @@ export class UnitEditExcelComponent implements OnChanges {
       ];
 
       worksheet.addRows(this.sortedExcelData, "n");
+
+      worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
+        if (row.getCell(2).value != '' && row.getCell(7).value === '') {
+          row.eachCell({ includeEmpty: true }, function(cell) {
+            cell.font = { bold: true };
+          });
+        }
+      });
 
       worksheet.mergeCells('C1:F1');
       worksheet.mergeCells('H1:K1');
