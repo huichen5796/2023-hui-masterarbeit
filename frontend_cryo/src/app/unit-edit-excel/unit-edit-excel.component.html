@@ -2,8 +2,7 @@
     <mat-form-field>
         <mat-label>Select</mat-label>
         <mat-select [(ngModel)]="formControl">
-            <mat-option value="raw">raw data</mat-option>
-            <mat-option value="{{item}}" *ngFor="let item of dict">{{ hash[item] }}</mat-option>
+            <mat-option value="{{item}}" *ngFor="let item of selectMenu">{{ hash[item] }}</mat-option>
         </mat-select>
     </mat-form-field>
 

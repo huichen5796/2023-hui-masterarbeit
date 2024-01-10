@@ -34,6 +34,7 @@ export class UnitEditExcelComponent implements OnChanges {
   statisticalResults: { [key: string]: any } = {}
   exporting: boolean = false
   dict: string[] = ['viabilityppn', 'recoveried_cellsppn', 'rundheitppn', 'durchmetterppn', 'viabilitypp', 'recoveried_cellspp', 'rundheitpp', 'durchmetterpp']
+  selectMenu: string[] = ['raw'].concat(this.dict)
   hash: { [k: string]: string } = {
     viabilityppn: 'norm. rel. viability',
     durchmetterppn: 'norm. rel. diameter',
@@ -51,6 +52,7 @@ export class UnitEditExcelComponent implements OnChanges {
     durchmetterpost: 'diameter of postdata',
     recoveried_cellspost: 'recovery rate of postdata',
     rundheitpost: 'circularity of postdata',
+    raw:'raw data'
   }
   Highcharts: typeof Highcharts = Highcharts;
   constructor(
