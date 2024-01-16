@@ -26,6 +26,7 @@ export class SeiteWelcomeComponent {
   ]
 
   check(input:string){
-    return input === this.highlight
+    return `/${input}` === this.highlight
   }
+
 }

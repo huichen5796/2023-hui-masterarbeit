@@ -197,9 +197,9 @@ export class UnitEditExcelComponent implements OnChanges {
         long += this.faktor_group[versuch_id][probe_id][1] - this.faktor_group[versuch_id][probe_id][0]
       })
       if (v_index == 0) {
-        this.vertikal_merge.push([3, long + 2])
+        this.vertikal_merge.push([3, long + this.getObjectKeys(this.faktor_group[versuch_id]).length-1])
       } else {
-        this.vertikal_merge.push([this.vertikal_merge[v_index - 1][1] + 1, this.vertikal_merge[v_index - 1][1] + long])
+        this.vertikal_merge.push([this.vertikal_merge[v_index - 1][1] + 1, this.vertikal_merge[v_index - 1][1] + long + this.getObjectKeys(this.faktor_group[versuch_id]).length-3])
       }
       this.classColors[versuch_id] = getRandomCoolColor()
     })
@@ -400,16 +400,16 @@ export class UnitEditExcelComponent implements OnChanges {
     })
     const headers: string[] = this.getObjectKeys(summeryRow[1])
     headers.forEach((header: string, index: number) => {
-      ws.getCell(`${String.fromCharCode(73 + index)}2`).value = header
-      ws.getCell(`${String.fromCharCode(73 + index)}2`).style.font = { bold: true }
-      ws.getCell(`${String.fromCharCode(73 + index)}2`).border = {
+      ws.getCell(`${String.fromCharCode(71 + index + fn)}2`).value = header
+      ws.getCell(`${String.fromCharCode(71 + index + fn)}2`).style.font = { bold: true }
+      ws.getCell(`${String.fromCharCode(71 + index + fn)}2`).border = {
         top: { style: 'thin' },
         left: { style: 'thin' },
         bottom: { style: 'thin' },
         right: { style: 'thin' },
       };
       summeryRow.forEach((row: any, i: number) => {
-        var cell = ws.getCell(`${String.fromCharCode(73 + index)}${i + 3}`)
+        var cell = ws.getCell(`${String.fromCharCode(71 + index + fn)}${i + 3}`)
         cell.value = row[header]
         cell.border = {
           top: { style: 'thin' },
@@ -429,16 +429,16 @@ export class UnitEditExcelComponent implements OnChanges {
 
     const annovaResultsHeader: string[] = this.getObjectKeys(this.statisticalResults[sheetName]['anovaTestResult']['Tukey HSD 0.05'][0])
     annovaResultsHeader.forEach((header: string, index: number) => {
-      ws.getCell(`${String.fromCharCode(73 + index)}${summeryRow.length + 9}`).value = header
-      ws.getCell(`${String.fromCharCode(73 + index)}${summeryRow.length + 9}`).style.font = { bold: true }
-      ws.getCell(`${String.fromCharCode(73 + index)}${summeryRow.length + 9}`).border = {
+      ws.getCell(`${String.fromCharCode(71 + index + fn)}${summeryRow.length + 9}`).value = header
+      ws.getCell(`${String.fromCharCode(71 + index + fn)}${summeryRow.length + 9}`).style.font = { bold: true }
+      ws.getCell(`${String.fromCharCode(71 + index + fn)}${summeryRow.length + 9}`).border = {
         top: { style: 'thin' },
         left: { style: 'thin' },
         bottom: { style: 'thin' },
         right: { style: 'thin' },
       };
       this.statisticalResults[sheetName]['anovaTestResult']['Tukey HSD 0.05'].forEach((row: any, i: number) => {
-        var cell = ws.getCell(`${String.fromCharCode(73 + index)}${i + summeryRow.length + 10}`)
+        var cell = ws.getCell(`${String.fromCharCode(71 + index + fn)}${i + summeryRow.length + 10}`)
         cell.value = row[header]
         cell.border = {
           top: { style: 'thin' },
@@ -693,7 +693,7 @@ export class UnitEditExcelComponent implements OnChanges {
       worksheet.addRows(this.sortedExcelData, "n");
 
       worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
-        if (row.getCell(2).value != '' && row.getCell(7).value === '') {
+        if (row.getCell(2).value != '' && row.getCell(7).value === '' && row.getCell(8).value != '') {
           row.eachCell({ includeEmpty: true }, function(cell) {
             cell.font = { bold: true };
           });

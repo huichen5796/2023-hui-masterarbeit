@@ -342,7 +342,7 @@ export class UnitEditDatabaseComponent implements AfterViewInit {
       this.addControlerProbe[`${location}`].push(cloneDeep(defaultProbe))
     }
     else if (info === 'ProbeAtNew') {
-      this.addControler[location][`Probe ${this.getObjectKeys(this.addControler[location]).length}`] = cloneDeep(defaultProbe)
+      this.addControler[location][`Probe ${this.getObjectKeys(this.addControler[location]).length - 1}`] = cloneDeep(defaultProbe)
     }
     else {
       if (info) {

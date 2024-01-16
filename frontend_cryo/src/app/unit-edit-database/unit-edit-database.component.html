@@ -134,7 +134,7 @@
                                                 is used in this Versuch.</mat-error>
                                         </mat-panel-description>
                                     </mat-expansion-panel-header>
-                                    <mat-divider></mat-divider>{{ probe | json }}
+                                    <mat-divider></mat-divider>
                                     <div style="height: 10px;"></div>
                                     <div
                                         *ngFor="let key of getObjectKeys(probe) | excludeItem: ['Unique ID', 'Sample ID']">

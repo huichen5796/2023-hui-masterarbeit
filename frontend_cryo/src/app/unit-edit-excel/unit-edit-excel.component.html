@@ -47,7 +47,7 @@
             <td colspan="4" class="rowfix">post / pre</td>
             <td colspan="4" class="rowfix">norm. post / pre</td>
         </tr>
-        <tr *ngFor="let row of sortedExcelData; let i = index" [class.highlight-row]="row['postid']==='' && row['preid'] != ''">
+        <tr *ngFor="let row of sortedExcelData; let i = index" [class.highlight-row]="row['postid']==='' && row['preid'] != '' && row['viabilitypost'] != ''">
             <td *ngIf="i === 0" [class.rowfix]="i === 0"></td>
             <td [class.rowfix]="i === 0" *ngIf="getFirstCol().indexOf(i+2)!=-1" [ngStyle]="{'background-color': classColors[row['vid']] }"
                 [attr.rowspan]="this.vertikal_merge[this.getFirstCol().indexOf(i+2)][1] - this.vertikal_merge[this.getFirstCol().indexOf(i+2)][0] + 1">
