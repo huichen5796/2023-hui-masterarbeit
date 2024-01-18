@@ -46,11 +46,11 @@ export class UnitEditExcelComponent implements OnChanges {
     rundheitpp: 'rel. circularity',
     viabilitypre: 'viiability of predata',
     durchmetterpre: 'diameter of predata',
-    recoveried_cellspre: 'recovery rate of predata',
+    recoveried_cellspre: 'viable cells of predata',
     rundheitpre: 'circularity of predata',
-    viabilitypost: 'viiability of postdata',
+    viabilitypost: 'viability of postdata',
     durchmetterpost: 'diameter of postdata',
-    recoveried_cellspost: 'recovery rate of postdata',
+    recoveried_cellspost: 'viable cells of postdata',
     rundheitpost: 'circularity of postdata',
     raw:'raw data'
   }
