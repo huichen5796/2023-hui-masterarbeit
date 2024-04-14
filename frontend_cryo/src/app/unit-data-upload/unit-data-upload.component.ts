@@ -164,10 +164,10 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
               }).call(this, file_name);
             }
           } else {
-            this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length]] = 'error'
+            this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length-1]] = 'error'
           }
         }).catch((error) => {
-          this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length]] = 'error'
+          this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length-1]] = 'error'
         });
 
     }
