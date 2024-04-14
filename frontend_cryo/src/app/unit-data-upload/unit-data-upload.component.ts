@@ -133,7 +133,8 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
           if (this.selectedFiles[file_name] == 'waiting') {
             this.selectedFiles[file_name] = 'doing'
             var self = this;
-            (function (fileName: string) {
+            setTimeout(()=>{
+              (function (fileName: string) {
               self.queryNeo4jService.feedNeo4j(self.data_type + 'Upload', fileName).then((res: any) => {
                 resolve(res)
                 self.selectedFiles[fileName] = res;
@@ -141,6 +142,8 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
                 self.selectedFiles = { ...self.selectedFiles };
               });
             }).call(this, file_name);
+            }, 2000)
+            
           }
         }))
 
@@ -149,7 +152,7 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
       Promise.all(error_store)
         .then((results) => {
           const allResolved = results.every((result) => result !== 'error');
-
+          console.log(allResolved)
           if (allResolved) {
             var file_name = Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length-1]
             if (this.selectedFiles[file_name] == 'waiting') {
@@ -164,10 +167,10 @@ export class UnitDataUploadComponent implements OnInit, AfterViewInit, OnChanges
               }).call(this, file_name);
             }
           } else {
-            this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length]] = 'error'
+            this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length-1]] = 'error'
           }
         }).catch((error) => {
-          this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length]] = 'error'
+          this.selectedFiles[Object.keys(this.selectedFiles)[Object.keys(this.selectedFiles).length-1]] = 'error'
         });
 
     }

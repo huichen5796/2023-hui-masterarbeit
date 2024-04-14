@@ -1,4 +1,4 @@
-export const backendUrl: string = 'https://huichen.space'
+export const backendUrl: string = 'http://localhost:8000'
 export const dataStoreName: string = 'data_store'
 
 export interface CpaStructur {
